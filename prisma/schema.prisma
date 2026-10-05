@@ -1,0 +1,121 @@
+// Phase 2: run `npx prisma init`, `npm i @prisma/client`, `npx prisma generate`,
+// then replace src/lib/db.ts mock re-export with a PrismaClient singleton.
+// Models mirror src/lib/mock-data.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Verification {
+  verified
+  pending
+  flagged
+  stale
+}
+
+enum BrokerStatus {
+  verified
+  pending
+  flagged
+  suspended
+}
+
+model Broker {
+  id           String       @id
+  name         String
+  agency       String
+  photo        String
+  verified     BrokerStatus @default(pending)
+  rating       Float        @default(0)
+  reviewsCount Int          @default(0)
+  recommend    Int          @default(0)
+  accuracy     Int          @default(0)
+  responseRate Int          @default(0)
+  responseTime String       @default("—")
+  cities       String[]     @default(["Delhi"])
+  areas        String[]
+  cats         String[]
+  exp          Int          @default(0)
+  tenure       String       @default("")
+  policy       String       @default("")
+  vdate        String       @default("")
+  complaints   Int          @default(0)
+  resolved     Int          @default(0)
+  kyc          String       @default("")
+  listings     Listing[]
+  leads        Lead[]
+}
+
+model Listing {
+  id           String       @id
+  propId       String
+  title        String
+  city         String       @default("Delhi")
+  locality     String
+  sector       String       @default("")
+  bhk          Int
+  type         String       @default("Apartment")
+  rent         Int
+  deposit      Int          @default(0)
+  furnishing   String       @default("")
+  area         Int          @default(0)
+  floor        String       @default("")
+  amenities    String[]
+  avail        String       @default("")
+  brok         String       @default("")
+  brokDays     Int          @default(0)
+  visitFee     Int          @default(0)
+  otherFee     Int          @default(0)
+  photos       String[]
+  brokerId     String
+  broker       Broker       @relation(fields: [brokerId], references: [id])
+  hrs          Int          @default(0)
+  verification Verification @default(pending)
+  desc         String       @default("")
+  views        Int          @default(0)
+  enq          Int          @default(0)
+  flags        String[]
+  leads        Lead[]
+}
+
+model Lead {
+  id        String @id
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id])
+  brokerId  String
+  broker    Broker  @relation(fields: [brokerId], references: [id])
+  userName  String
+  phone     String
+  req       String  @default("")
+  time      String  @default("")
+  msg       String  @default("")
+  status    String  @default("New")
+  date      String  @default("")
+  visit     String  @default("—")
+}
+
+model Report {
+  id        String @id
+  listingId String
+  reason    String
+  details   String @default("")
+  reporter  String @default("")
+  status    String @default("Open")
+  date      String @default("")
+}
+
+model CityRequest {
+  id       String @id
+  city     String
+  name     String
+  phone    String
+  userType String @default("seeker")
+  note     String @default("")
+  status   String @default("New")
+  date     String @default("")
+}

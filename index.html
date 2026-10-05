@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thikana — Delhi's Verified Broker Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme:{extend:{
+    colors:{ink:'#0B1526', ink2:'#13233D', paper:'#F7F6F1', cream:'#FFFDF7', pine:'#0B7A55', pinedark:'#064E38', saffron:'#E96A2B', saffrondark:'#C24E14', gold:'#C9A86A', line:'#E8E1D1', mist:'#EFF6F1'},
+    fontFamily:{display:['Fraunces','serif'], sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace']},
+    boxShadow:{card:'0 12px 40px -14px rgba(11,21,38,.22)', pop:'0 22px 60px -18px rgba(11,122,85,.45)', soft:'0 6px 24px -8px rgba(11,21,38,.12)'}
+  }}
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#F7F6F1;color:#0B1526;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#F7F6F1}
+  ::-webkit-scrollbar-thumb{background:#0B1526;border-radius:99px;border:2px solid #F7F6F1}
+  .display{font-family:Fraunces,serif}
+  .jali{background-image:radial-gradient(rgba(11,21,38,.10) 1px, transparent 1px);background-size:18px 18px}
+  .jali-light{background-image:radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px);background-size:16px 16px}
+  .view{display:none}.view.active{display:block;animation:fadeUp .45s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .reveal{opacity:0;transform:translateY(22px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  .marquee{display:flex;gap:12px;animation:scrollX 26s linear infinite}
+  @keyframes scrollX{to{transform:translateX(-50%)}}
+  .pulse-dot{position:relative}
+  .pulse-dot:after{content:'';position:absolute;inset:-4px;border-radius:99px;border:2px solid #0B7A55;animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
+  .fresh-glow{box-shadow:0 0 0 3px rgba(11,122,85,.18)}
+  .card-hover{transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s}
+  .card-hover:hover{transform:translateY(-6px);box-shadow:0 22px 50px -18px rgba(11,21,38,.35)}
+  .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{scrollbar-width:none}
+  .chip-active{background:#0B1526!important;color:#fff!important;border-color:#0B1526!important}
+  .tab-active{background:#0B1526;color:#fff}
+  .status-New{background:#FFF4E5;color:#9A5B00;border:1px solid #F5D9A8}
+  .status-Contacted{background:#E8F0FE;color:#1A49B0;border:1px solid #B9CCF5}
+  .status-VisitScheduled{background:#EDE9FE;color:#5B21B6;border:1px solid #CFC2FA}
+  .status-Visited{background:#E6F7ED;color:#0B7A55;border:1px solid #A9DDBE}
+  .status-Negotiating{background:#FFF1F2;color:#BE123C;border:1px solid #F5B8C2}
+  .status-Closed{background:#0B1526;color:#fff;border:1px solid #0B1526}
+  .modal-bg{background:rgba(11,21,38,.62);backdrop-filter:blur(8px)}
+  .timeline-dot{width:28px;height:28px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+  input,select,textarea{outline:none}
+  input:focus,select:focus,textarea:focus{border-color:#0B7A55!important;box-shadow:0 0 0 3px rgba(11,122,85,.15)}
+  .range{accent-color:#0B7A55}
+  .toast-in{animation:toastIn .4s cubic-bezier(.16,1,.3,1) both}
+  @keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+  .hero-grid{background:linear-gradient(180deg,#0B1526 0%,#13233D 60%,#0B1526 100%)}
+  .gold-underline{background:linear-gradient(transparent 62%, rgba(201,168,106,.55) 62%)}
+  .verified-shine{background:linear-gradient(135deg,#0B7A55,#10B981 50%,#0B7A55);background-size:200% 200%;animation:shine 4s ease infinite}
+  @keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .float-a{animation:floatA 5s ease-in-out infinite}
+  .float-b{animation:floatA 6.5s ease-in-out infinite reverse}
+  @keyframes floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .ticket{border:1.5px dashed #C9A86A}
+  details summary::-webkit-details-marker{display:none}
+  .sticky-contact{backdrop-filter:blur(14px)}
+</style>
+</head>
+<body class="bg-paper">
+
+<!-- ANNOUNCEMENT -->
+<div class="bg-ink text-white text-[12.5px] py-2 px-4 text-center font-medium tracking-wide">
+  <span class="inline-flex items-center gap-2 flex-wrap justify-center">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot inline-block"></span>
+    <span><b class="text-emerald-300">1,284 listings verified in last 24h</b> · Delhi-only · Zero hidden charges promise · <span class="text-gold">Never pay to buy verification</span></span>
+  </span>
+</div>
+
+<!-- NAV -->
+<header class="sticky top-0 z-50 bg-paper/90 backdrop-blur-xl border-b border-line">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[68px] flex items-center justify-between gap-3">
+    <button onclick="showView('home')" class="flex items-center gap-3 group">
+      <span class="w-11 h-11 rounded-2xl bg-ink flex items-center justify-center relative overflow-hidden">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5.5V11c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5.5L12 2z" fill="#C9A86A"/><path d="M8.5 12l2.4 2.4L15.7 9.5" stroke="#0B1526" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="absolute inset-0 jali-light opacity-40"></span>
+      </span>
+      <span class="text-left leading-none">
+        <span class="display font-black text-[20px] tracking-tight">Dilli<span class="text-pine">Verified</span></span>
+        <span class="block text-[10.5px] font-bold tracking-[.18em] uppercase text-ink/60 mt-0.5">Delhi Broker Marketplace</span>
+      </span>
+    </button>
+    <nav class="hidden lg:flex items-center gap-1 text-[14px] font-semibold">
+      <button onclick="showView('properties')" data-nav="properties" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-white transition">Properties</button>
+      <button onclick="showView('brokers')" data-nav="brokers" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-white transition">Brokers</button>
+      <button onclick="showView('home');setTimeout(()=>document.getElementById('how').scrollIntoView({behavior:'smooth'}),80)" class="px-4 py-2 rounded-full hover:bg-ink hover:text-white transition">Verification</button>
+      <button onclick="showView('home');setTimeout(()=>document.getElementById('pricing').scrollIntoView({behavior:'smooth'}),80)" class="px-4 py-2 rounded-full hover:bg-ink hover:text-white transition">Pricing</button>
+      <button onclick="showView('brokerdash')" class="px-4 py-2 rounded-full hover:bg-ink hover:text-white transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-pine inline-block"></span>Broker OS</button>
+      <button onclick="showView('admin')" class="px-4 py-2 rounded-full hover:bg-ink hover:text-white transition">Admin</button>
+    </nav>
+    <div class="flex items-center gap-2">
+      <button onclick="showView('saved')" class="relative w-10 h-10 rounded-full border border-line bg-cream flex items-center justify-center hover:border-ink transition">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        <span id="savedCount" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-saffron text-white text-[11px] font-bold flex items-center justify-center">2</span>
+      </button>
+      <button onclick="showView('enquiries')" class="hidden sm:flex relative h-10 px-4 rounded-full bg-ink text-white text-[13px] font-bold items-center gap-2 hover:bg-ink2 transition">
+        My Enquiries
+        <span id="leadCount" class="bg-pine text-white text-[11px] px-2 py-0.5 rounded-full">1</span>
+      </button>
+      <button onclick="openBrokerSignup()" class="hidden md:flex h-10 px-4 rounded-full bg-pine text-white text-[13px] font-bold items-center hover:bg-pinedark transition">List as Broker</button>
+      <button id="authBtn" onclick="openAuth()" class="h-10 px-4 rounded-full border-2 border-ink text-[13px] font-bold hover:bg-ink hover:text-white transition">Login</button>
+      <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="lg:hidden w-10 h-10 rounded-full border border-line bg-cream flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-line bg-cream px-4 py-3 grid grid-cols-2 gap-2 text-sm font-bold">
+    <button onclick="showView('properties')" class="p-3 rounded-xl bg-paper border border-line text-left">Properties</button>
+    <button onclick="showView('brokers')" class="p-3 rounded-xl bg-paper border border-line text-left">Brokers</button>
+    <button onclick="showView('enquiries')" class="p-3 rounded-xl bg-paper border border-line text-left">My Enquiries</button>
+    <button onclick="showView('brokerdash')" class="p-3 rounded-xl bg-paper border border-line text-left">Broker OS</button>
+    <button onclick="showView('admin')" class="p-3 rounded-xl bg-paper border border-line text-left">Admin</button>
+    <button onclick="openBrokerSignup()" class="p-3 rounded-xl bg-pine text-white text-left">List as Broker</button>
+  </div>
+</header>
+
+<main class="min-h-[80vh] pb-24 lg:pb-0">
+
+<!-- ================= HOME ================= -->
+<section id="view-home" class="view active">
+  <!-- HERO -->
+  <div class="hero-grid text-white relative overflow-hidden">
+    <div class="absolute inset-0 jali-light opacity-30"></div>
+    <div class="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-pine/30 blur-[120px]"></div>
+    <div class="absolute -bottom-40 -left-32 w-[500px] h-[500px] rounded-full bg-saffron/20 blur-[120px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 lg:pt-16 pb-10 grid lg:grid-cols-[1.05fr_.95fr] gap-10 items-center relative">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full pl-1.5 pr-4 py-1.5 text-[12.5px] font-semibold mb-5">
+          <span class="bg-emerald-400 text-ink text-[11px] font-extrabold px-2.5 py-1 rounded-full">NCR · PHASE 1</span>
+          <span class="text-white/85">5 cities · 16 localities · Live freshness</span>
+        </div>
+        <h1 class="display font-black text-[42px] sm:text-[58px] lg:text-[64px] leading-[.95] tracking-tight">Find property.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-[#C9A86A] to-saffron">Know your broker.</span></h1>
+        <p class="mt-4 text-white/70 text-[15.5px] leading-relaxed max-w-xl">Delhi property search with <b class="text-white">verified brokers, transparent charges & fresh availability.</b> No bait listings. No hidden brokerage. No wasted visits.</p>
+
+        <!-- SEARCH CARD -->
+        <div class="mt-6 bg-cream text-ink rounded-3xl p-2 shadow-pop">
+          <div class="flex gap-1 p-1">
+            <button id="tabProp" onclick="switchHeroTab('prop')" class="flex-1 py-2.5 rounded-2xl text-[13px] font-extrabold tab-active transition">Find Properties</button>
+            <button id="tabBrok" onclick="switchHeroTab('brok')" class="flex-1 py-2.5 rounded-2xl text-[13px] font-extrabold text-ink/60 transition">Find Verified Brokers</button>
+          </div>
+          <div class="p-2 sm:p-3 grid sm:grid-cols-[1fr_150px_150px_auto] gap-2">
+            <div class="relative">
+              <svg class="absolute left-3 top-3.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B7A55" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input id="heroQuery" placeholder="Locality, property or broker… e.g. 2 BHK Dwarka" class="w-full h-12 rounded-2xl border border-line bg-white pl-9 pr-3 text-[14px] font-medium placeholder:text-ink/40">
+            </div>
+            <select id="heroLocality" class="h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"><option value="All">All Delhi</option><option>Dwarka</option><option>Saket</option><option>Laxmi Nagar</option><option>Rohini</option><option>Karol Bagh</option><option>Greater Kailash</option><option>Mukherjee Nagar</option><option>Hauz Khas</option><option>Janakpuri</option><option>Uttam Nagar</option></select>
+            <select id="heroBudget" class="h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"><option value="100000">Any budget</option><option value="15000">Under ₹15k</option><option value="25000">Under ₹25k</option><option value="35000">Under ₹35k</option><option value="60000">Under ₹60k</option></select>
+            <button onclick="heroSearch()" class="h-12 px-6 rounded-2xl bg-ink text-white font-extrabold text-[14px] hover:bg-pine transition flex items-center gap-2 justify-center">Search <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+          <div class="px-3 pb-3 flex flex-wrap gap-2 text-[12px] font-semibold">
+            <span class="text-ink/50 py-1">Try:</span>
+            <button onclick="quickSearch('2 BHK under ₹25k in Dwarka')" class="px-3 py-1.5 rounded-full bg-mist border border-pine/20 text-pinedark hover:bg-pine hover:text-white transition">2 BHK under ₹25k in Dwarka</button>
+            <button onclick="quickSearch('Saket')" class="px-3 py-1.5 rounded-full bg-mist border border-pine/20 text-pinedark hover:bg-pine hover:text-white transition">Verified brokers in Saket</button>
+            <button onclick="quickSearch('11000')" class="px-3 py-1.5 rounded-full bg-mist border border-pine/20 text-pinedark hover:bg-pine hover:text-white transition">Student rooms Mukherjee Nagar</button>
+          </div>
+        </div>
+
+        <div class="mt-5 flex items-center gap-4">
+          <div class="flex -space-x-3" id="heroAvatars"></div>
+          <div class="text-[13px]"><span class="text-gold font-extrabold">★★★★★ 4.7/5</span> <span class="text-white/70">· 2,340 verified reviews · <b class="text-white">92% would recommend</b></span></div>
+        </div>
+      </div>
+
+      <!-- HERO VISUAL -->
+      <div class="relative hidden md:block">
+        <div class="relative rounded-[28px] overflow-hidden border border-white/15 shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80" class="w-full h-[480px] object-cover" alt="Verified Delhi home">
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent"></div>
+          <div class="absolute top-4 left-4 flex gap-2">
+            <span class="bg-emerald-400 text-ink text-[11.5px] font-extrabold px-3 py-1.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-ink rounded-full animate-pulse"></span>AVAILABLE — VERIFIED TODAY</span>
+            <span class="bg-ink/80 backdrop-blur text-white text-[11px] font-mono px-3 py-1.5 rounded-full">DL-DWK-004821</span>
+          </div>
+          <div class="absolute bottom-0 inset-x-0 p-5">
+            <div class="bg-white/95 backdrop-blur rounded-2xl p-4 text-ink">
+              <div class="flex justify-between items-start">
+                <div><div class="font-extrabold text-[17px]">2 BHK Apartment · Dwarka Sec-12</div><div class="text-[13px] text-ink/60 font-medium">1,050 sq.ft · Semi-Furnished · Parking</div></div>
+                <div class="text-right"><div class="display font-black text-[22px]">₹24,000<span class="text-[12px] font-sans font-semibold text-ink/50">/mo</span></div><div class="text-[11.5px] font-bold text-pine">Brokerage 15 days · Visit ₹0</div></div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-line flex items-center justify-between">
+                <div class="flex items-center gap-2"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80" class="w-8 h-8 rounded-full object-cover"><div class="text-[12.5px]"><b>Raj Properties</b> <span class="bg-pine text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">✓ VERIFIED</span><div class="text-ink/60">4.7 · 84 reviews · 96% response</div></div></div>
+                <button onclick="openProperty('L001')" class="bg-ink text-white text-[12.5px] font-bold px-4 py-2.5 rounded-xl hover:bg-pine transition">View Property</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -left-8 top-10 bg-cream rounded-2xl shadow-card p-3.5 w-[210px] float-a border border-line">
+          <div class="text-[11px] font-extrabold tracking-widest text-pine uppercase">Transparency</div>
+          <div class="mt-1.5 space-y-1 text-[12px] font-semibold"><div class="flex justify-between"><span class="text-ink/60">Rent</span><b>₹25,000</b></div><div class="flex justify-between"><span class="text-ink/60">Deposit</span><b>₹50,000</b></div><div class="flex justify-between"><span class="text-ink/60">Brokerage</span><b class="text-pine">15 days</b></div><div class="flex justify-between"><span class="text-ink/60">Hidden fee</span><b class="text-pine">₹0 ✓</b></div></div>
+        </div>
+        <div class="absolute -right-4 bottom-24 bg-ink text-white rounded-2xl shadow-card p-3.5 w-[220px] float-b border border-white/10">
+          <div class="text-[11px] font-extrabold tracking-widest text-gold uppercase">Same property detected</div>
+          <div class="text-[13px] font-bold mt-1">1 property · 3 verified brokers</div>
+          <div class="text-[11.5px] text-white/60">We group duplicates. You compare brokerage.</div>
+          <button onclick="openProperty('L001')" class="mt-2 w-full bg-white/10 hover:bg-pine text-[12px] font-bold py-2 rounded-xl transition">Compare 3 offers →</button>
+        </div>
+      </div>
+    </div>
+    <!-- STATS -->
+    <div class="relative border-t border-white/10 bg-black/20 backdrop-blur">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+        <div><div class="display font-black text-[26px] text-emerald-300">1,284</div><div class="text-[11.5px] font-bold tracking-widest uppercase text-white/60">Verified today</div></div>
+        <div><div class="display font-black text-[26px]">312</div><div class="text-[11.5px] font-bold tracking-widest uppercase text-white/60">Verified brokers</div></div>
+        <div><div class="display font-black text-[26px] text-gold">34%</div><div class="text-[11.5px] font-bold tracking-widest uppercase text-white/60">Verified visit rate ★ north-star</div></div>
+        <div><div class="display font-black text-[26px] text-emerald-300">0.8%</div><div class="text-[11.5px] font-bold tracking-widest uppercase text-white/60">Complaint rate</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST MARQUEE -->
+  <div class="bg-cream border-b border-line py-3 overflow-hidden">
+    <div class="marquee w-max text-[12.5px] font-bold text-ink/70" id="trustMarquee"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <!-- LOCALITIES -->
+    <div class="pt-12 reveal">
+      <div class="flex items-end justify-between flex-wrap gap-3">
+        <div><div class="text-[11px] font-extrabold tracking-[.2em] text-pine uppercase">Build density locality-by-locality</div><h2 class="display font-black text-[32px] sm:text-[40px] tracking-tight mt-1">Popular Delhi localities</h2></div>
+        <button onclick="showView('properties')" class="text-[13px] font-bold border border-ink rounded-full px-5 py-2.5 hover:bg-ink hover:text-white transition">Explore all →</button>
+      </div>
+      <div id="localityGrid" class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </div>
+
+    <!-- RECENTLY VERIFIED -->
+    <div class="pt-12 reveal">
+      <div class="flex items-end justify-between">
+        <div><div class="text-[11px] font-extrabold tracking-[.2em] text-saffron uppercase">Freshness is the product</div><h2 class="display font-black text-[32px] sm:text-[40px] tracking-tight mt-1">Verified in the last 24 hours</h2></div>
+        <div class="hidden sm:flex gap-2"><button onclick="scrollRow('recentRow',-1)" class="w-10 h-10 rounded-full border border-line bg-cream font-bold">←</button><button onclick="scrollRow('recentRow',1)" class="w-10 h-10 rounded-full border border-line bg-cream font-bold">→</button></div>
+      </div>
+      <div id="recentRow" class="mt-6 flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2"></div>
+    </div>
+
+    <!-- HOW VERIFICATION WORKS -->
+    <div id="how" class="pt-14 reveal">
+      <div class="bg-ink text-white rounded-[28px] p-6 sm:p-10 relative overflow-hidden">
+        <div class="absolute inset-0 jali-light opacity-20"></div>
+        <div class="relative grid lg:grid-cols-2 gap-10">
+          <div>
+            <div class="text-[11px] font-extrabold tracking-[.2em] text-emerald-300 uppercase">How verification works</div>
+            <h2 class="display font-black text-[30px] sm:text-[42px] leading-tight mt-2">Verification means something <span class="text-gold">specific.</span> Not “100% safe.”</h2>
+            <p class="text-white/65 text-[14.5px] mt-3 leading-relaxed">“This platform has verified specific identity / business information.” It does not guarantee the transaction. Every badge is traceable to a verification event with date.</p>
+            <div class="mt-6 space-y-4">
+              <div class="flex gap-4"><span class="w-10 h-10 rounded-2xl bg-pine flex items-center justify-center font-black">1</span><div><b>Broker KYC:</b> <span class="text-white/70 text-[14px]">phone + govt ID + agency proof + areas served + brokerage policy. Human review before badge.</span></div></div>
+              <div class="flex gap-4"><span class="w-10 h-10 rounded-2xl bg-gold text-ink flex items-center justify-center font-black">2</span><div><b>Listing identity:</b> <span class="text-white/70 text-[14px]">every property gets a permanent ID (e.g. DL-DWK-004821), mandatory fees, photos with duplicate-hash check.</span></div></div>
+              <div class="flex gap-4"><span class="w-10 h-10 rounded-2xl bg-saffron flex items-center justify-center font-black">3</span><div><b>Freshness:</b> <span class="text-white/70 text-[14px]">brokers reconfirm availability. Stale listings rank lower, then disappear. Reports trigger instant review.</span></div></div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <button onclick="showView('properties')" class="bg-white text-ink font-extrabold text-[13.5px] px-6 py-3 rounded-full hover:bg-emerald-300 transition">Find Properties</button>
+              <button onclick="showView('brokers')" class="border border-white/25 font-extrabold text-[13.5px] px-6 py-3 rounded-full hover:bg-white/10 transition">Find Verified Brokers</button>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="bg-white/[.07] border border-white/12 rounded-3xl p-5">
+              <div class="text-[11px] font-extrabold tracking-widest text-emerald-300">BROKER TRUST STACK</div>
+              <ul class="mt-3 space-y-2.5 text-[13px] font-semibold">
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Phone verified</li>
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Identity / KYC verified</li>
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Agency details verified</li>
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Areas served disclosed</li>
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Brokerage policy public</li>
+                <li class="flex gap-2"><span class="text-emerald-300">✓</span> Reviews + response rate</li>
+              </ul>
+              <div class="mt-4 bg-black/30 rounded-2xl p-3 text-[12px]"><span class="text-white/60">Example</span><br><b>Raj Properties ✓ Verified</b><br><span class="text-gold">4.7 · 84 reviews · 92% recommend</span></div>
+            </div>
+            <div class="bg-white/[.07] border border-white/12 rounded-3xl p-5">
+              <div class="text-[11px] font-extrabold tracking-widest text-gold">PROPERTY TRUST STACK</div>
+              <ul class="mt-3 space-y-2.5 text-[13px] font-semibold">
+                <li class="flex gap-2"><span class="text-gold">✓</span> Unique Property ID</li>
+                <li class="flex gap-2"><span class="text-gold">✓</span> Structured details + photos</li>
+                <li class="flex gap-2"><span class="text-gold">✓</span> Broker–property relationship</li>
+                <li class="flex gap-2"><span class="text-gold">✓</span> Availability timestamp</li>
+                <li class="flex gap-2"><span class="text-gold">✓</span> Brokerage + visit + deposit</li>
+                <li class="flex gap-2"><span class="text-gold">✓</span> Verification status</li>
+              </ul>
+              <div class="mt-4 bg-black/30 rounded-2xl p-3 text-[12px] font-mono"><span class="text-white/60 font-sans">Example</span><br>DL-DWK-004821<br><span class="text-emerald-300 font-sans font-bold">Verified 2h ago · Stale logic armed</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BROKERS PREVIEW -->
+    <div class="pt-12 reveal">
+      <div class="flex items-end justify-between flex-wrap gap-3">
+        <div><div class="text-[11px] font-extrabold tracking-[.2em] text-pine uppercase">The broker is the trust anchor</div><h2 class="display font-black text-[32px] sm:text-[40px] tracking-tight mt-1">Verified brokers in Delhi</h2></div>
+        <button onclick="showView('brokers')" class="text-[13px] font-bold bg-ink text-white rounded-full px-5 py-2.5 hover:bg-pine transition">Broker directory →</button>
+      </div>
+      <div id="homeBrokers" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </div>
+
+    <!-- DUPLICATE INTELLIGENCE -->
+    <div class="pt-12 reveal">
+      <div class="rounded-[28px] overflow-hidden border border-line bg-cream shadow-card grid lg:grid-cols-2">
+        <div class="p-6 sm:p-10">
+          <span class="text-[11px] font-extrabold tracking-[.2em] bg-saffron/10 text-saffrondark border border-saffron/30 px-3 py-1.5 rounded-full">ANTI-FRAUD · PROPERTY IDENTITY</span>
+          <h3 class="display font-black text-[28px] sm:text-[36px] leading-tight mt-4">Instead of 5 different flats, we show: <span class="text-pine">same property — 3 verified brokers.</span></h3>
+          <p class="text-ink/60 text-[14.5px] mt-3">One permanent property entity. Multiple broker offerings grouped. Photo-hash + address matching flags copies, bait pricing and advance-fee traps automatically.</p>
+          <div class="mt-5 grid grid-cols-3 gap-2 text-center text-[12px] font-bold">
+            <div class="bg-paper rounded-2xl border border-line p-3"><div class="text-pine text-[16px]">✓</div>Image-hash<br>match 98.2%</div>
+            <div class="bg-paper rounded-2xl border border-line p-3"><div class="text-pine text-[16px]">✓</div>Address<br>match flagged</div>
+            <div class="bg-paper rounded-2xl border border-line p-3"><div class="text-saffrondark text-[16px]">⚑</div>Outlier price<br>auto-review</div>
+          </div>
+          <button onclick="openProperty('L001')" class="mt-5 bg-ink text-white font-bold text-[13.5px] px-6 py-3.5 rounded-2xl hover:bg-pine transition">See live duplicate grouping →</button>
+        </div>
+        <div class="bg-paper border-l border-line p-6 sm:p-8">
+          <div class="text-[12px] font-mono font-bold text-ink/50">PROPERTY ID: DL-DWK-004821 · DWARKA SEC-12</div>
+          <div class="mt-3 space-y-3" id="dupPreview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div id="pricing" class="pt-12 reveal">
+      <div class="text-center"><div class="text-[11px] font-extrabold tracking-[.2em] text-pine uppercase">Business model · Users always free</div><h2 class="display font-black text-[32px] sm:text-[40px] mt-1">Brokers grow. Verification stays unbought.</h2><p class="text-ink/60 text-[14px] mt-2 font-semibold">Payment can never buy verification. Only better tools & visibility.</p></div>
+      <div class="mt-6 grid md:grid-cols-3 gap-4">
+        <div class="bg-cream border border-line rounded-3xl p-7 card-hover"><div class="font-extrabold text-[13px] tracking-widest text-ink/50">FREE</div><div class="display font-black text-[34px] mt-1">₹0</div><ul class="mt-4 space-y-2 text-[13.5px] font-medium text-ink/75"><li>✓ 5 active listings</li><li>✓ Basic profile + leads</li><li>✓ Freshness reminders</li><li>✓ Verified badge (on KYC pass)</li></ul><button onclick="openBrokerSignup()" class="mt-6 w-full border-2 border-ink font-bold py-3 rounded-2xl hover:bg-ink hover:text-white transition text-[13.5px]">Start free</button></div>
+        <div class="bg-ink text-white rounded-3xl p-7 relative overflow-hidden card-hover"><span class="absolute top-5 right-5 bg-gold text-ink text-[11px] font-extrabold px-3 py-1 rounded-full">MOST POPULAR</span><div class="font-extrabold text-[13px] tracking-widest text-emerald-300">PRO · ₹999–₹2,999/mo</div><div class="display font-black text-[34px] mt-1">₹1,999<span class="text-[14px] font-sans text-white/50">/mo</span></div><ul class="mt-4 space-y-2 text-[13.5px] text-white/80 font-medium"><li>✓ 50 active listings</li><li>✓ Lead CRM + visit tracking</li><li>✓ Analytics + profile boost</li><li>✓ Faster support</li></ul><button onclick="toast('Pro trial started — 14 days free. No card needed.','ok')" class="mt-6 w-full bg-pine font-bold py-3 rounded-2xl hover:bg-emerald-500 transition text-[13.5px]">Try Pro free</button></div>
+        <div class="bg-cream border border-line rounded-3xl p-7 card-hover"><div class="font-extrabold text-[13px] tracking-widest text-ink/50">AGENCY · ₹4,999+</div><div class="display font-black text-[34px] mt-1">₹4,999<span class="text-[14px] font-sans text-ink/40">/mo</span></div><ul class="mt-4 space-y-2 text-[13.5px] font-medium text-ink/75"><li>✓ Multiple users + roles</li><li>✓ Team dashboard + analytics</li><li>✓ Large inventory + API</li><li>✓ Sponsored slots (labelled)</li></ul><button onclick="toast('Agency demo request noted. Our Delhi team will call you.','ok')" class="mt-6 w-full border-2 border-ink font-bold py-3 rounded-2xl hover:bg-ink hover:text-white transition text-[13.5px]">Talk to us</button></div>
+      </div>
+    </div>
+
+    <!-- REPORT CTA -->
+    <div class="py-12 reveal">
+      <div class="rounded-[28px] bg-[#FFF1EC] border border-saffron/30 p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-6">
+        <span class="w-16 h-16 rounded-3xl bg-saffron text-white flex items-center justify-center flex-shrink-0"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>
+        <div class="flex-1 text-center lg:text-left"><h3 class="display font-black text-[26px]">Seen a bait listing or advance-fee demand?</h3><p class="text-ink/60 text-[14px] font-medium">Reports trigger moderation in under 6 hours on average. Photo-hash, price-outlier and visit-cancellation signals auto-escalate.</p></div>
+        <button onclick="openReport('L007')" class="bg-saffron text-white font-extrabold px-7 py-3.5 rounded-2xl hover:bg-saffrondark transition text-[14px] flex-shrink-0">Report suspicious listing</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROPERTIES ================= -->
+<section id="view-properties" class="view">
+  <div class="bg-ink text-white relative overflow-hidden">
+    <div class="absolute inset-0 jali-light opacity-20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 relative">
+      <div class="text-[11px] font-extrabold tracking-[.2em] text-emerald-300">PROPERTY-FIRST DISCOVERY · DELHI</div>
+      <h1 class="display font-black text-[36px] sm:text-[48px] tracking-tight">2 BHK under ₹25k? <span class="text-gold">Know the fees first.</span></h1>
+      <div class="mt-5 bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 max-w-3xl">
+        <input id="propSearch" oninput="state.filters.query=this.value;renderProperties()" placeholder="Search locality, BHK, broker, Property ID…" class="flex-1 h-12 px-4 rounded-xl text-ink text-[14px] font-medium border border-transparent">
+        <select onchange="state.filters.sort=this.value;renderProperties()" class="h-12 px-4 rounded-xl text-ink text-[13px] font-bold border border-line bg-paper"><option value="fresh">Sort: Freshest first</option><option value="low">Price: Low → High</option><option value="high">Price: High → Low</option><option value="rated">Broker rating</option></select>
+      </div>
+      <div id="activeFilterChips" class="mt-4 flex flex-wrap gap-2 text-[12px] font-bold"></div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-[280px_1fr] gap-6">
+    <aside class="lg:sticky lg:top-[84px] self-start space-y-4">
+      <div class="bg-cream border border-line rounded-3xl p-5">
+        <div class="flex justify-between items-center"><b class="text-[14px]">Filters</b><button onclick="clearFilters()" class="text-[12px] font-bold text-saffrondark hover:underline">Clear all</button></div>
+        <div class="mt-4"><div class="text-[11px] font-extrabold tracking-widest text-ink/50">LOCALITY</div><div id="localityPills" class="mt-2 flex flex-wrap gap-1.5"></div></div>
+        <div class="mt-4"><div class="text-[11px] font-extrabold tracking-widest text-ink/50">BHK</div><div id="bhkPills" class="mt-2 flex gap-1.5"></div></div>
+        <div class="mt-4"><div class="flex justify-between text-[11px] font-extrabold tracking-widest text-ink/50"><span>MAX RENT</span><span id="rentOut" class="text-pine">₹1,00,000</span></div><input type="range" min="8000" max="100000" step="1000" value="100000" oninput="state.filters.maxRent=+this.value;document.getElementById('rentOut').innerText='₹'+(+this.value).toLocaleString('en-IN');renderProperties()" class="range w-full mt-2"></div>
+        <div class="mt-4"><div class="text-[11px] font-extrabold tracking-widest text-ink/50">FURNISHING</div><div id="furnPills" class="mt-2 flex flex-wrap gap-1.5"></div></div>
+        <div class="mt-4 space-y-2">
+          <label class="flex items-center justify-between bg-paper border border-line rounded-2xl px-3.5 py-3 text-[13px] font-bold cursor-pointer"><span>✓ Verified only</span><input type="checkbox" onchange="state.filters.verifiedOnly=this.checked;renderProperties()" class="w-5 h-5 accent-[#0B7A55]"></label>
+          <label class="flex items-center justify-between bg-paper border border-line rounded-2xl px-3.5 py-3 text-[13px] font-bold cursor-pointer"><span>₹0 visit fee only</span><input type="checkbox" onchange="state.filters.zeroVisit=this.checked;renderProperties()" class="w-5 h-5 accent-[#0B7A55]"></label>
+        </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden border border-line relative">
+        <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80" class="h-56 w-full object-cover" alt="Delhi">
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent"></div>
+        <div class="absolute bottom-0 p-4 text-white"><div class="text-[11px] font-extrabold tracking-widest text-gold">DELHI DENSITY MAP</div><div class="display font-black text-[20px]">Tap a zone to filter</div><div class="mt-2 flex flex-wrap gap-1.5" id="mapDots"></div></div>
+      </div>
+      <div class="bg-mist border border-pine/20 rounded-3xl p-5 text-[13px]"><b class="text-pinedark">Freshness promise</b><p class="text-ink/65 mt-1 font-medium">Stale listings rank lower and auto-expire. “Verified today” means the broker reconfirmed availability within 24h.</p></div>
+    </aside>
+    <div>
+      <div class="flex items-center justify-between mb-4"><div id="propCount" class="text-[13.5px] font-bold text-ink/60"></div><div class="text-[12px] font-mono text-ink/40">duplicate groups merged · photo-hash on</div></div>
+      <div id="propertiesGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BROKERS ================= -->
+<section id="view-brokers" class="view">
+  <div class="bg-ink text-white relative overflow-hidden">
+    <div class="absolute inset-0 jali-light opacity-20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 relative">
+      <div class="text-[11px] font-extrabold tracking-[.2em] text-emerald-300">BROKER-FIRST DISCOVERY · TRUST ANCHOR</div>
+      <h1 class="display font-black text-[36px] sm:text-[48px] tracking-tight">Verified brokers <span class="text-gold">in Dwarka, Saket & beyond.</span></h1>
+      <div class="mt-5 flex flex-col sm:flex-row gap-2 max-w-3xl">
+        <input id="brokerSearch" oninput="state.brokerQuery=this.value;renderBrokers()" placeholder="Search broker, agency or area… e.g. Raj Properties" class="flex-1 h-12 px-4 rounded-2xl text-ink text-[14px] font-medium">
+        <select onchange="state.brokerArea=this.value;renderBrokers()" class="h-12 px-4 rounded-2xl text-ink text-[13px] font-bold"><option value="All">All areas</option><option>Dwarka</option><option>Saket</option><option>Laxmi Nagar</option><option>Rohini</option><option>Karol Bagh</option><option>Greater Kailash</option><option>Mukherjee Nagar</option><option>Hauz Khas</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8"><div id="brokersGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
+</section>
+
+<!-- ================= PROPERTY DETAIL ================= -->
+<section id="view-property" class="view"><div class="max-w-7xl mx-auto px-4 sm:px-6 py-6"><button onclick="showView('properties')" class="text-[13px] font-bold text-ink/60 hover:text-ink">← Back to results</button><div id="propertyDetailContent" class="mt-4"></div></div></section>
+
+<!-- ================= BROKER PROFILE ================= -->
+<section id="view-broker" class="view"><div class="max-w-7xl mx-auto px-4 sm:px-6 py-6"><button onclick="showView('brokers')" class="text-[13px] font-bold text-ink/60 hover:text-ink">← Back to directory</button><div id="brokerProfileContent" class="mt-4"></div></div></section>
+
+<!-- ================= ENQUIRIES ================= -->
+<section id="view-enquiries" class="view">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+    <div class="text-[11px] font-extrabold tracking-[.2em] text-pine">STRUCTURED LEADS · NO SCATTERED WHATSAPP</div>
+    <h1 class="display font-black text-[36px] sm:text-[44px]">My Enquiries</h1>
+    <p class="text-ink/60 text-[14px] font-medium">Track every contact → visit → negotiation in one place. Brokers see the same pipeline.</p>
+    <div class="mt-4 flex gap-2 text-[12.5px] font-bold" id="enqFilterPills"></div>
+    <div id="enquiriesList" class="mt-5 space-y-4"></div>
+  </div>
+</section>
+
+<!-- ================= SAVED ================= -->
+<section id="view-saved" class="view">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="display font-black text-[36px] sm:text-[44px]">Saved properties</h1>
+    <p class="text-ink/60 text-[14px] font-medium">Freshness is re-checked every time you open this list. Stale saves are flagged.</p>
+    <div id="savedGrid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+</section>
+
+<!-- ================= BROKER DASHBOARD ================= -->
+<section id="view-brokerdash" class="view">
+  <div class="bg-ink text-white"><div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center gap-4 justify-between">
+    <div><div class="text-[11px] font-extrabold tracking-[.2em] text-emerald-300">BROKER OS · CRM + FRESHNESS + ANALYTICS</div><h1 class="display font-black text-[32px] sm:text-[40px]">Good morning, Rajesh.</h1><p class="text-white/60 text-[13.5px] font-medium">Keep inventory fresh. Serious leads only. Reputation compounds.</p></div>
+    <div class="flex items-center gap-2 bg-white/10 border border-white/15 rounded-2xl p-2"><span class="text-[12px] font-bold pl-2 text-white/70">Demo as:</span><select id="brokerSwitch" onchange="state.brokerSession=this.value;renderBrokerDash()" class="bg-ink text-[13px] font-bold px-3 py-2 rounded-xl border border-white/20"></select><button onclick="openBrokerSignup()" class="bg-pine text-[12.5px] font-bold px-4 py-2.5 rounded-xl">+ New broker</button></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-1 pb-2 flex gap-2 overflow-x-auto no-scrollbar" id="brokerTabs"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6" id="brokerDashContent"></div>
+</section>
+
+<!-- ================= ADMIN ================= -->
+<section id="view-admin" class="view">
+  <div class="bg-[#1A0F0A] text-white relative overflow-hidden"><div class="absolute inset-0 jali-light opacity-10"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative flex flex-wrap gap-4 items-center justify-between">
+      <div><div class="text-[11px] font-extrabold tracking-[.2em] text-saffron">PLATFORM INTEGRITY · ADMIN CONSOLE</div><h1 class="display font-black text-[32px] sm:text-[40px]">Trust operations</h1><p class="text-white/60 text-[13.5px]">Optimize for <b class="text-white">verified visit rate</b>, not listing volume. KYC fraud, duplicates & advance-fee flags live here.</p></div>
+      <div class="flex gap-2 text-[12px] font-bold"><span class="bg-saffron/20 border border-saffron/40 px-3 py-2 rounded-full">3 pending KYC</span><span class="bg-red-500/20 border border-red-400/40 px-3 py-2 rounded-full">5 auto-flags open</span></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-4 relative flex gap-2 overflow-x-auto no-scrollbar" id="adminTabs"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6" id="adminContent"></div>
+</section>
+
+</main>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-cream/95 backdrop-blur border-t border-line px-2 py-2 grid grid-cols-5 text-[10.5px] font-bold text-center">
+  <button onclick="showView('home')" class="py-1.5 rounded-xl">🏠<br>Home</button>
+  <button onclick="showView('properties')" class="py-1.5 rounded-xl">🔍<br>Search</button>
+  <button onclick="showView('saved')" class="py-1.5 rounded-xl">♥<br>Saved</button>
+  <button onclick="showView('enquiries')" class="py-1.5 rounded-xl">✉<br>Enquiries</button>
+  <button onclick="showView('brokerdash')" class="py-1.5 rounded-xl">◈<br>Broker</button>
+</nav>
+
+<!-- FOOTER -->
+<footer class="bg-ink text-white mt-6 pb-24 lg:pb-0">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-4 gap-8">
+    <div><div class="display font-black text-[22px]">Dilli<span class="text-emerald-300">Verified</span></div><p class="text-white/60 text-[13px] mt-2 leading-relaxed">Delhi-first trust marketplace for broker-led discovery. Know who you're dealing with. Know what you're getting. Know what you'll pay.</p><div class="mt-4 bg-white/10 border border-white/15 rounded-2xl p-3 text-[12px] text-white/70"><b class="text-gold">Verification means:</b> we verified specific identity/business info. It does not guarantee the transaction. Never pay token money before a physical visit + written receipt.</div></div>
+    <div><b class="text-[13px] tracking-widest">DISCOVER</b><div class="mt-3 space-y-2 text-[13.5px] text-white/70 font-medium"><button onclick="showView('properties')" class="block hover:text-white">Properties in Delhi</button><button onclick="showView('brokers')" class="block hover:text-white">Verified brokers</button><button onclick="showView('saved')" class="block hover:text-white">Saved</button><button onclick="showView('enquiries')" class="block hover:text-white">My enquiries</button></div></div>
+    <div><b class="text-[13px] tracking-widest">SUPPLY & OPS</b><div class="mt-3 space-y-2 text-[13.5px] text-white/70 font-medium"><button onclick="openBrokerSignup()" class="block hover:text-white">Become a verified broker</button><button onclick="showView('brokerdash')" class="block hover:text-white">Broker OS demo</button><button onclick="showView('admin')" class="block hover:text-white">Admin console demo</button><button onclick="openReport('L001')" class="block hover:text-white">Report a listing</button></div></div>
+    <div><b class="text-[13px] tracking-widest">DELHI HELPLINE</b><div class="mt-3 text-[13.5px] text-white/70">Mon–Sat · 10am–7pm<br><span class="font-mono text-white">011-4100-2482</span><br>namaste@thikana.rent<br><div class="mt-3 flex gap-2"><span class="bg-pine px-3 py-1.5 rounded-full text-[11px] font-bold">Dwarka HQ</span><span class="bg-white/10 px-3 py-1.5 rounded-full text-[11px] font-bold">Saket desk</span></div></div></div>
+  </div>
+  <div class="border-t border-white/10 py-4 text-center text-[12px] text-white/40 font-medium">© 2026 Thikana · NCR Phase-1 MVP · Prototype with simulated live data · Made for trust in Dilli</div>
+</footer>
+
+<!-- ============ MODALS ============ -->
+<div id="authModal" class="hidden fixed inset-0 z-[80] modal-bg flex items-center justify-center p-4">
+  <div class="bg-cream rounded-3xl max-w-md w-full p-7 relative">
+    <button onclick="closeModal('authModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-paper border border-line font-bold">✕</button>
+    <div id="authStep1"><div class="text-[11px] font-extrabold tracking-widest text-pine">STEP 1 · PHONE VERIFICATION</div><h3 class="display font-black text-[26px] mt-1">Login with phone</h3><p class="text-[13.5px] text-ink/60 font-medium">OTP-gated enquiries keep brokers serious — and keep you safe from spam.</p><label class="block mt-4 text-[12px] font-bold">MOBILE NUMBER</label><div class="flex gap-2 mt-1"><span class="h-12 px-3 rounded-2xl border border-line bg-white flex items-center font-bold text-[14px]">+91</span><input id="authPhone" maxlength="10" placeholder="98110 24680" class="flex-1 h-12 rounded-2xl border border-line bg-white px-3 font-bold text-[15px] tracking-widest"></div><button onclick="sendOTP()" class="mt-4 w-full bg-ink text-white font-bold py-3.5 rounded-2xl hover:bg-pine transition">Send OTP →</button><p class="mt-3 text-[12px] text-ink/50 text-center">Demo: any 10-digit number works · OTP is <b class="font-mono">123456</b></p></div>
+    <div id="authStep2" class="hidden"><div class="text-[11px] font-extrabold tracking-widest text-pine">STEP 2 · ENTER OTP</div><h3 class="display font-black text-[26px] mt-1">Check your SMS</h3><p class="text-[13.5px] text-ink/60">Sent to +91 <span id="otpPhoneView" class="font-bold text-ink"></span></p><input id="authOTP" maxlength="6" placeholder="• • • • • •" class="mt-4 w-full h-14 rounded-2xl border-2 border-line bg-white text-center font-mono font-bold text-[22px] tracking-[.4em]"><label class="block mt-3 text-[12px] font-bold">YOUR NAME</label><input id="authName" placeholder="e.g. Ananya Gupta" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-4 text-[14px] font-semibold"><button onclick="verifyOTP()" class="mt-4 w-full bg-pine text-white font-bold py-3.5 rounded-2xl hover:bg-pinedark transition">Verify & continue →</button></div>
+  </div>
+</div>
+
+<div id="contactModal" class="hidden fixed inset-0 z-[80] modal-bg flex items-center justify-center p-4">
+  <div class="bg-cream rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto no-scrollbar">
+    <div class="p-6 sm:p-8">
+      <div class="flex justify-between items-start gap-3"><div><div class="text-[11px] font-extrabold tracking-widest text-pine">STRUCTURED LEAD · NO PHONE SPAM</div><h3 class="display font-black text-[26px]">Contact broker</h3></div><button onclick="closeModal('contactModal')" class="w-9 h-9 rounded-full bg-paper border border-line font-bold flex-shrink-0">✕</button></div>
+      <div id="contactSummary" class="mt-4"></div>
+      <div class="grid sm:grid-cols-2 gap-3 mt-4">
+        <div><label class="text-[12px] font-bold">YOUR NAME *</label><input id="cName" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-4 text-[14px] font-semibold" placeholder="Full name"></div>
+        <div><label class="text-[12px] font-bold">PHONE *</label><input id="cPhone" maxlength="10" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-4 text-[14px] font-semibold" placeholder="10-digit mobile"></div>
+        <div><label class="text-[12px] font-bold">REQUIREMENT</label><select id="cReq" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"><option>Ready to rent in 0–15 days</option><option>Exploring for next month</option><option>Student / sharing</option><option>Family relocation</option><option>Just comparing brokerage</option></select></div>
+        <div><label class="text-[12px] font-bold">PREFERRED VISIT</label><input id="cTime" type="datetime-local" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13px] font-semibold"></div>
+      </div>
+      <label class="block mt-3 text-[12px] font-bold">MESSAGE TO BROKER</label><textarea id="cMsg" rows="3" class="mt-1 w-full rounded-2xl border border-line bg-white p-4 text-[14px]" placeholder="Hi! Is this still available? I work in Connaught Place and need parking…"></textarea>
+      <label class="mt-3 flex gap-3 bg-mist border border-pine/25 rounded-2xl p-4 text-[13px] font-medium cursor-pointer"><input id="cAgree" type="checkbox" checked class="w-5 h-5 mt-0.5 accent-[#0B7A55]"><span>I have seen the <b>mandatory charge table</b> (rent, deposit, brokerage, visit fee). I understand the broker typically responds in <b>~1–2 hours</b> and I will <b>never pay advance/token</b> before a physical visit.</span></label>
+      <button onclick="submitLead()" class="mt-4 w-full bg-pine text-white font-extrabold py-4 rounded-2xl hover:bg-pinedark transition">Send enquiry → Get broker response</button>
+      <p class="text-center text-[12px] text-ink/50 mt-2 font-medium">Phone stays masked until the broker accepts. You both track status in Enquiries / Lead Inbox.</p>
+    </div>
+  </div>
+</div>
+
+<div id="reportModal" class="hidden fixed inset-0 z-[80] modal-bg flex items-center justify-center p-4">
+  <div class="bg-cream rounded-3xl max-w-md w-full p-7 relative">
+    <button onclick="closeModal('reportModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-paper border border-line font-bold">✕</button>
+    <div class="text-[11px] font-extrabold tracking-widest text-saffrondark">⚑ REPORT · FRAUD & ACCURACY DESK</div><h3 class="display font-black text-[24px] mt-1">Report this listing</h3><div id="reportTarget" class="text-[12px] font-mono text-ink/50 mt-1"></div>
+    <div class="mt-4 space-y-2 text-[13.5px] font-semibold" id="reportReasons">
+      <label class="flex gap-3 border border-line bg-white rounded-2xl p-3 cursor-pointer"><input type="radio" name="rep" value="Fake / stock photos" checked class="accent-[#E96A2B]"> Fake / stock photos</label>
+      <label class="flex gap-3 border border-line bg-white rounded-2xl p-3 cursor-pointer"><input type="radio" name="rep" value="Already rented but advertised" class="accent-[#E96A2B]"> Already rented but advertised</label>
+      <label class="flex gap-3 border border-line bg-white rounded-2xl p-3 cursor-pointer"><input type="radio" name="rep" value="Advance / token demanded" class="accent-[#E96A2B]"> Advance / token demanded</label>
+      <label class="flex gap-3 border border-line bg-white rounded-2xl p-3 cursor-pointer"><input type="radio" name="rep" value="Hidden brokerage / fees" class="accent-[#E96A2B]"> Hidden brokerage / fees</label>
+      <label class="flex gap-3 border border-line bg-white rounded-2xl p-3 cursor-pointer"><input type="radio" name="rep" value="Duplicate of another listing" class="accent-[#E96A2B]"> Duplicate of another listing</label>
+    </div>
+    <textarea id="reportDetails" rows="3" placeholder="What happened? (optional but helps moderation)" class="mt-3 w-full rounded-2xl border border-line bg-white p-3 text-[13.5px]"></textarea>
+    <button onclick="submitReport()" class="mt-3 w-full bg-saffron text-white font-extrabold py-3.5 rounded-2xl hover:bg-saffrondark transition">Submit report → moderation in ~6h</button>
+  </div>
+</div>
+
+<div id="reviewModal" class="hidden fixed inset-0 z-[80] modal-bg flex items-center justify-center p-4">
+  <div class="bg-cream rounded-3xl max-w-md w-full p-7 relative">
+    <button onclick="closeModal('reviewModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-paper border border-line font-bold">✕</button>
+    <div class="text-[11px] font-extrabold tracking-widest text-pine">VERIFIED REVIEW · ONLY AFTER VISIT</div><h3 class="display font-black text-[24px] mt-1">Rate your experience</h3><div id="reviewTarget" class="text-[12.5px] text-ink/60 font-semibold"></div>
+    <div class="mt-4"><div class="text-[12px] font-bold mb-1">OVERALL (tap stars)</div><div id="starRow" class="flex gap-1 text-[30px] cursor-pointer"></div></div>
+    <div class="grid grid-cols-2 gap-2 mt-3 text-[12.5px] font-bold">
+      <label>Listing accuracy<br><select id="rAcc" class="mt-1 w-full h-10 rounded-xl border border-line bg-white px-2"><option>5 - Exact</option><option>4 - Good</option><option>3 - Okay</option><option>2 - Poor</option><option>1 - Fake</option></select></label>
+      <label>Communication<br><select id="rComm" class="mt-1 w-full h-10 rounded-xl border border-line bg-white px-2"><option>5 - Excellent</option><option>4 - Good</option><option>3 - Okay</option><option>2 - Poor</option><option>1 - Rude</option></select></label>
+      <label>Professionalism<br><select id="rProf" class="mt-1 w-full h-10 rounded-xl border border-line bg-white px-2"><option>5 - Excellent</option><option>4 - Good</option><option>3 - Okay</option><option>2 - Poor</option><option>1 - Unprofessional</option></select></label>
+      <label>Availability accuracy<br><select id="rAvail" class="mt-1 w-full h-10 rounded-xl border border-line bg-white px-2"><option>5 - Exact</option><option>4 - Good</option><option>3 - Okay</option><option>2 - Poor</option><option>1 - Already gone</option></select></label>
+    </div>
+    <textarea id="rText" rows="2" placeholder="What should the next renter know?" class="mt-3 w-full rounded-2xl border border-line bg-white p-3 text-[13.5px]"></textarea>
+    <button onclick="submitReview()" class="mt-3 w-full bg-ink text-white font-extrabold py-3.5 rounded-2xl hover:bg-pine transition">Publish verified review</button>
+  </div>
+</div>
+
+<div id="signupModal" class="hidden fixed inset-0 z-[80] modal-bg flex items-center justify-center p-4">
+  <div class="bg-cream rounded-3xl max-w-lg w-full p-7 relative max-h-[92vh] overflow-y-auto no-scrollbar">
+    <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-paper border border-line font-bold">✕</button>
+    <div class="text-[11px] font-extrabold tracking-widest text-pine">BROKER ONBOARDING · KYC REQUIRED</div><h3 class="display font-black text-[26px]">Become a verified broker</h3>
+    <div class="flex gap-1.5 mt-3" id="suSteps"><span class="flex-1 h-1.5 rounded-full bg-pine"></span><span class="flex-1 h-1.5 rounded-full bg-line"></span><span class="flex-1 h-1.5 rounded-full bg-line"></span></div>
+    <div id="su1" class="mt-4"><div class="grid grid-cols-2 gap-2"><div><label class="text-[12px] font-bold">FULL NAME *</label><input id="suName" placeholder="e.g. Mohit Singh" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"></div><div><label class="text-[12px] font-bold">PHONE *</label><input id="suPhone" maxlength="10" placeholder="98110…" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"></div></div><div class="mt-2"><label class="text-[12px] font-bold">AGENCY (if any)</label><input id="suAgency" placeholder="e.g. Singh Estates" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13.5px] font-semibold"></div><button onclick="suNext(2)" class="mt-4 w-full bg-ink text-white font-bold py-3.5 rounded-2xl">Continue → KYC →</button></div>
+    <div id="su2" class="hidden mt-4"><div class="grid grid-cols-2 gap-2"><div><label class="text-[12px] font-bold">ID TYPE</label><select id="suID" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13px] font-semibold"><option>Aadhaar</option><option>PAN</option><option>Driving Licence</option><option>GST / Shop licence</option></select></div><div><label class="text-[12px] font-bold">AREAS SERVED *</label><input id="suAreas" placeholder="Dwarka, Janakpuri" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13px] font-semibold"></div></div><div class="mt-3 border-2 border-dashed border-line rounded-2xl p-5 text-center bg-white"><div class="text-[30px]">🪪</div><b class="text-[13.5px]">Upload ID + agency proof</b><p class="text-[12px] text-ink/50">Demo: simulated upload — our team verifies within 24h.</p><button onclick="toast('Documents attached (demo). KYC file hash recorded.','ok')" class="mt-2 text-[12.5px] font-bold bg-paper border border-line px-4 py-2 rounded-full">Choose files</button></div><div class="flex gap-2 mt-4"><button onclick="suNext(1)" class="flex-1 border border-line font-bold py-3.5 rounded-2xl">← Back</button><button onclick="suNext(3)" class="flex-[2] bg-ink text-white font-bold py-3.5 rounded-2xl">Continue → Policy →</button></div></div>
+    <div id="su3" class="hidden mt-4"><label class="text-[12px] font-bold">BROKERAGE POLICY (mandatory, public) *</label><select id="suPolicy" class="mt-1 w-full h-12 rounded-2xl border border-line bg-white px-3 text-[13px] font-semibold"><option>15 days brokerage · No visit fee</option><option>1 month brokerage · No visit fee</option><option>15 days brokerage · ₹199 visit (adjustable)</option><option>No brokerage (owner-pays) · No visit fee</option></select><label class="mt-3 flex gap-2 text-[12.5px] font-medium bg-mist border border-pine/25 rounded-2xl p-3"><input type="checkbox" checked class="w-4 h-4 accent-[#0B7A55]"> I agree my badge is earned via KYC — <b>payment can never buy verification.</b></label><div class="flex gap-2 mt-4"><button onclick="suNext(2)" class="flex-1 border border-line font-bold py-3.5 rounded-2xl">← Back</button><button onclick="submitBrokerSignup()" class="flex-[2] bg-pine text-white font-bold py-3.5 rounded-2xl">Submit for verification →</button></div></div>
+  </div>
+</div>
+
+<div id="toastBox" class="fixed top-20 right-4 z-[100] space-y-2 w-[320px] max-w-[calc(100vw-2rem)]"></div>
+
+<script>
+/* ==================== DATA ==================== */
+const U = (id,w=800)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+const IMG = {
+  a:U('photo-1522708323590-d24dbb6b0267'), b:U('photo-1502672260266-1c1ef2d93688'),
+  c:U('photo-1560448204-e02f11c3d0e2'), d:U('photo-1493809842364-78817add7ffb'),
+  e:U('photo-1560185009-5bf9f2849488'), f:U('photo-1600596542815-ffad4c1539a9'),
+  g:U('photo-1600585154340-be6161a56a0c'), h:U('photo-1600607687939-ce8a6c25118c'),
+  i:U('photo-1600566753086-00f18fb6b3ea'), j:U('photo-1595526114035-0d45ed16cfbf'),
+  k:U('photo-1616486338812-3dadae4b4ace'), l:U('photo-1600210492486-724fe5c67fb0'),
+  gate:U('photo-1587474260584-136574528ed5',600)
+};
+const P = {
+  B1:U('photo-1560250097-0b93528c311a',200), B2:U('photo-1573496359142-b8d87734a5a2',200),
+  B3:U('photo-1507003211169-0a1dd7228f2d',200), B4:U('photo-1472099645785-5658abf4ff4e',200),
+  B5:U('photo-1580489944761-15a19d654956',200), B6:U('photo-1500648767791-00dcc994a43e',200),
+  B7:U('photo-1544005313-94ddf0286df2',200), B8:U('photo-1506794778202-cad84cf45f1d',200)
+};
+
+let brokers = [
+  {id:'B1', name:'Rajesh Kumar', agency:'Raj Properties', photo:P.B1, verified:'verified', rating:4.7, reviews:84, recommend:92, accuracy:89, responseRate:96, responseTime:'~1.2h', areas:['Dwarka','Uttam Nagar','Janakpuri'], cats:['Family','2BHK','3BHK'], exp:8, tenure:'3y on platform', policy:'15 days brokerage · No visit fee · No hidden charges', vdate:'12 Mar 2024', complaints:2, resolved:2, kyc:'Aadhaar + Shop licence verified'},
+  {id:'B2', name:'Priya Sharma', agency:'Saket Homes', photo:P.B2, verified:'verified', rating:4.9, reviews:132, recommend:96, accuracy:94, responseRate:98, responseTime:'~45m', areas:['Saket','Hauz Khas','Greater Kailash'], cats:['Premium','Family','1BHK'], exp:6, tenure:'2.5y on platform', policy:'1 month brokerage · No visit fee', vdate:'08 Jul 2024', complaints:1, resolved:1, kyc:'Aadhaar + GST verified'},
+  {id:'B3', name:'Amit Verma', agency:'Laxmi Estates', photo:P.B3, verified:'verified', rating:4.5, reviews:67, recommend:88, accuracy:86, responseRate:91, responseTime:'~2h', areas:['Laxmi Nagar','Mukherjee Nagar','Dwarka'], cats:['Student','Budget','1BHK'], exp:5, tenure:'2y on platform', policy:'15 days brokerage · No visit fee', vdate:'21 Jan 2025', complaints:3, resolved:3, kyc:'PAN + Aadhaar verified'},
+  {id:'B4', name:'Sunil Yadav', agency:'Rohini Rentals', photo:P.B4, verified:'verified', rating:4.6, reviews:91, recommend:90, accuracy:88, responseRate:93, responseTime:'~1.5h', areas:['Rohini','Janakpuri','Pitampura'], cats:['Family','2BHK'], exp:10, tenure:'3.5y on platform', policy:'20 days brokerage · ₹0 visit fee', vdate:'02 Feb 2024', complaints:2, resolved:2, kyc:'Aadhaar + Shop licence verified'},
+  {id:'B5', name:'Kavya Malhotra', agency:'GK Luxury Living', photo:P.B5, verified:'verified', rating:4.8, reviews:56, recommend:95, accuracy:93, responseRate:97, responseTime:'~1h', areas:['Greater Kailash','Saket','Hauz Khas'], cats:['Luxury','3BHK','4BHK'], exp:7, tenure:'2y on platform', policy:'1 month brokerage · Accompanied visits', vdate:'15 Sep 2024', complaints:0, resolved:0, kyc:'GST + Aadhaar verified'},
+  {id:'B6', name:'Imran Khan', agency:'Karol Realty', photo:P.B6, verified:'verified', rating:4.4, reviews:73, recommend:86, accuracy:84, responseRate:89, responseTime:'~2.4h', areas:['Karol Bagh','Dwarka','Rajinder Nagar'], cats:['Family','Commercial'], exp:9, tenure:'4y on platform', policy:'1 month brokerage · No visit fee', vdate:'30 May 2023', complaints:4, resolved:3, kyc:'Aadhaar verified · agency re-check due'},
+  {id:'B7', name:'Neha Gupta', agency:'Hauz Khas Homes', photo:P.B7, verified:'pending', rating:0, reviews:0, recommend:0, accuracy:0, responseRate:0, responseTime:'—', areas:['Hauz Khas','Saket'], cats:['Co-living','1BHK'], exp:2, tenure:'Applied 2 days ago', policy:'15 days brokerage · No visit fee', vdate:'Pending review', complaints:0, resolved:0, kyc:'Aadhaar uploaded · agency proof pending'},
+  {id:'B8', name:'QuickDeal Properties', agency:'QuickDeal', photo:P.B8, verified:'flagged', rating:3.1, reviews:19, recommend:41, accuracy:52, responseRate:64, responseTime:'~8h', areas:['Dwarka','Rohini'], cats:['Budget'], exp:1, tenure:'4m on platform', policy:'Undisclosed — under review', vdate:'Suspended 28 Sep 2026', complaints:11, resolved:3, kyc:'ID mismatch · advance-fee complaints ×6'}
+];
+
+let listings = [
+  {id:'L001', propId:'DL-DWK-004821', title:'2 BHK Apartment', locality:'Dwarka', sector:'Sector 12, Near Metro', bhk:2, type:'Apartment', rent:24000, deposit:48000, furnishing:'Semi-Furnished', area:1050, floor:'3 / 5', amenities:['Parking','Lift','Power Backup','Park Facing','24x7 Security'], avail:'10 Oct 2026', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.a,IMG.b,IMG.h], brokerId:'B1', hrs:2, verification:'verified', desc:'Sunlit park-facing 2 BHK, 5 min from Dwarka Sec-12 metro. Modular kitchen, both rooms with wardrobes, east-facing balconies. Family preferred. Society gate verified.', views:342, enq:18},
+  {id:'L002', propId:'DL-DWK-004821', title:'2 BHK Apartment (Same Property)', locality:'Dwarka', sector:'Sector 12, Near Metro', bhk:2, type:'Apartment', rent:24500, deposit:49000, furnishing:'Semi-Furnished', area:1050, floor:'3 / 5', amenities:['Parking','Lift','Power Backup','Park Facing'], avail:'10 Oct 2026', brok:'20 days', brokDays:20, visitFee:0, otherFee:0, photos:[IMG.a,IMG.b,IMG.h], brokerId:'B3', hrs:9, verification:'verified', desc:'Same verified property via second broker. Compare brokerage before you decide — photos hash-matched 98.2%.', views:187, enq:9},
+  {id:'L003', propId:'DL-DWK-004821', title:'2 BHK Apartment (Same Property)', locality:'Dwarka', sector:'Sector 12, Near Metro', bhk:2, type:'Apartment', rent:25000, deposit:50000, furnishing:'Semi-Furnished', area:1050, floor:'3 / 5', amenities:['Parking','Lift','Park Facing'], avail:'12 Oct 2026', brok:'1 month', brokDays:30, visitFee:200, otherFee:0, photos:[IMG.a,IMG.b,IMG.h], brokerId:'B6', hrs:26, verification:'verified', desc:'Third offering for the same property ID. Visit fee ₹200 adjustable on closure. Choose the broker you trust.', views:98, enq:4},
+  {id:'L004', propId:'DL-SKT-001102', title:'3 BHK Builder Floor', locality:'Saket', sector:'J-Block, Near Max Hospital', bhk:3, type:'Builder Floor', rent:55000, deposit:110000, furnishing:'Fully-Furnished', area:1650, floor:'2 / 3', amenities:['Parking','Lift','AC ×4','Modular Kitchen','Terrace Access'], avail:'15 Oct 2026', brok:'1 month', brokDays:30, visitFee:0, otherFee:0, photos:[IMG.f,IMG.i,IMG.k], brokerId:'B2', hrs:5, verification:'verified', desc:'Premium furnished floor for working couples / small family. Italian flooring, power backup, stilt parking. Owner documents with broker.', views:512, enq:31},
+  {id:'L005', propId:'DL-LXN-002344', title:'1 BHK Independent Floor', locality:'Laxmi Nagar', sector:'Near Vikas Marg, Metro 2 min', bhk:1, type:'Independent Floor', rent:13500, deposit:27000, furnishing:'Semi-Furnished', area:600, floor:'1 / 3', amenities:['Metro Nearby','Water 24x7','Separate Entry'], avail:'Immediate', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.e,IMG.j,IMG.b], brokerId:'B3', hrs:3, verification:'verified', desc:'Ideal for singles / students. Separate entry, no interference, metro at doorstep. Owner-verified via broker.', views:428, enq:42},
+  {id:'L006', propId:'DL-RHN-003771', title:'2 BHK DDA Flat (Renovated)', locality:'Rohini', sector:'Sector 7, Pocket B', bhk:2, type:'DDA Flat', rent:18500, deposit:37000, furnishing:'Semi-Furnished', area:900, floor:'2 / 4', amenities:['Parking','Park Facing','Water 24x7'], avail:'20 Oct 2026', brok:'20 days', brokDays:20, visitFee:0, otherFee:0, photos:[IMG.d,IMG.c,IMG.e], brokerId:'B4', hrs:30, verification:'verified', desc:'Freshly renovated DDA flat, new bath fittings + paint. Gated pocket, family crowd. Broker reconfirmed yesterday.', views:264, enq:16},
+  {id:'L007', propId:'DL-KRB-009811', title:'2 BHK — Bait-price suspect', locality:'Karol Bagh', sector:'Ajmal Khan Rd (flagged)', bhk:2, type:'Apartment', rent:9500, deposit:20000, furnishing:'Fully-Furnished', area:1100, floor:'—', amenities:['AC','Furnished'], avail:'Immediate', brok:'Undisclosed', brokDays:0, visitFee:500, otherFee:1500, photos:[IMG.f,IMG.g,IMG.k], brokerId:'B8', hrs:190, verification:'flagged', desc:'⚑ AUTO-FLAG: price 58% below locality median · stock-photo hash match ×4 properties · 6 advance-fee complaints on broker. Under moderation — do not pay token.', views:891, enq:3, flags:['Price outlier −58%','Stock images ×4','Advance-fee complaints ×6','Undisclosed brokerage']},
+  {id:'L008', propId:'DL-GK2-005512', title:'3 BHK Luxury Apartment', locality:'Greater Kailash', sector:'GK-2, M-Block', bhk:3, type:'Apartment', rent:68000, deposit:136000, furnishing:'Fully-Furnished', area:1900, floor:'4 / 6', amenities:['Lift','Club Access','Concierge','Covered Parking ×2','Pet Friendly'], avail:'01 Nov 2026', brok:'1 month', brokDays:30, visitFee:0, otherFee:0, photos:[IMG.g,IMG.h,IMG.i], brokerId:'B5', hrs:12, verification:'verified', desc:'Designer-furnished GK-2 residence, Miele kitchen, servant room, south Delhi society with club. For CXO / expat families.', views:389, enq:22},
+  {id:'L009', propId:'DL-MNJ-006203', title:'1 BHK Student Studio', locality:'Mukherjee Nagar', sector:'Near Batra Cinema', bhk:1, type:'Studio', rent:11000, deposit:22000, furnishing:'Furnished', area:450, floor:'3 / 4', amenities:['WiFi Ready','Tiffin Allowed','Study Table','Metro 5 min'], avail:'Immediate', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.j,IMG.e,IMG.d], brokerId:'B3', hrs:7, verification:'verified', desc:'Coaching-hub favourite. Quiet floor, study setup, cook allowed. 200+ UPSC aspirants placed by this broker.', views:623, enq:58},
+  {id:'L010', propId:'DL-HZK-007190', title:'2 BHK Barsati + Terrace', locality:'Hauz Khas', sector:'Near Lake, G-Block', bhk:2, type:'Barsati', rent:27000, deposit:54000, furnishing:'Semi-Furnished', area:950, floor:'3 / 3 + Terrace', amenities:['Private Terrace','Lake View','Pet Friendly'], avail:'18 Oct 2026', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.k,IMG.l,IMG.a], brokerId:'B7', hrs:50, verification:'pending', desc:'Charming barsati with 400 sq.ft terrace overlooking the lake. Broker KYC pending — listing visible after approval.', views:74, enq:2},
+  {id:'L011', propId:'DL-DWK-004933', title:'3 BHK Corner Apartment', locality:'Dwarka', sector:'Sector 6, Near Market', bhk:3, type:'Apartment', rent:34000, deposit:68000, furnishing:'Semi-Furnished', area:1400, floor:'5 / 8', amenities:['Lift','Parking','Club','Power Backup'], avail:'25 Oct 2026', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.c,IMG.i,IMG.g], brokerId:'B1', hrs:18, verification:'verified', desc:'Corner 3 BHK with double balcony, society club + pool. Genuine family inventory, owner NOC available.', views:298, enq:14},
+  {id:'L012', propId:'DL-SKT-001540', title:'1 BHK Cozy Floor', locality:'Saket', sector:'Near Metro Gate 2', bhk:1, type:'Independent Floor', rent:18000, deposit:36000, furnishing:'Furnished', area:550, floor:'Ground', amenities:['Metro 2 min','Separate Entry','AC'], avail:'Immediate', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.b,IMG.d,IMG.j], brokerId:'B2', hrs:4, verification:'verified', desc:'Walk-to-metro 1 BHK for single professional. Ground floor with private patch. Verified this morning.', views:351, enq:27},
+  {id:'L013', propId:'DL-JNK-008120', title:'2 BHK — Stale, needs reconfirm', locality:'Janakpuri', sector:'C-Block', bhk:2, type:'DDA Flat', rent:21500, deposit:43000, furnishing:'Unfurnished', area:950, floor:'1 / 4', amenities:['Parking'], avail:'—', brok:'15 days', brokDays:15, visitFee:0, otherFee:0, photos:[IMG.d,IMG.e,IMG.c], brokerId:'B4', hrs:200, verification:'stale', desc:'Last verified 8 days ago. Ranked lower until broker reconfirms. Enquire only if you want us to nudge the broker.', views:120, enq:2},
+  {id:'L014', propId:'DL-UTM-009001', title:'1 RK Budget Room', locality:'Uttam Nagar', sector:'Near Metro Pillar 654', bhk:1, type:'1 RK', rent:9000, deposit:18000, furnishing:'Semi-Furnished', area:350, floor:'2 / 4', amenities:['Metro Nearby','Water 24x7'], avail:'Immediate', brok:'10 days', brokDays:10, visitFee:0, otherFee:0, photos:[IMG.e,IMG.j,IMG.l], brokerId:'B1', hrs:11, verification:'verified', desc:'Clean budget RK for single worker / student. Lowest brokerage slab on platform.', views:410, enq:35}
+];
+
+let leads = [
+  {id:'LD-2081', listingId:'L005', brokerId:'B3', userName:'Ananya Gupta', phone:'98110XXXXX', req:'Student / sharing', time:'06 Oct, 11:00 AM', msg:'Need near metro, budget 14k max. Is it still available?', status:'Visit Scheduled', date:'2 Oct 2026', visit:'06 Oct · 11 AM · Laxmi Nagar', mine:true},
+  {id:'LD-2074', listingId:'L001', brokerId:'B1', userName:'Rohit Malhotra', phone:'98990XXXXX', req:'Family relocation', time:'Evening', msg:'Family of 4, need parking + park facing.', status:'Contacted', date:'1 Oct 2026', visit:'—', mine:false},
+  {id:'LD-2071', listingId:'L004', brokerId:'B2', userName:'Sana Sheikh', phone:'99580XXXXX', req:'Ready in 15 days', time:'Weekend', msg:'Working couple, need fully furnished.', status:'New', date:'1 Oct 2026', visit:'—', mine:false},
+  {id:'LD-2066', listingId:'L009', brokerId:'B3', userName:'Aditya Rao', phone:'98110XXXXX', req:'Student', time:'Morning', msg:'UPSC aspirant, need quiet room.', status:'Visited', date:'29 Sep 2026', visit:'02 Oct · Visited ✓', mine:false},
+  {id:'LD-2060', listingId:'L008', brokerId:'B5', userName:'Meera Iyer', phone:'98110XXXXX', req:'Family', time:'Weekend', msg:'Expat family, need pet friendly.', status:'Negotiating', date:'27 Sep 2026', visit:'30 Sep · Visited ✓', mine:false}
+];
+
+let reviews = [
+  {brokerId:'B1', user:'Rohit M.', rating:5, text:'Flat exactly as photos. Broker disclosed 15-day brokerage upfront, zero visit fee. Visit on time.', date:'28 Sep 2026', tag:'DL-DWK-004821'},
+  {brokerId:'B1', user:'Farah K.', rating:4, text:'Good communication, one reschedule but informed early. Availability was accurate.', date:'20 Sep 2026', tag:'DL-DWK-004933'},
+  {brokerId:'B2', user:'Sana S.', rating:5, text:'Most professional broker in Saket. Documents ready, no pressure for token.', date:'25 Sep 2026', tag:'DL-SKT-001102'},
+  {brokerId:'B3', user:'Aditya R.', rating:5, text:'Helped 3 hostels + this studio. Honest about water timings. Highly recommend for students.', date:'02 Oct 2026', tag:'DL-MNJ-006203'},
+  {brokerId:'B5', user:'Meera I.', rating:5, text:'White-glove experience for our relocation. Society verification handled.', date:'30 Sep 2026', tag:'DL-GK2-005512'}
+];
+
+let reports = [
+  {id:'RP-331', listingId:'L007', reason:'Advance / token demanded', details:'Asked ₹5,000 token on call before visit.', reporter:'Anonymous seeker', status:'Open · auto-escalated', date:'04 Oct 2026'},
+  {id:'RP-328', listingId:'L007', reason:'Fake / stock photos', details:'Same photos on 4 listings across portals.', reporter:'System · hash-match', status:'Open', date:'03 Oct 2026'},
+  {id:'RP-325', listingId:'L013', reason:'Already rented but advertised', details:'Guard said flat rented last week.', reporter:'Verified visitor', status:'Nudged broker', date:'02 Oct 2026'}
+];
+
+/* ==================== STATE ==================== */
+const state = { user:null, saved:new Set(['L001','L005']), filters:{query:'', locality:'All', bhk:'All', maxRent:100000, furnishing:'All', verifiedOnly:false, zeroVisit:false, sort:'fresh'}, brokerQuery:'', brokerArea:'All', currentProp:'L001', currentBroker:'B1', brokerSession:'B1', brokerTab:'overview', adminTab:'overview', enqFilter:'All', heroTab:'prop', contactListing:'L001', reportListing:'L007', reviewLead:null, stars:5 };
+
+const $ = id=>document.getElementById(id);
+const brokerById = id=>brokers.find(b=>b.id===id);
+const listingById = id=>listings.find(l=>l.id===id);
+const sameProp = pid=>listings.filter(l=>l.propId===pid);
+const fmt = n=>'₹'+Number(n).toLocaleString('en-IN');
+
+function freshness(l){
+  const h=l.hrs;
+  if(l.verification==='flagged') return {label:'⚑ Flagged — under review', cls:'bg-red-600 text-white', dot:'bg-white'};
+  if(l.verification==='pending') return {label:'Pending approval', cls:'bg-amber-400 text-ink', dot:'bg-ink'};
+  if(h<=24) return {label: h<=3?`Available — verified ${h===0?'just now':h+'h ago'}`:'Available — verified today', cls:'bg-emerald-400 text-ink', dot:'bg-ink'};
+  if(h<=72) return {label:`Available — verified ${Math.round(h/24)}d ago`, cls:'bg-emerald-100 text-pinedark border border-pine/30', dot:'bg-pine'};
+  if(h<=168) return {label:`Last verified ${Math.round(h/24)} days ago`, cls:'bg-amber-100 text-amber-900 border border-amber-300', dot:'bg-amber-600'};
+  return {label:'Stale — needs confirmation', cls:'bg-red-100 text-red-800 border border-red-300', dot:'bg-red-600'};
+}
+function vBadge(b){
+  if(b.verified==='verified') return `<span class="inline-flex items-center gap-1 bg-pine text-white text-[10.5px] font-extrabold px-2 py-0.5 rounded-full">✓ VERIFIED</span>`;
+  if(b.verified==='pending') return `<span class="inline-flex items-center gap-1 bg-amber-400 text-ink text-[10.5px] font-extrabold px-2 py-0.5 rounded-full">◷ PENDING KYC</span>`;
+  return `<span class="inline-flex items-center gap-1 bg-red-600 text-white text-[10.5px] font-extrabold px-2 py-0.5 rounded-full">⚑ FLAGGED</span>`;
+}
+
+/* ==================== NAV / MODAL / TOAST ==================== */
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const map={home:'view-home',properties:'view-properties',brokers:'view-brokers',property:'view-property',broker:'view-broker',enquiries:'view-enquiries',saved:'view-saved',brokerdash:'view-brokerdash',admin:'view-admin'};
+  $(map[name]).classList.add('active');
+  document.querySelectorAll('.navlink').forEach(n=>n.classList.remove('bg-ink','text-white'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  $('mobileMenu').classList.add('hidden');
+  if(name==='admin') renderAdmin();
+  if(name==='brokerdash') renderBrokerDash();
+  if(name==='enquiries') renderEnquiries();
+  if(name==='saved') renderSaved();
+  observeReveals();
+}
+function openModal(id){$(id).classList.remove('hidden')}
+function closeModal(id){$(id).classList.add('hidden')}
+function toast(msg,type='ok'){
+  const c = type==='ok'?'border-pine bg-[#0B1526]':'border-saffron bg-[#2A130A]';
+  const el=document.createElement('div');
+  el.className=`toast-in ${c} text-white border-l-4 rounded-2xl p-4 shadow-card text-[13px] font-semibold`;
+  el.innerHTML = (type==='ok'?'✅ ':'⚠️ ')+msg;
+  $('toastBox').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='all .4s';setTimeout(()=>el.remove(),400)},3600);
+}
+function scrollRow(id,dir){$(id).scrollBy({left:dir*340,behavior:'smooth'})}
+function switchHeroTab(t){state.heroTab=t;$('tabProp').className='flex-1 py-2.5 rounded-2xl text-[13px] font-extrabold transition '+(t==='prop'?'tab-active':'text-ink/60');$('tabBrok').className='flex-1 py-2.5 rounded-2xl text-[13px] font-extrabold transition '+(t==='brok'?'tab-active':'text-ink/60');}
+function quickSearch(q){$('heroQuery').value=q;heroSearch();}
+function heroSearch(){
+  const q=$('heroQuery').value, loc=$('heroLocality').value, bud=+$('heroBudget').value;
+  if(state.heroTab==='brok'){state.brokerQuery=q;state.brokerArea=loc;showView('brokers');renderBrokers();return;}
+  state.filters.query=q;state.filters.locality=loc;state.filters.maxRent=bud;
+  const m=q.match(/(\d)\s*bhk/i); if(m) state.filters.bhk=m[1];
+  showView('properties');renderProperties();toast(`Searching Delhi: “${q||'All properties'}” · ${loc} · under ${fmt(bud)}`);
+}
+
+/* ==================== CARDS ==================== */
+function propertyCard(l, compact=false){
+  const b=brokerById(l.brokerId), f=freshness(l), saved=state.saved.has(l.id);
+  const dup=sameProp(l.propId).length;
+  return `<div class="bg-cream border ${l.verification==='flagged'?'border-red-300':'border-line'} rounded-3xl overflow-hidden card-hover snap-start min-w-[300px] ${compact?'':'w-full'} flex flex-col">
+    <div class="relative">
+      <img src="${l.photos[0]}" onerror="this.src='${IMG.a}'" class="w-full h-[190px] object-cover" loading="lazy">
+      <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap"><span class="text-[10.5px] font-extrabold px-2.5 py-1 rounded-full ${f.cls} flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full ${f.dot} ${l.hrs<=5?'animate-pulse':''}"></span>${f.label}</span></div>
+      <div class="absolute top-3 right-3 flex gap-1.5">
+        <button onclick="toggleSave('${l.id}',event)" class="w-9 h-9 rounded-full ${saved?'bg-saffron text-white':'bg-white/90 text-ink'} flex items-center justify-center font-bold shadow">♥</button>
+        <button onclick="openReport('${l.id}')" title="Report" class="w-9 h-9 rounded-full bg-ink/70 text-white flex items-center justify-center text-[13px]">⚑</button>
+      </div>
+      <div class="absolute bottom-3 left-3 flex gap-1.5"><span class="bg-ink/85 backdrop-blur text-white text-[10px] font-mono px-2 py-1 rounded-full">${l.propId}</span>${dup>1?`<span class="bg-gold text-ink text-[10px] font-extrabold px-2 py-1 rounded-full">SAME PROPERTY · ${dup} BROKERS</span>`:''}</div>
+    </div>
+    <div class="p-4 flex-1 flex flex-col">
+      <div class="flex justify-between items-start gap-2"><div><div class="font-extrabold text-[15.5px] leading-tight">${l.bhk} BHK ${l.type}</div><div class="text-[12.5px] text-ink/55 font-medium">${l.locality} · ${l.sector}</div></div><div class="text-right"><div class="display font-black text-[20px]">${fmt(l.rent)}<span class="text-[11px] font-sans font-semibold text-ink/45">/mo</span></div></div></div>
+      <div class="mt-2 flex flex-wrap gap-1.5 text-[11px] font-bold"><span class="bg-paper border border-line px-2 py-1 rounded-full">${l.furnishing}</span><span class="bg-paper border border-line px-2 py-1 rounded-full">${l.area} sq.ft</span><span class="bg-paper border border-line px-2 py-1 rounded-full">${l.amenities[0]||'—'}</span></div>
+      <div class="mt-2.5 bg-paper border border-line rounded-2xl px-3 py-2 text-[12px] font-semibold flex justify-between"><span>Brokerage: <b class="${l.brokDays===0?'text-red-600':'text-pine'}">${l.brok}</b></span><span>Visit: <b class="${l.visitFee===0?'text-pine':'text-ink'}">${l.visitFee===0?'₹0':'₹'+l.visitFee}</b></span></div>
+      <div class="mt-2.5 flex items-center gap-2"><img src="${b.photo}" class="w-8 h-8 rounded-full object-cover border border-line"><div class="text-[12px] leading-tight"><b>${b.agency}</b> ${vBadge(b)}<div class="text-ink/55 font-semibold">${b.rating?('★ '+b.rating+' · '+b.reviews+' reviews'):'KYC pending'}</div></div></div>
+      <div class="mt-3 flex gap-2"><button onclick="openProperty('${l.id}')" class="flex-1 bg-ink text-white text-[13px] font-bold py-2.5 rounded-xl hover:bg-pine transition">View Property</button><button onclick="openContact('${l.id}')" class="flex-1 border-2 border-pine text-pinedark text-[13px] font-bold py-2.5 rounded-xl hover:bg-pine hover:text-white transition">Contact</button></div>
+    </div>
+  </div>`;
+}
+function brokerCard(b){
+  const count=listings.filter(l=>l.brokerId===b.id&&l.verification!=='pending').length;
+  return `<div class="bg-cream border ${b.verified==='flagged'?'border-red-300':'border-line'} rounded-3xl p-5 card-hover flex flex-col">
+    <div class="flex gap-4"><img src="${b.photo}" class="w-[72px] h-[72px] rounded-2xl object-cover border border-line"><div class="flex-1"><div class="flex items-center gap-2 flex-wrap"><b class="text-[16px]">${b.name}</b>${vBadge(b)}</div><div class="text-[13px] text-ink/55 font-semibold">${b.agency} · ${b.exp}y exp · ${b.tenure}</div><div class="text-[12.5px] font-bold mt-0.5">${b.rating?`<span class="text-amber-500">★</span> <b>${b.rating}</b> · ${b.reviews} verified reviews · <span class="text-pine">${b.recommend}% recommend</span>`:'<span class="text-amber-600">Awaiting first verification</span>'}</div></div></div>
+    <div class="mt-3 flex flex-wrap gap-1.5 text-[11.5px] font-bold">${b.areas.map(a=>`<span class="bg-paper border border-line px-2.5 py-1 rounded-full">${a}</span>`).join('')}</div>
+    <div class="mt-3 grid grid-cols-3 gap-2 text-center text-[11.5px] font-bold bg-paper border border-line rounded-2xl p-2.5"><div><div class="text-pine text-[14px]">${b.responseRate||'—'}${b.responseRate?'%':''}</div>response</div><div><div class="text-[14px]">${b.responseTime}</div>resp. time</div><div><div class="text-[14px]">${count}</div>active</div></div>
+    <div class="mt-2 text-[12px] font-semibold bg-mist border border-pine/20 rounded-xl px-3 py-2 text-pinedark">◈ ${b.policy}</div>
+    ${b.verified==='flagged'?`<div class="mt-2 text-[12px] font-bold bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2">⚑ ${b.complaints} complaints · advance-fee pattern · ${b.resolved} resolved</div>`:''}
+    <div class="mt-3 flex gap-2"><button onclick="openBroker('${b.id}')" class="flex-1 bg-ink text-white text-[13px] font-bold py-2.5 rounded-xl hover:bg-pine transition">View Profile</button><button onclick="contactBrokerDirect('${b.id}')" class="flex-1 border-2 border-ink text-[13px] font-bold py-2.5 rounded-xl hover:bg-ink hover:text-white transition">Contact</button></div>
+  </div>`;
+}
+
+/* ==================== HOME RENDER ==================== */
+const localities=[{n:'Dwarka',img:IMG.a,avg:'₹24k',c:214},{n:'Saket',img:IMG.f,avg:'₹42k',c:132},{n:'Laxmi Nagar',img:IMG.e,avg:'₹13k',c:186},{n:'Rohini',img:IMG.d,avg:'₹18k',c:149},{n:'Karol Bagh',img:IMG.g,avg:'₹21k',c:98},{n:'Greater Kailash',img:IMG.h,avg:'₹58k',c:76},{n:'Mukherjee Nagar',img:IMG.j,avg:'₹11k',c:164},{n:'Hauz Khas',img:IMG.k,avg:'₹31k',c:88}];
+function renderHome(){
+  $('localityGrid').innerHTML=localities.map(l=>`<button onclick="filterLocality('${l.n}')" class="relative rounded-3xl overflow-hidden text-left card-hover h-[170px] group"><img src="${l.img}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700"><span class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></span><span class="absolute bottom-0 p-4 text-white w-full"><span class="font-extrabold text-[16px]">${l.n}</span><span class="block text-[12px] text-white/70 font-semibold">${l.c} live · avg ${l.avg}/mo · <span class="text-emerald-300">verified today</span></span></span><span class="absolute top-3 right-3 bg-white/90 text-ink text-[11px] font-extrabold px-2.5 py-1 rounded-full">→</span></button>`).join('');
+  const recent=listings.filter(l=>l.verification==='verified').sort((a,b)=>a.hrs-b.hrs).slice(0,8);
+  $('recentRow').innerHTML=recent.map(l=>propertyCard(l,true)).join('');
+  $('homeBrokers').innerHTML=brokers.filter(b=>b.verified==='verified').slice(0,4).map(brokerCard).join('');
+  $('dupPreview').innerHTML=sameProp('DL-DWK-004821').map(l=>{const b=brokerById(l.brokerId);return `<div class="bg-cream border border-line rounded-2xl p-3.5 flex items-center gap-3"><img src="${b.photo}" class="w-11 h-11 rounded-xl object-cover"><div class="flex-1 text-[12.5px]"><b>${b.agency}</b> ${vBadge(b)}<div class="text-ink/60 font-semibold">${fmt(l.rent)}/mo · ${l.brok} brokerage · Visit ${l.visitFee===0?'₹0':'₹'+l.visitFee} · ★ ${b.rating}</div></div><button onclick="openProperty('${l.id}')" class="text-[12px] font-extrabold bg-ink text-white px-3.5 py-2 rounded-xl">View</button></div>`}).join('');
+  $('heroAvatars').innerHTML=brokers.slice(0,5).map(b=>`<img src="${b.photo}" class="w-9 h-9 rounded-full border-2 border-white object-cover">`).join('')+`<span class="w-9 h-9 rounded-full bg-gold text-ink text-[11px] font-extrabold border-2 border-white flex items-center justify-center">2.3k</span>`;
+  const items=['✓ Phone-verified brokers only','✓ Brokerage disclosed before visit','✓ Freshness timestamp on every card','✓ Same-property duplicate grouping','✓ Advance-fee auto-flags','✓ Reviews only after verified visits','✓ Stale listings auto-expire','✓ Delhi-only density: 8 localities live'];
+  $('trustMarquee').innerHTML=(items.concat(items)).map(t=>`<span class="bg-paper border border-line px-4 py-1.5 rounded-full whitespace-nowrap">${t}</span>`).join('');
+}
+function filterLocality(n){state.filters.locality=n;showView('properties');renderProperties();}
+
+/* ==================== PROPERTIES ==================== */
+function renderProperties(){
+  const locs=['All',...new Set(listings.map(l=>l.locality))];
+  $('localityPills').innerHTML=locs.map(l=>`<button onclick="state.filters.locality='${l}';renderProperties()" class="text-[12px] font-bold px-3 py-1.5 rounded-full border ${state.filters.locality===l?'chip-active':'bg-white border-line'} transition">${l}</button>`).join('');
+  $('bhkPills').innerHTML=['All','1','2','3'].map(b=>`<button onclick="state.filters.bhk='${b}';renderProperties()" class="text-[12px] font-bold px-4 py-1.5 rounded-full border ${String(state.filters.bhk)===b?'chip-active':'bg-white border-line'} transition">${b==='All'?'Any':b+' BHK'}</button>`).join('');
+  $('furnPills').innerHTML=['All','Furnished','Semi-Furnished','Unfurnished'].map(f=>`<button onclick="state.filters.furnishing='${f}';renderProperties()" class="text-[12px] font-bold px-3 py-1.5 rounded-full border ${state.filters.furnishing===f?'chip-active':'bg-white border-line'} transition">${f==='All'?'Any':f}</button>`).join('');
+  $('mapDots').innerHTML=localities.map(l=>`<button onclick="filterLocality('${l.n}')" class="text-[11px] font-bold bg-white/15 hover:bg-pine border border-white/25 px-2.5 py-1 rounded-full backdrop-blur transition">● ${l.n}</button>`).join('');
+  let r=listings.filter(l=>{
+    const f=state.filters;
+    if(f.query){const q=f.query.toLowerCase();const b=brokerById(l.brokerId);if(!(l.locality+' '+l.title+' '+l.propId+' '+b.agency+' '+b.name+' '+l.bhk+'bhk '+l.rent).toLowerCase().includes(q))return false;}
+    if(f.locality!=='All'&&l.locality!==f.locality)return false;
+    if(f.bhk!=='All'&&String(l.bhk)!==String(f.bhk))return false;
+    if(l.rent>f.maxRent)return false;
+    if(f.furnishing!=='All'&&l.furnishing!==f.furnishing)return false;
+    if(f.verifiedOnly&&l.verification!=='verified')return false;
+    if(f.zeroVisit&&l.visitFee!==0)return false;
+    return true;
+  });
+  if(state.filters.sort==='low')r.sort((a,b)=>a.rent-b.rent);
+  else if(state.filters.sort==='high')r.sort((a,b)=>b.rent-a.rent);
+  else if(state.filters.sort==='rated')r.sort((a,b)=>brokerById(b.brokerId).rating-brokerById(a.brokerId).rating);
+  else r.sort((a,b)=>a.hrs-b.hrs);
+  $('propCount').innerHTML=`<b class="text-ink">${r.length} results</b> in Delhi · ${r.filter(l=>l.verification==='verified'&&l.hrs<=24).length} verified today · ${new Set(r.map(l=>l.propId)).size} unique properties`;
+  $('activeFilterChips').innerHTML=(state.filters.query?`<span class="bg-white/15 border border-white/20 px-3 py-1.5 rounded-full">“${state.filters.query}” <button onclick="state.filters.query='';$('propSearch').value='';renderProperties()">✕</button></span>`:'')+(state.filters.locality!=='All'?`<span class="bg-white/15 border border-white/20 px-3 py-1.5 rounded-full">${state.filters.locality} <button onclick="state.filters.locality='All';renderProperties()">✕</button></span>`:'');
+  $('propertiesGrid').innerHTML=r.length?r.map(l=>propertyCard(l)).join(''):`<div class="col-span-full bg-cream border border-line rounded-3xl p-10 text-center"><div class="text-[40px]">🔍</div><b>No matches — try widening budget or clearing “verified only”.</b><p class="text-[13px] text-ink/55 mt-1">Stale bait listings are hidden by design. That's the point.</p><button onclick="clearFilters()" class="mt-4 bg-ink text-white text-[13px] font-bold px-6 py-3 rounded-2xl">Clear filters</button></div>`;
+}
+function clearFilters(){state.filters={query:'',locality:'All',bhk:'All',maxRent:100000,furnishing:'All',verifiedOnly:false,zeroVisit:false,sort:'fresh'};$('propSearch').value='';renderProperties();}
+
+/* ==================== BROKERS ==================== */
+function renderBrokers(){
+  let r=brokers.filter(b=>{
+    if(state.brokerArea!=='All'&&!b.areas.includes(state.brokerArea))return false;
+    if(state.brokerQuery){const q=state.brokerQuery.toLowerCase();if(!(b.name+' '+b.agency+' '+b.areas.join(' ')).toLowerCase().includes(q))return false;}
+    return true;
+  });
+  r.sort((a,b)=>(b.verified==='verified')-(a.verified==='verified')||b.rating-a.rating);
+  $('brokersGrid').innerHTML=r.map(brokerCard).join('')||'<p class="text-ink/60 font-semibold">No brokers match.</p>';
+}
+
+/* ==================== PROPERTY DETAIL ==================== */
+function openProperty(id){state.currentProp=id;renderPropertyDetail();showView('property');}
+function renderPropertyDetail(){
+  const l=listingById(state.currentProp), b=brokerById(l.brokerId), f=freshness(l);
+  const group=sameProp(l.propId), rel=listings.filter(x=>x.locality===l.locality&&x.id!==l.id).slice(0,3);
+  const revs=reviews.filter(r=>r.brokerId===b.id);
+  $('propertyDetailContent').innerHTML=`
+  <div class="grid lg:grid-cols-[1.15fr_.85fr] gap-6">
+    <div>
+      <div class="relative rounded-[24px] overflow-hidden border border-line bg-cream">
+        <img id="galMain" src="${l.photos[0]}" class="w-full h-[340px] sm:h-[420px] object-cover">
+        <div class="absolute top-4 left-4 flex gap-2 flex-wrap"><span class="text-[11.5px] font-extrabold px-3 py-1.5 rounded-full ${f.cls}">${f.label}</span><span class="bg-ink/85 text-white text-[11px] font-mono px-3 py-1.5 rounded-full">${l.propId}</span></div>
+        <div class="absolute top-4 right-4 flex gap-2"><button onclick="toggleSave('${l.id}',event)" class="h-10 px-4 rounded-full ${state.saved.has(l.id)?'bg-saffron text-white':'bg-white/90'} text-[13px] font-bold shadow">${state.saved.has(l.id)?'♥ Saved':'♡ Save'}</button><button onclick="openReport('${l.id}')" class="h-10 px-4 rounded-full bg-ink/70 text-white text-[13px] font-bold">⚑ Report</button></div>
+      </div>
+      <div class="mt-3 grid grid-cols-3 gap-3">${l.photos.map((p,i)=>`<img onclick="document.getElementById('galMain').src='${p}'" src="${p}" class="h-[90px] object-cover rounded-2xl border-2 border-transparent hover:border-pine cursor-pointer transition">`).join('')}</div>
+      ${l.flags?`<div class="mt-4 bg-red-50 border-2 border-red-200 rounded-3xl p-5"><b class="text-red-700 text-[14px]">⚑ Automated fraud flags on this listing</b><div class="mt-2 flex flex-wrap gap-2">${l.flags.map(fl=>`<span class="bg-red-600 text-white text-[11.5px] font-bold px-3 py-1.5 rounded-full">${fl}</span>`).join('')}</div><p class="text-[12.5px] text-red-700/80 mt-2 font-medium">Do not pay any token/advance. This listing is under human moderation.</p></div>`:''}
+      <div class="mt-4 bg-cream border border-line rounded-3xl p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3"><div><h1 class="display font-black text-[30px] leading-tight">${l.bhk} BHK ${l.type} — ${l.locality}</h1><p class="text-[13.5px] text-ink/55 font-medium">${l.sector} · ${l.area} sq.ft · Floor ${l.floor} · Available ${l.avail}</p></div><div class="text-right"><div class="display font-black text-[32px]">${fmt(l.rent)}<span class="text-[13px] font-sans text-ink/45">/mo</span></div><div class="text-[12px] font-bold text-pine">Last availability confirmation: ${l.hrs<=24?l.hrs+'h ago ✓ fresh':Math.round(l.hrs/24)+'d ago'}</div></div></div>
+        <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[12.5px] font-bold">
+          <div class="bg-paper border border-line rounded-2xl p-3"><div class="text-ink/45 text-[10.5px] tracking-widest">FURNISHING</div>${l.furnishing}</div>
+          <div class="bg-paper border border-line rounded-2xl p-3"><div class="text-ink/45 text-[10.5px] tracking-widest">AREA</div>${l.area} sq.ft</div>
+          <div class="bg-paper border border-line rounded-2xl p-3"><div class="text-ink/45 text-[10.5px] tracking-widest">FLOOR</div>${l.floor}</div>
+          <div class="bg-paper border border-line rounded-2xl p-3"><div class="text-ink/45 text-[10.5px] tracking-widest">VIEWS</div>${l.views} · ${l.enq} enquiries</div>
+        </div>
+        <p class="mt-4 text-[14.5px] leading-relaxed text-ink/75">${l.desc}</p>
+        <div class="mt-3 flex flex-wrap gap-2">${l.amenities.map(a=>`<span class="bg-mist border border-pine/20 text-pinedark text-[12px] font-bold px-3 py-1.5 rounded-full">✓ ${a}</span>`).join('')}</div>
+        <div class="mt-5"><b class="text-[13px] tracking-widest">FRESHNESS TIMELINE</b><div class="mt-2 flex items-center gap-1.5">${['Listed','Photo-hash pass','Broker reconfirmed','Available now'].map((s,i)=>`<div class="flex-1 text-center"><div class="h-2 rounded-full ${i<3||l.verification==='verified'?'bg-pine':'bg-line'}"></div><div class="text-[10.5px] font-bold mt-1 ${i<3?'text-pinedark':'text-ink/40'}">${s}</div></div>`).join('')}</div></div>
+      </div>
+      <div class="mt-4 bg-ink text-white rounded-3xl p-6">
+        <b class="text-[13px] tracking-widest text-gold">MANDATORY TRANSPARENCY · NO HIDDEN CHARGES</b>
+        <div class="mt-3 overflow-hidden rounded-2xl border border-white/15 text-[13.5px] font-semibold">
+          ${[['Monthly rent',fmt(l.rent)],['Security deposit',fmt(l.deposit)],['Brokerage',l.brok+(l.brokDays?' ('+fmt(Math.round(l.rent*l.brokDays/30))+' one-time)':'')],['Visit fee',l.visitFee===0?'₹0 — free visit':'₹'+l.visitFee],['Other mandatory fee',l.otherFee===0?'₹0':'₹'+l.otherFee],['Total to move in',fmt(l.rent+l.deposit+Math.round(l.rent*l.brokDays/30)+l.visitFee)]].map((r,i)=>`<div class="flex justify-between px-4 py-2.5 ${i%2?'bg-white/[.04]':'bg-white/[.08]'} ${i===5?'!bg-pine font-extrabold':''}"><span class="text-white/70">${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+        </div>
+        <p class="text-[12px] text-white/55 mt-2">You must see this table before contacting. No hidden mandatory charge is permitted on Thikana.</p>
+      </div>
+      ${group.length>1?`<div class="mt-4 bg-cream border-2 border-gold/60 rounded-3xl p-6"><b class="text-[14px]">◈ Same property — ${group.length} verified brokers <span class="font-mono text-[12px] text-ink/50">${l.propId}</span></b><p class="text-[12.5px] text-ink/60 font-medium">We merged duplicates. Compare and pick the broker you trust — not the loudest advertiser.</p><div class="mt-3 space-y-2">${group.map(g=>{const gb=brokerById(g.brokerId);return `<div class="flex items-center gap-3 bg-paper border ${g.id===l.id?'border-pine':'border-line'} rounded-2xl p-3"><img src="${gb.photo}" class="w-10 h-10 rounded-xl object-cover"><div class="flex-1 text-[12.5px]"><b>${gb.agency}</b> ${vBadge(gb)} <span class="text-ink/55">· ★${gb.rating} · ${g.brok} · Visit ${g.visitFee===0?'₹0':'₹'+g.visitFee}</span></div><b class="text-[14px]">${fmt(g.rent)}</b>${g.id===l.id?'<span class="text-[10px] font-extrabold bg-pine text-white px-2 py-1 rounded-full">VIEWING</span>':`<button onclick="openProperty('${g.id}')" class="text-[11.5px] font-bold border border-ink px-3 py-1.5 rounded-full">View</button>`}</div>`}).join('')}</div></div>`:''}
+      <div class="mt-4 bg-cream border border-line rounded-3xl p-6"><b class="text-[15px]">Broker reviews · ${b.rating?b.rating+'/5 — '+b.reviews+' verified reviews':''}</b>${b.rating?`<div class="mt-2 grid grid-cols-3 gap-2 text-center text-[12px] font-bold"><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.recommend}%</div>would recommend</div><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.accuracy}%</div>availability accuracy</div><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.responseRate}%</div>response rate</div></div>`:''}<div class="mt-3 space-y-2">${revs.map(r=>`<div class="bg-paper border border-line rounded-2xl p-4 text-[13px]"><div class="flex justify-between"><b>${r.user}</b><span class="text-gold font-bold">${'★'.repeat(r.rating)}</span></div><p class="text-ink/70 mt-1">${r.text}</p><div class="text-[11px] text-ink/45 mt-1 font-mono">${r.tag} · ${r.date} · verified visit ✓</div></div>`).join('')||'<p class="text-[13px] text-ink/50">No reviews yet — reviews unlock only after a verified visit.</p>'}</div></div>
+    </div>
+    <div class="lg:sticky lg:top-[84px] self-start space-y-4">
+      <div class="bg-cream border border-line rounded-3xl p-6 shadow-card">
+        <div class="flex gap-4"><img src="${b.photo}" class="w-[68px] h-[68px] rounded-2xl object-cover"><div><div class="flex items-center gap-2 flex-wrap"><b class="text-[16px]">${b.agency}</b>${vBadge(b)}</div><div class="text-[12.5px] text-ink/55 font-semibold">${b.name} · ${b.exp}y exp · Verified ${b.vdate}</div><div class="text-[12.5px] font-bold mt-0.5">★ ${b.rating||'—'} · ${b.reviews} reviews · <span class="text-pine">${b.responseRate}% responds ${b.responseTime}</span></div></div></div>
+        <div class="mt-3 text-[12px] font-semibold bg-mist border border-pine/20 rounded-2xl p-3 text-pinedark">◈ ${b.policy}<br><span class="text-ink/55">Serves: ${b.areas.join(', ')}</span></div>
+        <div class="mt-3 grid grid-cols-2 gap-2"><button onclick="openContact('${l.id}')" class="bg-pine text-white font-extrabold py-3.5 rounded-2xl text-[13.5px] hover:bg-pinedark transition">Contact Broker</button><button onclick="openContact('${l.id}',true)" class="bg-ink text-white font-extrabold py-3.5 rounded-2xl text-[13.5px] hover:bg-ink2 transition">Schedule Visit</button></div>
+        <p class="text-[11.5px] text-ink/50 text-center mt-2 font-medium">Phone stays masked · structured lead · tracked pipeline</p>
+      </div>
+      <div class="bg-paper border border-line rounded-3xl p-5 text-[12.5px]"><b class="tracking-widest text-[11px]">SAFETY CHECKLIST</b><ul class="mt-2 space-y-1.5 font-medium text-ink/70"><li>✓ Visit physically before any token</li><li>✓ Take written receipt for every payment</li><li>✓ Match owner ID with broker disclosure</li><li>✕ Never pay advance to “block” a flat</li></ul><button onclick="openReport('${l.id}')" class="mt-3 w-full text-saffrondark font-bold border border-saffron/40 bg-[#FFF1EC] py-2.5 rounded-xl text-[12.5px]">⚑ Report this listing</button></div>
+      <div><b class="text-[13px] tracking-widest">SIMILAR IN ${l.locality.toUpperCase()}</b><div class="mt-2 space-y-3">${rel.map(x=>`<button onclick="openProperty('${x.id}')" class="w-full text-left bg-cream border border-line rounded-2xl p-3 flex gap-3 hover:border-pine transition"><img src="${x.photos[0]}" class="w-20 h-16 rounded-xl object-cover"><span><b class="text-[13.5px]">${x.bhk} BHK · ${fmt(x.rent)}/mo</b><span class="block text-[12px] text-ink/55">${x.sector} · ${freshness(x).label}</span></span></button>`).join('')||'<p class="text-[12px] text-ink/50">No similar live.</p>'}</div></div>
+    </div>
+  </div>
+  <div class="lg:hidden fixed bottom-[64px] inset-x-3 z-30 bg-ink/95 sticky-contact border border-white/15 rounded-2xl p-3 flex gap-2"><button onclick="openContact('${l.id}')" class="flex-1 bg-pine text-white font-extrabold py-3 rounded-xl text-[13px]">Contact · ${fmt(l.rent)}</button><button onclick="toggleSave('${l.id}',event)" class="w-12 rounded-xl bg-white/10 text-white font-bold">♥</button></div>`;
+}
+
+/* ==================== BROKER PROFILE ==================== */
+function openBroker(id){state.currentBroker=id;renderBrokerProfile();showView('broker');}
+function renderBrokerProfile(){
+  const b=brokerById(state.currentBroker), mine=listings.filter(l=>l.brokerId===b.id), revs=reviews.filter(r=>r.brokerId===b.id);
+  $('brokerProfileContent').innerHTML=`
+  <div class="bg-ink text-white rounded-[28px] overflow-hidden relative"><div class="absolute inset-0 jali-light opacity-20"></div>
+    <div class="relative p-6 sm:p-10 flex flex-col sm:flex-row gap-6 items-start">
+      <img src="${b.photo}" class="w-28 h-28 rounded-3xl object-cover border-4 border-white/20">
+      <div class="flex-1"><div class="flex items-center gap-3 flex-wrap"><h1 class="display font-black text-[30px] sm:text-[38px]">${b.agency}</h1>${vBadge(b)}</div>
+      <p class="text-white/65 text-[14px] font-medium">${b.name} · ${b.exp} years · ${b.tenure} · KYC: ${b.kyc}</p>
+      <div class="mt-3 flex flex-wrap gap-2 text-[12px] font-bold"><span class="bg-gold text-ink px-3 py-1.5 rounded-full">★ ${b.rating||'—'} · ${b.reviews} verified reviews</span><span class="bg-white/10 border border-white/15 px-3 py-1.5 rounded-full">${b.recommend||'—'}% would recommend</span><span class="bg-white/10 border border-white/15 px-3 py-1.5 rounded-full">${b.responseRate||'—'}% response ${b.responseTime}</span><span class="bg-white/10 border border-white/15 px-3 py-1.5 rounded-full">Verified ${b.vdate}</span></div></div>
+      <div class="flex sm:flex-col gap-2 w-full sm:w-auto"><button onclick="contactBrokerDirect('${b.id}')" class="flex-1 bg-pine font-extrabold px-6 py-3.5 rounded-2xl text-[13.5px]">Contact Broker</button><button onclick="toast('Broker comparison saved to enquiries.','ok')" class="flex-1 border border-white/25 font-bold px-6 py-3.5 rounded-2xl text-[13.5px]">+ Compare</button></div>
+    </div>
+    <div class="relative grid grid-cols-2 sm:grid-cols-5 border-t border-white/10 text-center">${[['Active listings',mine.length],['Availability accuracy',(b.accuracy||'—')+(b.accuracy?'%':'')],['Complaints',b.complaints],['Resolved',b.resolved],['Areas',b.areas.length]].map(s=>`<div class="py-4 border-r border-white/10 last:border-0"><div class="display font-black text-[22px]">${s[1]}</div><div class="text-[10.5px] tracking-widest text-white/50 font-bold">${s[0].toUpperCase()}</div></div>`).join('')}</div>
+  </div>
+  <div class="mt-5 grid lg:grid-cols-[1fr_320px] gap-5">
+    <div>
+      <div class="bg-cream border border-line rounded-3xl p-6"><b>BROKERAGE POLICY · PUBLIC & BINDING</b><div class="mt-2 bg-mist border border-pine/25 rounded-2xl p-4 font-bold text-pinedark text-[14px]">◈ ${b.policy}</div><div class="mt-2 flex flex-wrap gap-1.5">${b.areas.map(a=>`<span class="bg-paper border border-line text-[12px] font-bold px-3 py-1.5 rounded-full">📍 ${a}</span>`).join('')}${b.cats.map(c=>`<span class="bg-ink text-white text-[12px] font-bold px-3 py-1.5 rounded-full">${c}</span>`).join('')}</div>
+      <p class="mt-3 text-[12px] text-ink/50 font-medium">Verification means we verified identity/business info on ${b.vdate}. It does not guarantee any transaction. ${b.complaints?`Complaints: ${b.complaints} filed · ${b.resolved} resolved with tenant confirmation.`:''}</p></div>
+      <h3 class="display font-black text-[22px] mt-6 mb-3">All active properties (${mine.length})</h3>
+      <div class="grid sm:grid-cols-2 gap-4">${mine.map(l=>propertyCard(l)).join('')||'<p class="text-ink/50 font-semibold">No active listings (pending KYC).</p>'}</div>
+      <h3 class="display font-black text-[22px] mt-6 mb-3">Verified reviews</h3>
+      <div class="space-y-2">${revs.map(r=>`<div class="bg-cream border border-line rounded-2xl p-4 text-[13.5px]"><div class="flex justify-between"><b>${r.user} <span class="text-[11px] font-mono text-pine bg-mist px-2 py-0.5 rounded-full ml-2">verified visit ✓</span></b><span class="text-gold font-bold">${'★'.repeat(r.rating)}</span></div><p class="text-ink/70 mt-1">${r.text}</p><div class="text-[11.5px] text-ink/45 mt-1">${r.tag} · ${r.date}</div></div>`).join('')||'<p class="text-ink/50">Reviews unlock after verified visits.</p>'}</div>
+    </div>
+    <div class="space-y-4"><div class="bg-cream border border-line rounded-3xl p-5"><b class="text-[13px] tracking-widest">REPUTATION BREAKDOWN</b><div class="mt-3 space-y-2 text-[12.5px] font-bold">${[['Overall',b.rating,5],['Availability accuracy',b.accuracy/20,5],['Communication',4.6,5],['Professionalism',4.5,5]].map(r=>`<div><div class="flex justify-between"><span>${r[0]}</span><span>${r[1]||'—'}</span></div><div class="h-2 bg-paper border border-line rounded-full mt-1 overflow-hidden"><div class="h-full bg-pine rounded-full" style="width:${(r[1]/r[2]*100)||0}%"></div></div></div>`).join('')}</div></div>
+    <div class="bg-[#FFF1EC] border border-saffron/30 rounded-3xl p-5 text-[13px]"><b>Had a bad visit?</b><p class="text-ink/60 mt-1">Reports go to human moderation + affect ranking within hours.</p><button onclick="openReport('${mine[0]?mine[0].id:'L001'}')" class="mt-3 w-full bg-saffron text-white font-bold py-2.5 rounded-xl">Report broker / listing</button></div></div>
+  </div>`;
+}
+
+/* ==================== SAVE ==================== */
+function toggleSave(id,e){if(e)e.stopPropagation();state.saved.has(id)?state.saved.delete(id):state.saved.add(id);$('savedCount').innerText=state.saved.size;toast(state.saved.has(id)?'Saved. We’ll nudge you if freshness slips to stale.':'Removed from saved.');renderProperties();renderHome();if($('view-saved').classList.contains('active'))renderSaved();if($('view-property').classList.contains('active'))renderPropertyDetail();}
+function renderSaved(){const r=[...state.saved].map(listingById).filter(Boolean);$('savedGrid').innerHTML=r.length?r.map(l=>propertyCard(l)).join(''):`<div class="col-span-full bg-cream border border-line rounded-3xl p-12 text-center"><div class="text-[44px]">♥</div><b>Nothing saved yet.</b><p class="text-[13px] text-ink/55">Tap the heart on any property card.</p><button onclick="showView('properties')" class="mt-4 bg-ink text-white text-[13px] font-bold px-6 py-3 rounded-2xl">Browse verified homes</button></div>`;}
+
+/* ==================== CONTACT / LEAD ==================== */
+function openContact(listingId,schedule=false){
+  if(!state.user){openAuth();toast('Login first — OTP keeps enquiries serious & spam-free.','warn');state.contactListing=listingId;return;}
+  state.contactListing=listingId;
+  const l=listingById(listingId),b=brokerById(l.brokerId);
+  $('contactSummary').innerHTML=`<div class="bg-paper border border-line rounded-2xl p-4 flex gap-3 items-center"><img src="${l.photos[0]}" class="w-20 h-16 rounded-xl object-cover"><div class="flex-1 text-[13px]"><b>${l.bhk} BHK · ${l.locality} · ${fmt(l.rent)}/mo</b><div class="text-ink/55 font-mono text-[11.5px]">${l.propId} · ${b.agency} ✓ Verified · ${b.responseTime} response</div></div></div>
+  <div class="mt-2 grid grid-cols-4 gap-1.5 text-center text-[11.5px] font-bold"><div class="bg-white border border-line rounded-xl p-2">Rent<br><b>${fmt(l.rent)}</b></div><div class="bg-white border border-line rounded-xl p-2">Deposit<br><b>${fmt(l.deposit)}</b></div><div class="bg-white border border-line rounded-xl p-2">Brokerage<br><b class="text-pine">${l.brok}</b></div><div class="bg-white border border-line rounded-xl p-2">Visit<br><b>${l.visitFee===0?'FREE':'₹'+l.visitFee}</b></div></div>`;
+  $('cName').value=state.user.name||'';$('cPhone').value=state.user.phone||'';
+  openModal('contactModal');
+}
+function contactBrokerDirect(brokerId){const l=listings.find(x=>x.brokerId===brokerId&&x.verification==='verified')||listings[0];openContact(l.id);}
+function submitLead(){
+  const n=$('cName').value.trim(),p=$('cPhone').value.trim();
+  if(n.length<2)return toast('Please enter your name.','warn');
+  if(!/^\d{10}$/.test(p))return toast('Enter a valid 10-digit phone.','warn');
+  if(!$('cAgree').checked)return toast('Please confirm you saw the charge table.','warn');
+  const l=listingById(state.contactListing);
+  const id='LD-'+(2090+leads.length);
+  leads.unshift({id,listingId:l.id,brokerId:l.brokerId,userName:n,phone:p.slice(0,5)+'XXXXX',req:$('cReq').value,time:$('cTime').value||'Flexible',msg:$('cMsg').value||'Interested — is it available?',status:'New',date:'5 Oct 2026',visit:$('cTime').value||'—',mine:true});
+  l.enq++;closeModal('contactModal');$('leadCount').innerText=leads.filter(x=>x.mine).length;
+  toast(`Enquiry ${id} sent to ${brokerById(l.brokerId).agency}. Typical response ${brokerById(l.brokerId).responseTime}.`);
+  showView('enquiries');renderEnquiries();
+}
+
+/* ==================== ENQUIRIES ==================== */
+const STAGES=['New','Contacted','Visit Scheduled','Visited','Negotiating','Closed'];
+function renderEnquiries(){
+  if(!state.user){$('enquiriesList').innerHTML=`<div class="bg-cream border border-line rounded-3xl p-10 text-center"><div class="text-[44px]">✉</div><b class="text-[18px] display">Login to see your pipeline</b><p class="text-[13.5px] text-ink/55">Enquiries, visit slots & reviews live here.</p><button onclick="openAuth()" class="mt-4 bg-ink text-white font-bold px-6 py-3 rounded-2xl text-[13.5px]">Login with OTP</button></div>`;$('enqFilterPills').innerHTML='';return;}
+  $('enqFilterPills').innerHTML=['All',...STAGES].map(s=>`<button onclick="state.enqFilter='${s}';renderEnquiries()" class="px-4 py-2 rounded-full border text-[12.5px] ${state.enqFilter===s?'chip-active':'bg-cream border-line'}">${s}</button>`).join('');
+  let mine=leads.filter(l=>l.mine||l.userName===state.user.name);
+  if(!mine.length)mine=leads.filter(l=>l.mine);
+  if(state.enqFilter!=='All')mine=mine.filter(l=>l.status===state.enqFilter||(state.enqFilter==='Visit Scheduled'&&l.status==='Visit Scheduled'));
+  $('enquiriesList').innerHTML=mine.length?mine.map(l=>{
+    const li=listingById(l.listingId),b=brokerById(l.brokerId),idx=STAGES.indexOf(l.status==='Visit Scheduled'?'Visit Scheduled':l.status);
+    return `<div class="bg-cream border border-line rounded-3xl p-5">
+    <div class="flex flex-col sm:flex-row gap-4"><img src="${li.photos[0]}" class="w-full sm:w-44 h-32 rounded-2xl object-cover">
+      <div class="flex-1"><div class="flex flex-wrap items-center gap-2"><b class="text-[15px]">${li.bhk} BHK · ${li.locality} · ${fmt(li.rent)}/mo</b><span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full status-${l.status.replace(' ','')}">${l.status.toUpperCase()}</span><span class="text-[11px] font-mono text-ink/45">${l.id} · ${li.propId}</span></div>
+      <div class="text-[12.5px] text-ink/60 font-medium mt-1 flex items-center gap-2"><img src="${b.photo}" class="w-6 h-6 rounded-full object-cover"> ${b.agency} ✓ Verified · ${b.responseTime} · ${l.date}</div>
+      <div class="mt-3 flex items-center gap-1">${STAGES.map((s,i)=>`<div class="flex-1"><div class="h-1.5 rounded-full ${i<=idx?'bg-pine':'bg-line'}"></div><div class="text-[9.5px] font-bold mt-1 ${i<=idx?'text-pinedark':'text-ink/35'} hidden sm:block">${s.toUpperCase()}</div></div>`).join('')}</div>
+      <div class="mt-2 text-[12.5px] bg-paper border border-line rounded-xl px-3 py-2">“${l.msg}” · Visit: <b>${l.visit}</b></div>
+      <div class="mt-3 flex flex-wrap gap-2 text-[12.5px] font-bold">
+        ${l.status==='New'?`<button onclick="advanceLead('${l.id}')" class="bg-ink text-white px-4 py-2 rounded-xl">Simulate broker contact →</button>`:''}
+        ${['Contacted','New'].includes(l.status)?`<span class="flex gap-2 items-center bg-white border border-line rounded-xl px-2 py-1"><input type="datetime-local" id="vs-${l.id}" class="text-[12px] font-semibold"><button onclick="scheduleVisit('${l.id}')" class="bg-pine text-white px-3 py-1.5 rounded-lg">Schedule visit</button></span>`:''}
+        ${l.status==='Visit Scheduled'?`<button onclick="advanceLead('${l.id}')" class="bg-pine text-white px-4 py-2 rounded-xl">Mark visited ✓</button>`:''}
+        ${['Visited','Negotiating'].includes(l.status)?`<button onclick="openReview('${l.id}')" class="bg-gold text-ink px-4 py-2 rounded-xl">★ Write verified review</button><button onclick="advanceLead('${l.id}')" class="border border-ink px-4 py-2 rounded-xl">Advance →</button>`:''}
+        ${l.status==='Closed'?'<span class="text-pine font-extrabold px-2">🎉 Closed — welcome home!</span>':''}
+        <button onclick="openBroker('${b.id}')" class="border border-line bg-white px-4 py-2 rounded-xl">Broker profile</button>
+      </div></div></div></div>`;
+  }).join(''):`<div class="bg-cream border border-line rounded-3xl p-10 text-center"><b>No enquiries in “${state.enqFilter}”.</b><br><button onclick="showView('properties')" class="mt-3 bg-ink text-white text-[13px] font-bold px-6 py-3 rounded-2xl">Find a verified home →</button></div>`;
+}
+function advanceLead(id){const l=leads.find(x=>x.id===id);const i=STAGES.indexOf(l.status);if(i<STAGES.length-1){l.status=STAGES[i+1];toast(`${id} moved to “${l.status}”. Broker & seeker see the same pipeline.`);}renderEnquiries();renderBrokerDash();}
+function scheduleVisit(id){const v=$('vs-'+id).value;if(!v)return toast('Pick a date & time for the visit.','warn');const l=leads.find(x=>x.id===id);l.visit=new Date(v).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});l.status='Visit Scheduled';toast(`Visit scheduled: ${l.visit}. Broker + society notified (demo).`);renderEnquiries();}
+
+/* ==================== REPORT / REVIEW ==================== */
+function openReport(listingId){state.reportListing=listingId;const l=listingById(listingId);$('reportTarget').innerText=`${l.propId} · ${l.bhk} BHK ${l.locality} · ${brokerById(l.brokerId).agency}`;openModal('reportModal');}
+function submitReport(){const r=document.querySelector('input[name=rep]:checked').value;const l=listingById(state.reportListing);reports.unshift({id:'RP-'+(332+reports.length),listingId:l.id,reason:r,details:$('reportDetails').value||'—',reporter:state.user?state.user.name:'Anonymous seeker',status:'Open · triaged',date:'5 Oct 2026'});if(!l.flags)l.flags=[];if(!l.flags.includes(r))l.flags.push(r);if(reports.filter(x=>x.listingId===l.id).length>=2&&l.verification!=='flagged'){l.verification='flagged';toast('Multiple reports: listing auto-flagged & de-ranked. Human review queued.','warn');}else toast('Report filed. Moderation typically responds in ~6 hours.');closeModal('reportModal');renderProperties();if($('view-property').classList.contains('active'))renderPropertyDetail();}
+function openReview(leadId){const l=leads.find(x=>x.id===leadId);if(!['Visited','Negotiating','Closed'].includes(l.status))return toast('Reviews unlock only after a verified visit.','warn');state.reviewLead=leadId;state.stars=5;drawStars();const li=listingById(l.listingId);$('reviewTarget').innerText=`${brokerById(l.brokerId).agency} · ${li.propId} · visit ${l.visit}`;openModal('reviewModal');}
+function drawStars(){$('starRow').innerHTML=[1,2,3,4,5].map(i=>`<span onclick="state.stars=${i};drawStars()" class="${i<=state.stars?'text-amber-400':'text-line'}">★</span>`).join('');}
+function submitReview(){const l=leads.find(x=>x.id===state.reviewLead);const b=brokerById(l.brokerId);const t=$('rText').value||'Verified visit completed. Details as listed.';reviews.unshift({brokerId:b.id,user:state.user?state.user.name.split(' ')[0]+' '+ (state.user.name.split(' ')[1]||'')[0]+'.':'Guest',rating:state.stars,text:t,date:'5 Oct 2026',tag:listingById(l.listingId).propId});b.reviews++;b.rating=Math.round(((b.rating*(b.reviews-1)+state.stars)/b.reviews)*10)/10;closeModal('reviewModal');toast(`Verified review published. ${b.agency} is now ${b.rating} ★ (${b.reviews}).`);renderEnquiries();}
+
+/* ==================== AUTH ==================== */
+function openAuth(){$('authStep1').classList.remove('hidden');$('authStep2').classList.add('hidden');openModal('authModal');}
+function sendOTP(){const p=$('authPhone').value.trim();if(!/^\d{10}$/.test(p))return toast('Enter a valid 10-digit number.','warn');$('otpPhoneView').innerText=p;$('authStep1').classList.add('hidden');$('authStep2').classList.remove('hidden');toast('OTP sent (demo code: 123456).');}
+function verifyOTP(){if($('authOTP').value.trim()!=='123456')return toast('Wrong OTP. Hint: 123456.','warn');const n=$('authName').value.trim()||'Delhi Seeker';state.user={name:n,phone:$('authPhone').value};$('authBtn').innerText='Hi, '+n.split(' ')[0];$('authBtn').classList.add('!bg-pine','!text-white','!border-pine');closeModal('authModal');toast(`Welcome, ${n}. Enquiries, saves & reviews are now live.`);renderEnquiries();}
+
+/* ==================== BROKER SIGNUP ==================== */
+function openBrokerSignup(){openModal('signupModal');suNext(1);}
+function suNext(n){[1,2,3].forEach(i=>$('su'+i).classList.add('hidden'));$('su'+n).classList.remove('hidden');[...$('suSteps').children].forEach((s,i)=>s.className='flex-1 h-1.5 rounded-full '+(i<n?'bg-pine':'bg-line'));}
+function submitBrokerSignup(){
+  const n=$('suName').value.trim(),p=$('suPhone').value.trim();if(n.length<2||!/^\d{10}$/.test(p))return toast('Name + valid 10-digit phone required.','warn');
+  const id='B'+(brokers.length+1);brokers.push({id,name:n,agency:$('suAgency').value||(n+' Estates'),photo:P.B2,verified:'pending',rating:0,reviews:0,recommend:0,accuracy:0,responseRate:0,responseTime:'—',areas:($('suAreas').value||'Dwarka').split(',').map(s=>s.trim()),cats:['Rental'],exp:1,tenure:'Applied just now',policy:$('suPolicy').value,vdate:'Pending review',complaints:0,resolved:0,kyc:'Docs uploaded · in queue'});
+  closeModal('signupModal');toast(`Application received. Broker ID ${id} is in the Admin verification queue.`);renderBrokers();
+}
+
+/* ==================== BROKER DASHBOARD ==================== */
+function renderBrokerDash(){
+  $('brokerSwitch').innerHTML=brokers.map(b=>`<option value="${b.id}" ${b.id===state.brokerSession?'selected':''}>${b.agency} ${b.verified==='verified'?'✓':'(pending)'}</option>`).join('');
+  const tabs=[['overview','Overview'],['listings','My Listings'],['add','+ Add Listing'],['leads','Lead Inbox'],['profile','Profile & KYC']];
+  $('brokerTabs').innerHTML=tabs.map(t=>`<button onclick="state.brokerTab='${t[0]}';renderBrokerDash()" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap ${state.brokerTab===t[0]?'bg-white text-ink':'bg-white/10 text-white/70 border border-white/15'}">${t[1]}</button>`).join('');
+  const b=brokerById(state.brokerSession), mine=listings.filter(l=>l.brokerId===b.id), inbox=leads.filter(l=>l.brokerId===b.id);
+  const fresh=mine.filter(l=>l.hrs<=72).length;
+  if(state.brokerTab==='overview'){
+    $('brokerDashContent').innerHTML=`
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      ${[['Active listings',mine.length,'+2 this week','bg-cream'],['Fresh (≤72h)',fresh+'/'+mine.length,mine.length-fresh+' need reconfirm','bg-mist'],['Open leads',inbox.filter(l=>!['Closed'].includes(l.status)).length,'2 need reply <2h','bg-cream'],['Rating',b.rating?b.rating+' ★':'—',b.reviews+' verified reviews','bg-cream']].map(s=>`<div class="${s[3]} border border-line rounded-3xl p-5"><div class="text-[11px] font-extrabold tracking-widest text-ink/50">${s[0].toUpperCase()}</div><div class="display font-black text-[30px]">${s[1]}</div><div class="text-[12px] font-bold text-pine">${s[2]}</div></div>`).join('')}
+    </div>
+    <div class="mt-4 grid lg:grid-cols-2 gap-4">
+      <div class="bg-cream border border-line rounded-3xl p-6"><b>Lead pipeline (this broker)</b><div class="h-[240px] mt-2"><canvas id="chFunnel"></canvas></div></div>
+      <div class="bg-cream border border-line rounded-3xl p-6"><b>Enquiries → visits (8 weeks)</b><div class="h-[240px] mt-2"><canvas id="chTrend"></canvas></div>
+        <div class="mt-3 flex gap-2"><button onclick="state.brokerTab='add';renderBrokerDash()" class="flex-1 bg-ink text-white text-[13px] font-bold py-3 rounded-2xl">+ Add property</button><button onclick="reconfirmAll('${b.id}')" class="flex-1 bg-pine text-white text-[13px] font-bold py-3 rounded-2xl">✓ Reconfirm all fresh</button></div></div>
+    </div>
+    <div class="mt-4 bg-amber-50 border border-amber-200 rounded-3xl p-5 text-[13px]"><b class="text-amber-800">⚠ Freshness nudge:</b> <span class="text-ink/70 font-medium">${mine.filter(l=>l.hrs>72).map(l=>l.propId).join(', ')||'All listings fresh. Great — you rank higher.'} ${mine.filter(l=>l.hrs>72).length?'— reconfirm to stop de-ranking.':''}</span></div>`;
+    drawBrokerCharts(inbox);
+  }
+  if(state.brokerTab==='listings'){
+    $('brokerDashContent').innerHTML=`<div class="bg-cream border border-line rounded-3xl overflow-hidden"><div class="p-5 flex justify-between items-center flex-wrap gap-2"><b>Inventory · ${mine.length} listings</b><button onclick="state.brokerTab='add';renderBrokerDash()" class="bg-ink text-white text-[12.5px] font-bold px-4 py-2.5 rounded-xl">+ Add listing</button></div>
+    <div class="overflow-x-auto"><table class="w-full text-[12.5px] min-w-[760px]"><thead><tr class="text-left text-ink/45 text-[11px] tracking-widest border-y border-line bg-paper"><th class="p-3">PROPERTY</th><th class="p-3">RENT</th><th class="p-3">FRESHNESS</th><th class="p-3">STATUS</th><th class="p-3">VIEWS</th><th class="p-3">ACTIONS</th></tr></thead><tbody>
+    ${mine.map(l=>{const f=freshness(l);return `<tr class="border-b border-line"><td class="p-3"><div class="flex gap-2 items-center"><img src="${l.photos[0]}" class="w-14 h-11 rounded-xl object-cover"><div><b>${l.bhk} BHK · ${l.locality}</b><div class="font-mono text-[11px] text-ink/50">${l.propId}</div></div></div></td><td class="p-3 font-bold">${fmt(l.rent)}</td><td class="p-3"><span class="text-[11px] font-extrabold px-2 py-1 rounded-full ${f.cls}">${f.label}</span></td><td class="p-3 font-bold">${l.verification}</td><td class="p-3">${l.views}</td><td class="p-3"><div class="flex gap-1.5"><button onclick="reconfirm('${l.id}')" class="bg-pine text-white text-[11.5px] font-bold px-3 py-1.5 rounded-lg">✓ Reconfirm</button><button onclick="expireListing('${l.id}')" class="border border-line bg-white text-[11.5px] font-bold px-3 py-1.5 rounded-lg">Expire</button></div></td></tr>`}).join('')}</tbody></table></div></div>`;
+  }
+  if(state.brokerTab==='add'){
+    $('brokerDashContent').innerHTML=`<div class="bg-cream border border-line rounded-3xl p-6 sm:p-8 max-w-3xl">
+    <b class="display text-[22px]">Add property — all fields mandatory</b><p class="text-[13px] text-ink/55 font-medium">Listings without brokerage, visit fee, photos or Property ID are rejected by moderation.</p>
+    <div class="mt-4 grid sm:grid-cols-3 gap-3 text-[13px]">
+      <label class="font-bold">TYPE<select id="fType" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-2"><option>Apartment</option><option>Builder Floor</option><option>Independent Floor</option><option>DDA Flat</option><option>Studio</option><option>1 RK</option><option>Barsati</option></select></label>
+      <label class="font-bold">BHK<select id="fBhk" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-2"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+      <label class="font-bold">LOCALITY<select id="fLoc" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-2"><option>Dwarka</option><option>Saket</option><option>Laxmi Nagar</option><option>Rohini</option><option>Karol Bagh</option><option>Greater Kailash</option><option>Mukherjee Nagar</option><option>Hauz Khas</option><option>Janakpuri</option><option>Uttam Nagar</option></select></label>
+      <label class="font-bold">SECTOR / LANDMARK<input id="fSec" placeholder="Sector 12, Near Metro" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">RENT ₹/mo<input id="fRent" type="number" value="22000" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">DEPOSIT ₹<input id="fDep" type="number" value="44000" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">FURNISHING<select id="fFurn" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-2"><option>Semi-Furnished</option><option>Furnished</option><option>Fully-Furnished</option><option>Unfurnished</option></select></label>
+      <label class="font-bold">AREA sq.ft<input id="fArea" type="number" value="1000" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">FLOOR<input id="fFloor" value="2 / 4" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">BROKERAGE<select id="fBrok" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-2"><option value="15">15 days</option><option value="20">20 days</option><option value="30">1 month</option><option value="10">10 days</option></select></label>
+      <label class="font-bold">VISIT FEE ₹<input id="fVisit" type="number" value="0" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+      <label class="font-bold">AVAILABLE FROM<input id="fAvail" value="Immediate" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+    </div>
+    <label class="block mt-3 text-[13px] font-bold">AMENITIES (comma separated)<input id="fAmen" value="Parking, Lift, Power Backup" class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+    <label class="block mt-3 text-[13px] font-bold">DESCRIPTION<input id="fDesc" value="Bright, ventilated flat near metro. Owner papers available." class="mt-1 w-full h-11 rounded-xl border border-line bg-white px-3"></label>
+    <button onclick="submitListing()" class="mt-4 w-full bg-pine text-white font-extrabold py-4 rounded-2xl">Submit → moderation + photo-hash check</button>
+    <p class="text-[12px] text-ink/50 mt-2 text-center">Gets a permanent Property ID · duplicate-address scan runs automatically.</p></div>`;
+  }
+  if(state.brokerTab==='leads'){
+    const stages=['All',...STAGES];
+    $('brokerDashContent').innerHTML=`<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">${stages.map(s=>`<button onclick="state.leadStage='${s}';renderBrokerDash()" class="px-4 py-2 rounded-full border text-[12.5px] font-bold whitespace-nowrap ${(state.leadStage||'All')===s?'chip-active':'bg-cream border-line'}">${s}</button>`).join('')}</div>
+    <div class="mt-3 grid lg:grid-cols-2 gap-3">${inbox.filter(l=>(state.leadStage||'All')==='All'||l.status===state.leadStage).map(l=>{const li=listingById(l.listingId);return `<div class="bg-cream border border-line rounded-3xl p-5"><div class="flex justify-between gap-2 flex-wrap"><div><b class="text-[14.5px]">${l.userName}</b> <span class="text-[11.5px] font-mono text-ink/45">${l.id}</span><div class="text-[12.5px] text-ink/60 font-medium">${li.bhk} BHK ${li.locality} · ${fmt(li.rent)} · ${li.propId}</div></div><select onchange="setLeadStatus('${l.id}',this.value)" class="h-10 rounded-xl border border-line bg-white text-[12.5px] font-bold px-2">${STAGES.map(s=>`<option ${s===l.status?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="mt-2 text-[13px] bg-paper border border-line rounded-xl p-3">“${l.msg}”<div class="text-[12px] text-ink/55 mt-1">Need: ${l.req} · Pref: ${l.time} · Visit: <b>${l.visit}</b> · ${l.date}</div></div>
+    <div class="mt-2 flex gap-2 text-[12px] font-bold"><button onclick="toast('Masked call connecting… broker number stays protected.','ok')" class="bg-ink text-white px-4 py-2 rounded-xl">☎ Call (masked)</button><button onclick="toast('WhatsApp thread exported to structured lead ${l.id}.','ok')" class="border border-line bg-white px-4 py-2 rounded-xl">Export chat</button></div></div>`}).join('')||'<p class="text-ink/55 font-semibold">No leads in this stage.</p>'}</div>`;
+  }
+  if(state.brokerTab==='profile'){
+    $('brokerDashContent').innerHTML=`<div class="grid lg:grid-cols-2 gap-4"><div class="bg-cream border border-line rounded-3xl p-6"><b>PUBLIC PROFILE</b><div class="mt-3 flex gap-4"><img src="${b.photo}" class="w-20 h-20 rounded-2xl object-cover"><div class="text-[13px] font-semibold">Name: <b>${b.name}</b><br>Agency: <b>${b.agency}</b><br>Areas: ${b.areas.join(', ')}<br>Policy: <span class="text-pine font-bold">${b.policy}</span></div></div><div class="mt-4 grid grid-cols-3 gap-2 text-center text-[12px] font-bold"><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.rating||'—'}</div>rating</div><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.responseRate||'—'}%</div>response</div><div class="bg-paper border border-line rounded-2xl p-3"><div class="display text-[20px]">${b.complaints}</div>complaints</div></div></div>
+    <div class="bg-cream border border-line rounded-3xl p-6"><b>KYC & VERIFICATION</b><div class="mt-3 space-y-2 text-[13px] font-semibold"><div class="flex justify-between bg-paper border border-line rounded-xl px-3 py-2.5"><span>Status</span><span>${vBadge(b)}</span></div><div class="flex justify-between bg-paper border border-line rounded-xl px-3 py-2.5"><span>Documents</span><span>${b.kyc}</span></div><div class="flex justify-between bg-paper border border-line rounded-xl px-3 py-2.5"><span>Verified on</span><span>${b.vdate}</span></div><div class="flex justify-between bg-paper border border-line rounded-xl px-3 py-2.5"><span>Resolution</span><span>${b.resolved}/${b.complaints} resolved</span></div></div><button onclick="toast('KYC re-verification requested. SLA 24h.','ok')" class="mt-4 w-full border-2 border-ink font-bold py-3 rounded-2xl text-[13px]">Request re-verification</button></div></div>`;
+  }
+}
+function setLeadStatus(id,v){leads.find(l=>l.id===id).status=v;toast(`${id} → ${v}. Seeker notified.`);renderBrokerDash();}
+function reconfirm(id){const l=listingById(id);l.hrs=0;l.verification='verified';toast(`${l.propId} reconfirmed just now. Ranking restored.`);renderBrokerDash();renderProperties();}
+function reconfirmAll(bid){listings.filter(l=>l.brokerId===bid).forEach(l=>{l.hrs=0;l.verification='verified';});toast('All inventory reconfirmed. Freshness badges updated.');renderBrokerDash();}
+function expireListing(id){const l=listingById(id);l.verification='stale';l.hrs=300;toast(`${l.propId} expired from active search (stale logic).`,'warn');renderBrokerDash();}
+function submitListing(){
+  const rent=+$('fRent').value;if(!rent||rent<1000)return toast('Enter a valid rent.','warn');
+  const loc=$('fLoc').value, pre='DL-'+loc.slice(0,3).toUpperCase();
+  const pid=pre+'-'+String(Math.floor(100000+Math.random()*899999));
+  const bd=+$('fBrok').value;
+  listings.unshift({id:'L'+(100+listings.length),propId:pid,title:$('fBhk').value+' BHK '+$('fType').value,locality:loc,sector:$('fSec').value,bhk:+$('fBhk').value,type:$('fType').value,rent,deposit:+$('fDep').value||rent*2,furnishing:$('fFurn').value,area:+$('fArea').value||800,floor:$('fFloor').value,amenities:$('fAmen').value.split(','),avail:$('fAvail').value,brok:bd===30?'1 month':bd+' days',brokDays:bd,visitFee:+$('fVisit').value||0,otherFee:0,photos:[IMG.c,IMG.d,IMG.k],brokerId:state.brokerSession,hrs:0,verification:'pending',desc:$('fDesc').value,views:0,enq:0});
+  toast(`Listing ${pid} submitted. Photo-hash + price-median checks running.`);state.brokerTab='listings';renderBrokerDash();renderProperties();
+}
+let brokerCharts={};
+function drawBrokerCharts(inbox){
+  if(typeof Chart==='undefined')return;
+  Object.values(brokerCharts).forEach(c=>c.destroy());brokerCharts={};
+  const counts=STAGES.map(s=>inbox.filter(l=>l.status===s).length||(s==='New'?2:s==='Contacted'?1:0));
+  const c1=$('chFunnel');if(c1)brokerCharts.f=new Chart(c1,{type:'bar',data:{labels:STAGES,datasets:[{data:counts,backgroundColor:['#E8E1D1','#93B4F5','#B9A7F5','#0B7A55','#F5A8B8','#0B1526'],borderRadius:10}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  const c2=$('chTrend');if(c2)brokerCharts.t=new Chart(c2,{type:'line',data:{labels:['W1','W2','W3','W4','W5','W6','W7','W8'],datasets:[{label:'Enquiries',data:[4,6,5,9,8,12,11,14],borderColor:'#0B7A55',tension:.4,fill:true,backgroundColor:'rgba(11,122,85,.12)'},{label:'Visits',data:[1,2,2,4,5,6,7,8],borderColor:'#E96A2B',tension:.4}]},options:{plugins:{legend:{position:'bottom'}}}});
+}
+
+/* ==================== ADMIN ==================== */
+function renderAdmin(){
+  const tabs=[['overview','North-star'],['verify','Verification queue'],['listings','Listings moderation'],['reports','Reports'],['dup','Duplicates & flags']];
+  $('adminTabs').innerHTML=tabs.map(t=>`<button onclick="state.adminTab='${t[0]}';renderAdmin()" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap ${state.adminTab===t[0]?'bg-white text-ink':'bg-white/10 text-white/70 border border-white/15'}">${t[1]}</button>`).join('');
+  const pendB=brokers.filter(b=>b.verified==='pending'), flagL=listings.filter(l=>l.verification==='flagged'||l.flags), staleL=listings.filter(l=>l.verification==='stale');
+  if(state.adminTab==='overview'){
+    $('adminContent').innerHTML=`
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      ${[['Verified visit rate ★','34%','+3.1 pts MoM · target 40%'],['Active verified ≤72h','78%','1,284 / 1,646 live'],['Broker response rate','93%','median 1.4h'],['Complaint rate','0.8%','−0.3 pts · 11 open']].map(m=>`<div class="bg-cream border border-line rounded-3xl p-5"><div class="text-[11px] font-extrabold tracking-widest text-ink/50">${m[0]}</div><div class="display font-black text-[32px]">${m[1]}</div><div class="text-[12px] font-bold text-pine">${m[2]}</div></div>`).join('')}
+    </div>
+    <div class="mt-4 grid lg:grid-cols-3 gap-4">
+      <div class="bg-cream border border-line rounded-3xl p-6 lg:col-span-2"><b>Verified visit rate — 12 weeks (north-star)</b><div class="h-[250px] mt-2"><canvas id="adMain"></canvas></div></div>
+      <div class="bg-cream border border-line rounded-3xl p-6"><b>Inventory health</b><div class="h-[250px] mt-2"><canvas id="adDonut"></canvas></div></div>
+    </div>
+    <div class="mt-4 grid sm:grid-cols-3 gap-3 text-[13px] font-semibold">
+      <div class="bg-cream border border-line rounded-2xl p-4">◈ Duplicate rate <b class="float-right">2.1% ↓</b><div class="text-ink/55 text-[12px]">groups merged this week: 34</div></div>
+      <div class="bg-cream border border-line rounded-2xl p-4">◈ Fake-listing interception <b class="float-right">41 blocked</b><div class="text-ink/55 text-[12px]">hash + outlier + KYC tripwires</div></div>
+      <div class="bg-cream border border-line rounded-2xl p-4">◈ Avg time to suitable home <b class="float-right">9.2 days</b><div class="text-ink/55 text-[12px]">repeat-user rate 28%</div></div>
+    </div>`;
+    if(typeof Chart!=='undefined'){if(window._ad1)window._ad1.destroy();if(window._ad2)window._ad2.destroy();
+      window._ad1=new Chart($('adMain'),{type:'line',data:{labels:['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'],datasets:[{label:'Verified visit rate %',data:[22,24,23,26,28,27,30,31,30,32,33,34],borderColor:'#0B7A55',backgroundColor:'rgba(11,122,85,.12)',fill:true,tension:.4},{label:'Complaint %',data:[2.4,2.1,2.0,1.8,1.6,1.5,1.2,1.1,1.0,0.9,0.8,0.8],borderColor:'#E96A2B',tension:.4}]},options:{plugins:{legend:{position:'bottom'}}}});
+      window._ad2=new Chart($('adDonut'),{type:'doughnut',data:{labels:['Verified fresh','Verified aging','Stale','Flagged','Pending'],datasets:[{data:[62,16,9,4,9],backgroundColor:['#0B7A55','#C9A86A','#E8E1D1','#E96A2B','#F5D9A8']}]},options:{plugins:{legend:{position:'bottom'}}}});}
+  }
+  if(state.adminTab==='verify'){
+    $('adminContent').innerHTML=`<b class="display text-[22px]">Broker verification queue (${pendB.length})</b><p class="text-[13px] text-ink/55 font-medium">KYC fraud checks: ID photo-match, agency licence cross-check, phone tenure.</p>
+    <div class="mt-4 grid lg:grid-cols-2 gap-3">${pendB.map(b=>`<div class="bg-cream border-2 border-amber-300 rounded-3xl p-5"><div class="flex gap-3"><img src="${b.photo}" class="w-16 h-16 rounded-2xl object-cover"><div><b>${b.name} · ${b.agency}</b><div class="text-[12.5px] text-ink/60 font-medium">${b.areas.join(', ')} · Applied ${b.tenure}</div><div class="text-[12px] font-mono bg-paper border border-line rounded-lg px-2 py-1 mt-1 inline-block">${b.kyc}</div></div></div>
+    <div class="mt-3 grid grid-cols-3 gap-1.5 text-[11.5px] font-bold text-center"><div class="bg-paper border border-line rounded-xl p-2">ID doc<br><span class="text-pine">✓ match 94%</span></div><div class="bg-paper border border-line rounded-xl p-2">Agency proof<br><span class="text-amber-600">◷ pending</span></div><div class="bg-paper border border-line rounded-xl p-2">Phone tenure<br><span class="text-pine">✓ 3y</span></div></div>
+    <div class="mt-3 flex gap-2"><button onclick="adminApproveBroker('${b.id}')" class="flex-1 bg-pine text-white font-bold py-2.5 rounded-xl text-[13px]">Approve + badge ✓</button><button onclick="adminRejectBroker('${b.id}')" class="flex-1 border border-red-300 text-red-700 font-bold py-2.5 rounded-xl text-[13px]">Reject</button><button onclick="adminSuspend('${b.id}')" class="border border-line bg-white font-bold px-4 rounded-xl text-[13px]">Suspend</button></div></div>`).join('')||'<p class="text-ink/55">Queue clear. 🎉</p>'}
+    <div class="mt-4 bg-cream border border-line rounded-3xl p-5"><b>Suspended / flagged brokers</b><div class="mt-2 space-y-2">${brokers.filter(b=>['flagged','suspended'].includes(b.verified)).map(b=>`<div class="flex items-center gap-3 bg-paper border border-red-200 rounded-2xl p-3 text-[13px]"><img src="${b.photo}" class="w-10 h-10 rounded-xl object-cover"><b class="flex-1">${b.agency} — ${b.complaints} complaints</b><span class="text-[11px] font-extrabold bg-red-600 text-white px-2 py-1 rounded-full">${b.verified.toUpperCase()}</span><button onclick="adminApproveBroker('${b.id}')" class="text-[12px] font-bold border border-line bg-white px-3 py-1.5 rounded-lg">Reinstate</button></div>`).join('')||'<span class="text-ink/50">None.</span>'}</div></div>`;
+  }
+  if(state.adminTab==='listings'){
+    const all=[...listings].sort((a,b)=>(b.flags?1:0)-(a.flags?1:0));
+    $('adminContent').innerHTML=`<b class="display text-[22px]">Listing moderation (${all.length})</b><div class="mt-3 space-y-2">${all.map(l=>{const b=brokerById(l.brokerId);return `<div class="bg-cream border ${l.verification==='flagged'?'border-red-300':l.verification==='pending'?'border-amber-300':'border-line'} rounded-2xl p-4 flex flex-col sm:flex-row gap-3 sm:items-center"><img src="${l.photos[0]}" class="w-full sm:w-28 h-20 rounded-xl object-cover"><div class="flex-1 text-[13px]"><b>${l.propId} · ${l.bhk} BHK ${l.locality} · ${fmt(l.rent)}</b> <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full ${freshness(l).cls}">${freshness(l).label}</span><div class="text-ink/55">${b.agency} · ${l.views} views · ${l.enq} enquiries ${l.flags?'· <b class="text-red-600">'+l.flags.join(' · ')+'</b>':''}</div></div><div class="flex gap-1.5 text-[12px] font-bold"><button onclick="adminApproveListing('${l.id}')" class="bg-pine text-white px-3 py-2 rounded-lg">Approve</button><button onclick="adminExpireListing('${l.id}')" class="border border-line bg-white px-3 py-2 rounded-lg">Expire</button><button onclick="adminSuspend('${b.id}')" class="border border-red-300 text-red-700 px-3 py-2 rounded-lg">Suspend broker</button></div></div>`}).join('')}</div>`;
+  }
+  if(state.adminTab==='reports'){
+    $('adminContent').innerHTML=`<b class="display text-[22px]">Reports (${reports.length}) · avg triage 5.8h</b><div class="mt-3 space-y-2">${reports.map(r=>{const l=listingById(r.listingId);return `<div class="bg-cream border border-line rounded-2xl p-4 text-[13px]"><div class="flex justify-between flex-wrap gap-2"><b>⚑ ${r.reason} — ${l?l.propId:''}</b><span class="text-[11px] font-bold bg-saffron/10 text-saffrondark border border-saffron/30 px-2 py-1 rounded-full">${r.status}</span></div><p class="text-ink/65 mt-1">“${r.details}” — <i>${r.reporter} · ${r.date}</i></p><div class="mt-2 flex gap-2 text-[12px] font-bold"><button onclick="resolveReport('${r.id}',true)" class="bg-ink text-white px-4 py-2 rounded-lg">Uphold → penalise listing</button><button onclick="resolveReport('${r.id}',false)" class="border border-line bg-white px-4 py-2 rounded-lg">Dismiss</button>${l?`<button onclick="openProperty('${l.id}')" class="border border-line bg-white px-4 py-2 rounded-lg">Open listing</button>`:''}</div></div>`}).join('')}</div>`;
+  }
+  if(state.adminTab==='dup'){
+    $('adminContent').innerHTML=`<b class="display text-[22px]">Duplicate & suspicion engine</b><p class="text-[13px] text-ink/55">Photo pHash · address normalisation · velocity · price-outlier · visit-cancellation signals.</p>
+    <div class="mt-4 bg-cream border-2 border-gold/60 rounded-3xl p-6"><b>◈ Group: DL-DWK-004821 — 3 offerings merged (photo-hash 98.2%)</b><div class="mt-3 space-y-2">${sameProp('DL-DWK-004821').map(l=>{const b=brokerById(l.brokerId);return `<div class="flex items-center gap-3 bg-paper border border-line rounded-2xl p-3 text-[13px]"><img src="${b.photo}" class="w-10 h-10 rounded-xl object-cover"><span class="flex-1"><b>${b.agency}</b> · ${fmt(l.rent)} · ${l.brok}</span><button onclick="adminExpireListing('${l.id}')" class="text-[12px] font-bold border border-line bg-white px-3 py-1.5 rounded-lg">Unmerge / penalise</button></div>`}).join('')}</div>
+    <div class="mt-3 flex gap-2 text-[12.5px] font-bold"><span class="bg-pine text-white px-3 py-1.5 rounded-full">✓ Auto-merged — seeker sees 1 card</span><span class="bg-paper border border-line px-3 py-1.5 rounded-full">Broker attribution preserved</span></div></div>
+    <div class="mt-4 grid sm:grid-cols-2 gap-3">${[['Unusual volume','B8 created 14 listings in 48h — capped at 5, KYC re-check forced.','warn'],['Visit cancellations ×5','B6 cancelled 5 visits in 7 days — ranking −30%, warning sent.','warn'],['Price outlier −58%','L007 (Karol Bagh ₹9,500) — flagged, token-keyword scan on calls.','bad'],['Complaint velocity','B8: 6 advance-fee mentions in 10 days — suspended from search.','bad']].map(f=>`<div class="bg-cream border ${f[2]==='bad'?'border-red-300':'border-amber-300'} rounded-2xl p-4 text-[13px]"><b>${f[0]}</b><p class="text-ink/60 mt-1">${f[1]}</p></div>`).join('')}</div>`;
+  }
+}
+function adminApproveBroker(id){const b=brokerById(id);b.verified='verified';b.rating=b.rating||4.3;b.reviews=b.reviews||3;b.responseRate=90;b.responseTime='~2h';b.vdate='5 Oct 2026';listings.filter(l=>l.brokerId===id).forEach(l=>{if(l.verification==='pending')l.verification='verified';});toast(`${b.agency} approved — verified badge live with date stamp.`);renderAdmin();renderBrokers();renderHome();}
+function adminRejectBroker(id){brokers=brokers.filter(b=>b.id!==id);toast('Broker application rejected with reason logged.','warn');renderAdmin();}
+function adminSuspend(id){brokerById(id).verified='suspended';toast('Broker suspended from search. Existing leads frozen.','warn');renderAdmin();renderBrokers();}
+function adminApproveListing(id){const l=listingById(id);l.verification='verified';l.hrs=0;delete l.flags;toast(`${l.propId} approved & marked fresh.`);renderAdmin();renderProperties();}
+function adminExpireListing(id){const l=listingById(id);l.verification='stale';l.hrs=400;toast(`${l.propId} expired — removed from active search.`,'warn');renderAdmin();renderProperties();}
+function resolveReport(id,uphold){const r=reports.find(x=>x.id===id);r.status=uphold?'Resolved · upheld':'Resolved · dismissed';if(uphold){const l=listingById(r.listingId);if(l){l.verification='flagged';}}toast(uphold?'Report upheld. Listing penalised & broker notified.':'Report dismissed with notes.');renderAdmin();}
+
+/* ==================== REVEAL / INIT ==================== */
+function observeReveals(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>o.observe(el));}
+window.addEventListener('DOMContentLoaded',()=>{
+  renderHome();renderProperties();renderBrokers();renderPropertyDetail();renderBrokerProfile();renderEnquiries();renderSaved();
+  $('leadCount').innerText='1';observeReveals();
+  setTimeout(()=>toast('Welcome to Thikana — try “2 BHK under ₹25k in Dwarka” in search.'),900);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['authModal','contactModal','reportModal','reviewModal','signupModal'].forEach(closeModal);});
+['authModal','contactModal','reportModal','reviewModal','signupModal'].forEach(id=>{document.addEventListener('click',e=>{const m=$(id);if(e.target===m)closeModal(id);});});
+</script>
+</body>
+</html>
