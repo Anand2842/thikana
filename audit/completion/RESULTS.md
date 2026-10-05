@@ -1,6 +1,6 @@
 # Thikana completion results — 6 October 2026
 
-**Ready for local use with the real Supabase project. 453/453 browser/API checks passed.** The completed code is integrated into `/Users/anand/Downloads/settle`. Open [Thikana](http://localhost:3001).
+**Ready for local use with the real Supabase project. 475/475 browser/API checks passed.** The completed code is integrated into `/Users/anand/Downloads/settle`. Open [Thikana](http://localhost:3001).
 
 ## Verification
 
@@ -11,6 +11,7 @@
 | Visible buttons, native validation and network failures | 27/27 |
 | Invalid service key and rate limits | 12/12 |
 | Catalog, links, layouts, metadata and sitemap | 278/278 |
+| Main checkout, localhost sign-in/out and mobile smoke checks | 22/22 |
 | Production build + TypeScript | Passed |
 | ESLint and runnable logic checks | Passed |
 | Additive database migrations, including repeat application | Passed |
@@ -37,7 +38,7 @@ Repeated controls were exercised on isolated representative records. These resul
 
 Migrations 004–009 are applied to the supplied project. Private pre-change row and column snapshots remain in the worktree's `.local/` directory; they are not a full database dump.
 
-One authorized sign-in email was delivered. The user supplied its link; Supabase records a confirmed email and a successful sign-in. Reopening the one-use link correctly shows the expiry message. Automated code verification used a real Supabase-generated test OTP, with only the mail-send request intercepted so the test did not send extra emails.
+The final localhost:3001 callback URL was also accepted by Supabase. One authorized sign-in email was delivered. The user supplied its link; Supabase records a confirmed email and a successful sign-in. Reopening the one-use link correctly shows the expiry message. Automated code verification used a real Supabase-generated test OTP, with only the mail-send request intercepted so the test did not send extra emails.
 
 Temporary QA accounts, applications, uploads, listings, enquiries, reviews, reports and city requests were removed. The project retains **12 brokers, 22 listings, 5 original reviews, 3 original reports and 2 added demo enquiries**. All 5 demo accounts remain available; no QA accounts remain. [Cleanup evidence](/Users/anand/Downloads/settle/audit/completion/evidence/data-after-cleanup.json).
 

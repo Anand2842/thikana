@@ -25,5 +25,10 @@
     "runtimeErrors": 0
   },
   "publicRouteCount": 65,
-  "internalLinkCount": 73
+  "internalLinkCount": 73,
+  "main": {
+    "passed": 22,
+    "total": 22,
+    "runtimeErrors": 0
+  }
 }

@@ -1,0 +1,94 @@
+{
+  "base": "http://localhost:3001",
+  "checks": [
+    {
+      "name": "main /",
+      "pass": true
+    },
+    {
+      "name": "main /properties",
+      "pass": true
+    },
+    {
+      "name": "main /brokers",
+      "pass": true
+    },
+    {
+      "name": "main /properties/L001",
+      "pass": true
+    },
+    {
+      "name": "main /brokers/B1",
+      "pass": true
+    },
+    {
+      "name": "private API remains gated",
+      "pass": true
+    },
+    {
+      "name": "demo banner is visible",
+      "pass": true
+    },
+    {
+      "name": "main demo seeker",
+      "pass": true
+    },
+    {
+      "name": "main demo broker",
+      "pass": true
+    },
+    {
+      "name": "main demo admin",
+      "pass": true
+    },
+    {
+      "name": "main demo applicant",
+      "pass": true
+    },
+    {
+      "name": "main demo other",
+      "pass": true
+    },
+    {
+      "name": "seeker demo enquiries are ready",
+      "pass": true
+    },
+    {
+      "name": "admin queue loads",
+      "pass": true
+    },
+    {
+      "name": "broker inventory loads",
+      "pass": true
+    },
+    {
+      "name": "listing creation is reachable",
+      "pass": true
+    },
+    {
+      "name": "other seeker stays isolated",
+      "pass": true
+    },
+    {
+      "name": "demo application form is reachable",
+      "pass": true
+    },
+    {
+      "name": "localhost sign-out works",
+      "pass": true
+    },
+    {
+      "name": "main mobile /",
+      "pass": true
+    },
+    {
+      "name": "main mobile /properties/L001",
+      "pass": true
+    },
+    {
+      "name": "main runtime errors",
+      "pass": true
+    }
+  ],
+  "runtimeErrors": []
+}

@@ -1,0 +1,23 @@
+PASS main /
+PASS main /properties
+PASS main /brokers
+PASS main /properties/L001
+PASS main /brokers/B1
+PASS private API remains gated
+PASS demo banner is visible
+PASS main demo seeker
+PASS main demo broker
+PASS main demo admin
+PASS main demo applicant
+PASS main demo other
+PASS seeker demo enquiries are ready
+PASS admin queue loads
+PASS broker inventory loads
+PASS listing creation is reachable
+PASS other seeker stays isolated
+PASS demo application form is reachable
+PASS localhost sign-out works
+PASS main mobile /
+PASS main mobile /properties/L001
+PASS main runtime errors
+22/22 passed
