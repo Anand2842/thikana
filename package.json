@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx --env-file=.env scripts/seed.ts"
+    "seed": "tsx --env-file=.env scripts/seed.ts",
+    "demo": "tsx --env-file=.env scripts/demo.ts && tsx scripts/demo-guide.ts",
+    "check": "tsx scripts/check.ts",
+    "migrate": "tsx --env-file=.env scripts/migrate.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

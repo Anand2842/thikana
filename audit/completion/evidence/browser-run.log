@@ -1,0 +1,108 @@
+PASS public /
+PASS public /properties
+PASS public /brokers
+PASS public /properties/L001
+PASS public /properties/L003
+PASS public /properties/L007
+PASS public /brokers/B1
+PASS public /brokers/B7
+PASS public /properties?city=Noida
+PASS public /properties?city=Delhi&locality=Dwarka&sort=low
+PASS public /properties?q=missing-home
+PASS anonymous leads blocked
+PASS anonymous city requests blocked
+PASS anonymous write /api/leads
+PASS anonymous write /api/listings
+PASS anonymous write /api/brokers
+PASS anonymous write /api/reports
+PASS anonymous write /api/reviews
+PASS anonymous write /api/saved
+PASS cron requires secret
+PASS pending inventory hidden
+PASS disclosed visit fee
+PASS other fees disclosed
+PASS All locality clears filter
+PASS empty results guidance
+PASS real Supabase password sessions
+PASS seeker sees own leads
+PASS other seeker sees no private leads
+PASS broker sees assigned leads
+PASS non-admin moderation blocked
+PASS unassigned broker reconfirm blocked
+PASS flagged reconfirm blocked
+PASS unknown enquiry rejected
+PASS flagged enquiry rejected
+PASS malformed payload /api/leads
+PASS malformed payload /api/brokers
+PASS malformed payload /api/listings
+PASS malformed payload /api/reports
+PASS malformed payload /api/reviews
+PASS malformed payload /api/city-requests
+PASS saved home persisted
+PASS enquiry persisted with owner and actual broker
+PASS other user cannot change enquiry
+PASS visit schedules
+PASS future visit cannot be confirmed
+PASS premature review blocked
+PASS broker pipeline update
+PASS seeker can start broker onboarding
+PASS pending broker application persisted
+PASS pending applicant can update documents
+PASS pending broker cannot publish
+PASS admin can review private proofs
+PASS approve broker
+PASS new listing pending and hidden publicly
+PASS owner can preview pending listing
+PASS admin approves listing
+PASS listing published in database
+PASS listing fees persisted
+PASS reconfirm owned listing
+PASS new listing enquiry uses real broker
+PASS report persisted
+PASS uphold report atomically
+PASS flagged listing cannot be reconfirmed by owner
+PASS flagged listing cannot accept enquiries
+PASS approval clears flags
+PASS flags cleared
+PASS suspend broker retains records
+PASS suspension flags owned inventory
+PASS reject broker with listings succeeds
+PASS no overflow 320 /
+PASS no overflow 320 /properties
+PASS no overflow 320 /brokers
+PASS no overflow 320 /properties/L001
+PASS no overflow 320 /properties/L003
+PASS no overflow 320 /properties/L007
+PASS no overflow 320 /brokers/B1
+PASS no overflow 320 /auth
+PASS no overflow 375 /
+PASS no overflow 375 /properties
+PASS no overflow 375 /brokers
+PASS no overflow 375 /properties/L001
+PASS no overflow 375 /properties/L003
+PASS no overflow 375 /properties/L007
+PASS no overflow 375 /brokers/B1
+PASS no overflow 375 /auth
+PASS no overflow 768 /
+PASS no overflow 768 /properties
+PASS no overflow 768 /brokers
+PASS no overflow 768 /properties/L001
+PASS no overflow 768 /properties/L003
+PASS no overflow 768 /properties/L007
+PASS no overflow 768 /brokers/B1
+PASS no overflow 768 /auth
+PASS no overflow 1440 /
+PASS no overflow 1440 /properties
+PASS no overflow 1440 /brokers
+PASS no overflow 1440 /properties/L001
+PASS no overflow 1440 /properties/L003
+PASS no overflow 1440 /properties/L007
+PASS no overflow 1440 /brokers/B1
+PASS no overflow 1440 /auth
+PASS private mobile /dashboard
+PASS private mobile /broker/dashboard
+PASS private mobile /admin
+PASS private mobile /broker/onboard
+PASS no browser runtime errors
+PASS sign-out revokes local session
+107/107 checks passed

@@ -1,0 +1,373 @@
+[
+  {
+    "route": "/broker/listings/new",
+    "width": 320,
+    "document": 345,
+    "main": 320,
+    "controls": [
+      {
+        "value": "2 BHK Apartment",
+        "label": null,
+        "right": 279
+      },
+      {
+        "value": "Delhi",
+        "label": null,
+        "right": 279
+      },
+      {
+        "value": "Dwarka",
+        "label": null,
+        "right": 154
+      },
+      {
+        "value": "B1",
+        "label": null,
+        "right": 279
+      },
+      {
+        "value": "24000",
+        "label": null,
+        "right": 154
+      },
+      {
+        "value": "2",
+        "label": null,
+        "right": 279
+      }
+    ]
+  },
+  {
+    "route": "/broker/listings/new",
+    "width": 375,
+    "document": 375,
+    "main": 375,
+    "controls": [
+      {
+        "value": "2 BHK Apartment",
+        "label": null,
+        "right": 334
+      },
+      {
+        "value": "Delhi",
+        "label": null,
+        "right": 334
+      },
+      {
+        "value": "Dwarka",
+        "label": null,
+        "right": 181.5
+      },
+      {
+        "value": "B1",
+        "label": null,
+        "right": 334
+      },
+      {
+        "value": "24000",
+        "label": null,
+        "right": 181.5
+      },
+      {
+        "value": "2",
+        "label": null,
+        "right": 334
+      }
+    ]
+  },
+  {
+    "route": "/broker/listings/new",
+    "width": 768,
+    "document": 816,
+    "main": 672,
+    "controls": [
+      {
+        "value": "2 BHK Apartment",
+        "label": null,
+        "right": 679
+      },
+      {
+        "value": "Delhi",
+        "label": null,
+        "right": 679
+      },
+      {
+        "value": "Dwarka",
+        "label": null,
+        "right": 378
+      },
+      {
+        "value": "B1",
+        "label": null,
+        "right": 679
+      },
+      {
+        "value": "24000",
+        "label": null,
+        "right": 378
+      },
+      {
+        "value": "2",
+        "label": null,
+        "right": 679
+      }
+    ]
+  },
+  {
+    "route": "/broker/listings/new",
+    "width": 1024,
+    "document": 1024,
+    "main": 672,
+    "controls": [
+      {
+        "value": "2 BHK Apartment",
+        "label": null,
+        "right": 807
+      },
+      {
+        "value": "Delhi",
+        "label": null,
+        "right": 807
+      },
+      {
+        "value": "Dwarka",
+        "label": null,
+        "right": 506
+      },
+      {
+        "value": "B1",
+        "label": null,
+        "right": 807
+      },
+      {
+        "value": "24000",
+        "label": null,
+        "right": 506
+      },
+      {
+        "value": "2",
+        "label": null,
+        "right": 807
+      }
+    ]
+  },
+  {
+    "route": "/broker/onboard",
+    "width": 320,
+    "document": 345,
+    "main": 320,
+    "controls": [
+      {
+        "value": "",
+        "label": null,
+        "right": 279
+      },
+      {
+        "value": "",
+        "label": null,
+        "right": 279
+      }
+    ]
+  },
+  {
+    "route": "/broker/onboard",
+    "width": 375,
+    "document": 375,
+    "main": 375,
+    "controls": [
+      {
+        "value": "",
+        "label": null,
+        "right": 334
+      },
+      {
+        "value": "",
+        "label": null,
+        "right": 334
+      }
+    ]
+  },
+  {
+    "route": "/broker/onboard",
+    "width": 768,
+    "document": 816,
+    "main": 672,
+    "controls": [
+      {
+        "value": "",
+        "label": null,
+        "right": 679
+      },
+      {
+        "value": "",
+        "label": null,
+        "right": 679
+      }
+    ]
+  },
+  {
+    "route": "/broker/onboard",
+    "width": 1024,
+    "document": 1024,
+    "main": 672,
+    "controls": [
+      {
+        "value": "",
+        "label": null,
+        "right": 807
+      },
+      {
+        "value": "",
+        "label": null,
+        "right": 807
+      }
+    ]
+  },
+  {
+    "route": "/broker/dashboard",
+    "width": 320,
+    "document": 345,
+    "main": 320,
+    "controls": []
+  },
+  {
+    "route": "/broker/dashboard",
+    "width": 375,
+    "document": 375,
+    "main": 375,
+    "controls": []
+  },
+  {
+    "route": "/broker/dashboard",
+    "width": 768,
+    "document": 816,
+    "main": 768,
+    "controls": []
+  },
+  {
+    "route": "/broker/dashboard",
+    "width": 1024,
+    "document": 1024,
+    "main": 1024,
+    "controls": []
+  },
+  {
+    "route": "/admin",
+    "width": 320,
+    "document": 345,
+    "main": 320,
+    "controls": []
+  },
+  {
+    "route": "/admin",
+    "width": 375,
+    "document": 375,
+    "main": 375,
+    "controls": []
+  },
+  {
+    "route": "/admin",
+    "width": 768,
+    "document": 816,
+    "main": 768,
+    "controls": []
+  },
+  {
+    "route": "/admin",
+    "width": 1024,
+    "document": 1024,
+    "main": 1024,
+    "controls": []
+  },
+  {
+    "check": "reduced motion",
+    "transition": "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s"
+  },
+  {
+    "check": "fonts",
+    "faces": [
+      {
+        "family": "Fraunces",
+        "status": "unloaded"
+      },
+      {
+        "family": "Fraunces",
+        "status": "loaded"
+      },
+      {
+        "family": "Fraunces",
+        "status": "loaded"
+      },
+      {
+        "family": "Fraunces Fallback",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter Fallback",
+        "status": "unloaded"
+      }
+    ],
+    "display": "Fraunces, serif"
+  },
+  {
+    "check": "keyboard focus",
+    "style": {
+      "name": "Thikana.rentNCR \u00b7 5 CITIES",
+      "outline": "rgb(0, 95, 204) auto 1px"
+    }
+  },
+  {
+    "check": "cron secret",
+    "without": 401,
+    "with": 200,
+    "result": {
+      "expired": [],
+      "count": 0,
+      "source": "supabase"
+    }
+  },
+  {
+    "check": "rate limit",
+    "statuses": [
+      400,
+      400,
+      400,
+      400,
+      400,
+      400,
+      400,
+      400,
+      400,
+      400,
+      429
+    ]
+  }
+]

@@ -1,135 +1,178 @@
 "use client";
-
 import { Suspense, useState, type FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-
-function safeNext(raw: string | null): string {
-  if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/dashboard";
-}
-
+import { safeNext } from "@/lib/navigation";
 function AuthForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = safeNext(searchParams.get("next"));
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [codeSent, setCodeSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
-
-  async function sendCode(e: FormEvent<HTMLFormElement>) {
+  const sp = useSearchParams(),
+    next = safeNext(sp.get("next"));
+  const [email, setEmail] = useState(""),
+    [password, setPassword] = useState(""),
+    [code, setCode] = useState("");
+  const [mode, setMode] = useState("email"),
+    [sent, setSent] = useState(false),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(sp.get("error") ?? ""),
+    [info, setInfo] = useState("");
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setInfo(null);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: {
-        shouldCreateUser: true,
-        // Magic-link clicks land on the callback route, which exchanges the
-        // code and forwards to ?next=. The 6-digit OTP path stays on this page.
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-      },
-    });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-      return;
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    setInfo("");
+    try {
+      const sb = createClient();
+      const result =
+        mode === "password"
+          ? await sb.auth.signInWithPassword({ email: email.trim(), password })
+          : sent
+            ? await sb.auth.verifyOtp({
+                email: email.trim(),
+                token: code.trim(),
+                type: "email",
+              })
+            : await sb.auth.signInWithOtp({
+                email: email.trim(),
+                options: {
+                  shouldCreateUser: true,
+                  emailRedirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+                },
+              });
+      if (result.error) throw result.error;
+      if (mode === "email" && !sent) {
+        setSent(true);
+        setInfo(
+          "Check your email for a sign-in link or code. You can paste the code below.",
+        );
+      } else {
+        // Read the new session on the server instead of reusing an anonymous prefetch.
+        window.location.replace(next);
+      }
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Could not sign in. Please try again.",
+      );
+    } finally {
+      setBusy(false);
     }
-    setCodeSent(true);
-    setInfo(`6-digit code sent to ${email.trim()}.`);
   }
-
-  async function verifyCode(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({
-      email: email.trim(),
-      token: code.trim(),
-      type: "email",
-    });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-      return;
-    }
-    router.push(next);
-    router.refresh();
-  }
-
   return (
-    <main className="max-w-md mx-auto px-4 sm:px-6 py-16">
-      <div className="text-[11px] font-extrabold tracking-[.2em] text-pine">THIKANA.RENT · SIGN IN</div>
-      <h1 className="display font-black text-[32px]">Welcome back.</h1>
-      <p className="text-ink/60 text-[14px] mt-1">
-        {codeSent ? "Enter the 6-digit code from your email." : "Enter your email — we'll send you a 6-digit code."}
+    <main className="max-w-md mx-auto px-4 py-16">
+      <div className="eyebrow">THIKANA.RENT · SIGN IN</div>
+      <h1 className="display text-4xl font-black">Welcome back.</h1>
+      <p className="mt-2 text-ink/65">
+        Keep your saved homes, enquiries and visits in one place.
       </p>
-
-      {!codeSent ? (
-        <form onSubmit={sendCode} className="mt-6 space-y-3">
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full bg-cream border border-line rounded-2xl px-4 py-3 text-[14px] outline-none focus:border-ink"
-          />
-          {error && <p className="text-[13px] font-semibold text-red-700">{error}</p>}
-          {info && <p className="text-[13px] font-semibold text-pine">{info}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-ink text-white font-bold text-[14px] px-6 py-3 rounded-2xl disabled:opacity-50"
-          >
-            {loading ? "Sending…" : "Send code"}
-          </button>
-        </form>
-      ) : (
-        <form onSubmit={verifyCode} className="mt-6 space-y-3">
-          <input
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            required
-            minLength={6}
-            maxLength={6}
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="6-digit code"
-            className="w-full bg-cream border border-line rounded-2xl px-4 py-3 text-[14px] tracking-[.3em] text-center outline-none focus:border-ink"
-          />
-          {error && <p className="text-[13px] font-semibold text-red-700">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-ink text-white font-bold text-[14px] px-6 py-3 rounded-2xl disabled:opacity-50"
-          >
-            {loading ? "Verifying…" : "Verify & sign in"}
-          </button>
+      <div className="flex gap-2 mt-6">
+        <button
+          className={mode === "email" ? "button" : "button secondary"}
+          disabled={busy}
+          onClick={() => {
+            setMode("email");
+            setError("");
+          }}
+        >
+          Email link / code
+        </button>
+        <button
+          className={mode === "password" ? "button" : "button secondary"}
+          disabled={busy}
+          onClick={() => {
+            setMode("password");
+            setSent(false);
+            setError("");
+          }}
+        >
+          Password
+        </button>
+      </div>
+      <form
+        key={`${mode}-${sent}`}
+        onSubmit={submit}
+        className="mt-6 space-y-4"
+      >
+        {!sent && (
+          <label>
+            Email
+            <input
+              type="email"
+              autoComplete="email"
+              required
+              maxLength={254}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+        )}
+        {mode === "password" && (
+          <label>
+            Password
+            <input
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        )}
+        {sent && (
+          <>
+            <p className="text-sm">Code sent to {email}</p>
+            <label>
+              Email code
+              <input
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]{6,10}"
+                minLength={6}
+                maxLength={10}
+                required
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              />
+            </label>
+          </>
+        )}
+        {error && (
+          <p role="alert" className="text-red-700 text-sm">
+            {error}
+          </p>
+        )}
+        {info && (
+          <p role="status" className="text-pine text-sm">
+            {info}
+          </p>
+        )}
+        <button className="button w-full" disabled={busy}>
+          {busy
+            ? "Please wait…"
+            : mode === "password"
+              ? "Sign in"
+              : sent
+                ? "Verify & sign in"
+                : "Send sign-in email"}
+        </button>
+        {sent && (
           <button
             type="button"
-            onClick={() => {
-              setCodeSent(false);
+            className="text-sm underline w-full"
+            disabled={busy}
+            onClick={(e) => {
+              e.preventDefault();
+              setSent(false);
               setCode("");
-              setError(null);
-              setInfo(null);
+              setInfo("");
+              setError("");
             }}
-            className="w-full text-[13px] font-bold text-ink/60 underline"
           >
             Use a different email
           </button>
-        </form>
-      )}
+        )}
+      </form>
     </main>
   );
 }
-
 export default function AuthPage() {
   return (
     <Suspense>

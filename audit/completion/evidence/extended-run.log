@@ -1,0 +1,30 @@
+PASS seeker confirms past visit
+PASS both confirmations advance pipeline
+PASS review persists
+PASS review appears on broker profile
+PASS different-email button does not resubmit
+PASS real Supabase OTP verifies
+PASS private tables protected by RLS
+PASS review account identifiers protected
+PASS cross-origin logout blocked
+PASS GET cannot log out
+PASS logout works on current hostname
+PASS restore QA broker approval
+PASS photo upload persists in Supabase Storage
+PASS uploaded photo publicly loads
+PASS fake image rejected
+PASS oversize upload rejected
+PASS second offer saves
+PASS same address shares property identity
+PASS approve QA offer
+PASS timestamp aging works without cron
+PASS protected cron expires timestamp-based listing
+PASS owner reconfirms stale listing
+PASS gallery switches photo
+PASS city demand persists
+PASS new listing form fits 320
+PASS new listing form fits 375
+PASS new listing form fits 768
+PASS new listing form fits 1440
+PASS no runtime errors during extended checks
+29/29 passed

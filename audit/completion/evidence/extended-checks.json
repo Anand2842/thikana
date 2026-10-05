@@ -1,0 +1,150 @@
+{
+  "checks": [
+    {
+      "name": "seeker confirms past visit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "both confirmations advance pipeline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review persists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review appears on broker profile",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "different-email button does not resubmit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "real Supabase OTP verifies",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "private tables protected by RLS",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review account identifiers protected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "cross-origin logout blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "GET cannot log out",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "logout works on current hostname",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "restore QA broker approval",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "photo upload persists in Supabase Storage",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "uploaded photo publicly loads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "fake image rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "oversize upload rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "second offer saves",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "same address shares property identity",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "approve QA offer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "timestamp aging works without cron",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "protected cron expires timestamp-based listing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "owner reconfirms stale listing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery switches photo",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "city demand persists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing form fits 320",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing form fits 375",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing form fits 768",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing form fits 1440",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no runtime errors during extended checks",
+      "pass": true,
+      "detail": "[]"
+    }
+  ],
+  "runtimeErrors": []
+}

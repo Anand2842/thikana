@@ -1,48 +1,99 @@
 import { NextResponse } from "next/server";
-import { brokers as mockBrokers } from "@/lib/mock-data";
-import { validateBroker } from "@/lib/validation";
+import { authorize, body, invalid, unavailable } from "@/lib/api";
+import { validateBroker, text } from "@/lib/validation";
 import { createServiceClient } from "@/lib/supabase/server";
-import { mapBroker } from "@/lib/supabase/data";
 import { checkRateLimit } from "@/lib/ratelimit";
-
+import { userRole } from "@/lib/supabase/role";
+import { fetchBrokers } from "@/lib/supabase/data";
 export async function GET() {
   try {
-    const sb = createServiceClient();
-    const { data, error } = await sb.from("brokers").select("*").order("rating", { ascending: false });
-    if (error) throw error;
-    return NextResponse.json({ brokers: (data ?? []).map(mapBroker), source: "supabase" });
-  } catch {
-    return NextResponse.json({ brokers: mockBrokers, source: "mock" });
+    return NextResponse.json({ brokers: await fetchBrokers() });
+  } catch (e) {
+    return unavailable(e);
   }
 }
-
 export async function POST(req: Request) {
-  const limited = checkRateLimit(req, { limit: 10, windowMs: 60_000, key: "brokers" });
+  const { user, response } = await authorize();
+  if (response) return response;
+  const limited = checkRateLimit(req, {
+    limit: 10,
+    windowMs: 60000,
+    key: `brokers:${user!.id}`,
+  });
   if (limited) return limited;
-  const body = await req.json().catch(() => ({}));
-  const errors = validateBroker(body as Record<string, unknown>);
-  if (errors.length) return NextResponse.json({ errors }, { status: 400 });
-  const b = body as Record<string, unknown>;
-  const id = `B${Date.now().toString().slice(-6)}`;
-  const row = {
-    id,
-    name: String(b.name),
-    agency: String(b.agency),
-    photo: "",
-    verified: "pending",
-    cities: b.city ? [String(b.city)] : ["Delhi"],
-    areas: Array.isArray(b.areas) ? (b.areas as string[]) : [],
-    cats: [] as string[],
-  };
+  const b = await body(req),
+    errors = validateBroker(b);
+  if (errors.length) return invalid(errors);
+  if (
+    ![b.identityPath, b.businessPath].every(
+      (p) => text(p).startsWith(`${user!.id}/`) && !text(p).includes(".."),
+    )
+  )
+    return invalid(["Upload your own verification documents."]);
   try {
-    const sb = createServiceClient();
-    const { data, error } = await sb.from("brokers").insert(row).select().single();
-    if (error) throw error;
-    return NextResponse.json({ broker: mapBroker(data), source: "supabase" }, { status: 201 });
-  } catch {
+    const db = createServiceClient();
+    const { data: existing, error: ee } = await db
+      .from("broker_applications")
+      .select("broker_id")
+      .eq("owner_id", user!.id)
+      .maybeSingle();
+    if (ee) throw ee;
+    const id = existing?.broker_id ?? `B-${crypto.randomUUID()}`;
+    if (existing) {
+      const { data: profile, error } = await db
+        .from("brokers")
+        .select("verified")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      if (profile.verified === "verified")
+        return NextResponse.json(
+          {
+            error:
+              "Your profile is already approved. Use your broker dashboard.",
+          },
+          { status: 409 },
+        );
+    }
+    {
+      for (const path of [text(b.identityPath), text(b.businessPath)]) {
+        const { data, error } = await db.storage
+          .from("broker-proofs")
+          .download(path);
+        if (error || !data)
+          return invalid(["Verification document is missing. Upload again."]);
+      }
+      const { error } = await db.rpc("submit_broker", {
+        broker: {
+          id,
+          name: text(b.name),
+          agency: text(b.agency),
+          cities: [text(b.city)],
+          areas: b.areas,
+          policy: text(b.policy),
+        },
+        application: {
+          owner_id: user!.id,
+          phone: text(b.phone),
+          identity_path: b.identityPath,
+          business_path: b.businessPath,
+        },
+      });
+      if (error) throw error;
+    }
+    const { error: authError } = await db.auth.admin.updateUserById(user!.id, {
+      app_metadata: {
+        ...user!.app_metadata,
+        role: userRole(user) === "admin" ? "admin" : "broker",
+        broker_id: id,
+      },
+    });
+    if (authError) throw authError;
     return NextResponse.json(
-      { broker: { ...row, verified: "pending" as const }, note: "Demo mode: accepted, persisted after DB wiring." },
-      { status: 201 }
+      { broker: { id, verified: "pending" } },
+      { status: 201 },
     );
+  } catch (e) {
+    return unavailable(e);
   }
 }

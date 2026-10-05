@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "brokers": 12,
+    "listings": 22,
+    "leads": 7,
+    "reviews": 5,
+    "reports": 3,
+    "city_requests": 0,
+    "broker_applications": 0
+  },
+  "qaAccountsRemaining": 0,
+  "demoAccounts": 5
+}

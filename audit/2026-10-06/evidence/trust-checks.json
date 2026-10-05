@@ -1,0 +1,24 @@
+[
+  {
+    "check": "homepage 24h promise with only 26h listings",
+    "section": "VERIFIED\nDL-DWK-004821\n2 BHK Apartment \u00b7 Dwarka, Delhi\nSector 12, Near Metro\n\u20b924,000/mo\nBrokerage 15 days\nVerified 26h ago \u00b7 Recent\n\u2605 4.7 \u00b7 Raj Properties\nVERIFIED\nDL-DWK-004821\n2 BHK Apartment \u00b7 Dwarka, Delhi\nSector 12, Near Metro\n\u20b924,500/mo\nBrokerage 20 days\nVerified 26h ago \u00b7 Recent\n\u2605 4.5 \u00b7 Laxmi"
+  },
+  {
+    "check": "cron marks elapsed supplied hours",
+    "status": 200,
+    "count": 19
+  },
+  {
+    "check": "flagged rank on price sort",
+    "first_two": [
+      {
+        "href": "/properties/L014",
+        "text": "VERIFIED\nDL-UTM-009001\n1 BHK 1 RK \u00b7 Uttam Nagar, Delhi\nNear Metro Pillar 654\n\u20b99,000/mo\nBrokerage 10 days\nVerified 11h ago \u00b7 Fresh\n\u2605 4.7 \u00b7 Raj Properties"
+      },
+      {
+        "href": "/properties/L007",
+        "text": "FLAGGED\nDL-KRB-009811\n2 BHK Apartment \u00b7 Karol Bagh, Delhi\nAjmal Khan Rd (flagged)\n\u20b99,500/mo\nBrokerage Undisclosed\nFlagged \u00b7 under review\n\u2605 3.1 \u00b7 QuickDeal"
+      }
+    ]
+  }
+]

@@ -1,0 +1,574 @@
+{
+  "checks": [
+    {
+      "check": "Anonymous read /api/leads",
+      "expected": "401/403",
+      "actual": {
+        "status": 200,
+        "records": 5,
+        "contains_phone": true
+      },
+      "passed": false
+    },
+    {
+      "check": "Anonymous read /api/city-requests",
+      "expected": "401/403",
+      "actual": {
+        "status": 200,
+        "records": 2,
+        "contains_phone": true
+      },
+      "passed": false
+    },
+    {
+      "check": "Anonymous dashboard",
+      "expected": "sign-in redirect",
+      "actual": {
+        "url": "http://localhost:4317/dashboard",
+        "all_leads": 1
+      },
+      "passed": false
+    },
+    {
+      "check": "Sign in navbar action",
+      "expected": "opens auth form",
+      "actual": {
+        "url": "http://localhost:4317/dashboard",
+        "email_fields": 0
+      },
+      "passed": false
+    },
+    {
+      "check": "Anonymous route gate /admin",
+      "expected": "/auth?next=\u2026",
+      "actual": "http://localhost:4317/auth?next=%2Fadmin",
+      "passed": true
+    },
+    {
+      "check": "Anonymous route gate /broker/dashboard",
+      "expected": "/auth?next=\u2026",
+      "actual": "http://localhost:4317/auth?next=%2Fbroker%2Fdashboard",
+      "passed": true
+    },
+    {
+      "check": "Anonymous route gate /broker/onboard",
+      "expected": "/auth?next=\u2026",
+      "actual": "http://localhost:4317/auth?next=%2Fbroker%2Fonboard",
+      "passed": true
+    },
+    {
+      "check": "Anonymous route gate /broker/listings/new",
+      "expected": "/auth?next=\u2026",
+      "actual": "http://localhost:4317/auth?next=%2Fbroker%2Flistings%2Fnew",
+      "passed": true
+    },
+    {
+      "check": "Anonymous moderation /api/brokers/B7",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "check": "Anonymous moderation /api/listings/L010",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "check": "Anonymous moderation /api/reports/RP-331",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "check": "Anonymous reconfirm flagged listing",
+      "expected": "401/403; retain flagged",
+      "actual": {
+        "status": 200,
+        "verification": "verified"
+      },
+      "passed": false
+    },
+    {
+      "check": "Broker reconfirm someone else\u2019s flagged listing",
+      "expected": "403; retain flagged",
+      "actual": {
+        "status": 200,
+        "verification": "verified"
+      },
+      "passed": false
+    },
+    {
+      "check": "Anonymous create listing as B2",
+      "expected": "401/403",
+      "actual": {
+        "status": 201,
+        "id_created": true
+      },
+      "passed": false
+    },
+    {
+      "check": "Lead to newly created B2 listing",
+      "expected": "brokerId B2",
+      "actual": {
+        "status": 201,
+        "brokerId": "B1"
+      },
+      "passed": false
+    },
+    {
+      "check": "New lead has user ownership",
+      "expected": "user id persisted",
+      "actual": {
+        "lead_keys": [
+          "id",
+          "listingId",
+          "brokerId",
+          "userName",
+          "phone",
+          "req",
+          "time",
+          "msg",
+          "status",
+          "date",
+          "visit",
+          "mine"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "check": "Broker registration retains phone",
+      "expected": "phone saved",
+      "actual": {
+        "status": 201,
+        "phone_present": false
+      },
+      "passed": false
+    },
+    {
+      "check": "Malformed value /api/leads 0",
+      "expected": "400",
+      "actual": 500,
+      "passed": false
+    },
+    {
+      "check": "Malformed value /api/leads 1",
+      "expected": "400",
+      "actual": 500,
+      "passed": false
+    },
+    {
+      "check": "Malformed value /api/city-requests 2",
+      "expected": "400",
+      "actual": 500,
+      "passed": false
+    },
+    {
+      "check": "Malformed value /api/brokers 3",
+      "expected": "400",
+      "actual": 500,
+      "passed": false
+    },
+    {
+      "check": "Malformed value /api/listings 4",
+      "expected": "400",
+      "actual": 500,
+      "passed": false
+    },
+    {
+      "check": "Database unavailable /api/leads",
+      "expected": "5xx; no success message",
+      "actual": {
+        "status": 201,
+        "source": "mock",
+        "persisted": false,
+        "returned_id": "LD-338889"
+      },
+      "passed": false
+    },
+    {
+      "check": "Database unavailable /api/brokers",
+      "expected": "5xx; no success message",
+      "actual": {
+        "status": 201,
+        "source": null,
+        "persisted": false,
+        "returned_id": "B338903"
+      },
+      "passed": false
+    },
+    {
+      "check": "Database unavailable /api/listings",
+      "expected": "5xx; no success message",
+      "actual": {
+        "status": 201,
+        "source": "mock",
+        "persisted": false,
+        "returned_id": "L338917"
+      },
+      "passed": false
+    },
+    {
+      "check": "Database unavailable /api/city-requests",
+      "expected": "5xx; no success message",
+      "actual": {
+        "status": 201,
+        "source": "mock",
+        "persisted": false,
+        "returned_id": "CR-338926"
+      },
+      "passed": false
+    },
+    {
+      "check": "Reconfirm with database unavailable",
+      "expected": "5xx",
+      "actual": {
+        "status": 200,
+        "source": "mock"
+      },
+      "passed": false
+    },
+    {
+      "check": "Locality All clears filter",
+      "expected": "no locality query",
+      "actual": "http://localhost:4317/properties?city=Delhi&locality=Dwarka",
+      "passed": false
+    },
+    {
+      "check": "Sort Price \u2191",
+      "expected": "ordered prices",
+      "actual": [
+        9000,
+        9500,
+        11000,
+        11000,
+        13500,
+        14000,
+        15000,
+        18000,
+        18500,
+        19000,
+        20000,
+        21500,
+        24000,
+        24500,
+        25000,
+        27000,
+        28000,
+        32000,
+        34000,
+        38000,
+        55000,
+        68000
+      ],
+      "passed": true
+    },
+    {
+      "check": "Sort Price \u2193",
+      "expected": "ordered prices",
+      "actual": [
+        68000,
+        55000,
+        38000,
+        34000,
+        32000,
+        28000,
+        27000,
+        25000,
+        24500,
+        24000,
+        21500,
+        20000,
+        19000,
+        18500,
+        18000,
+        15000,
+        14000,
+        13500,
+        11000,
+        11000,
+        9500,
+        9000
+      ],
+      "passed": true
+    },
+    {
+      "check": "Zero-result guidance",
+      "expected": "help and clear-filter action",
+      "actual": {
+        "text": "ad\nAll\nDwarka\nLaxmi Nagar\nSaket\nMukherjee Nagar\nUttam Nagar\nGreater Kailash\nRohini\nHauz Khas\nKarol Bagh\nJanakpuri\nFreshest\nPrice \u2191\nPrice \u2193\n\n0 results in Delhi \u00b7 flagged & stale de-ranked automatically",
+        "clear_controls": 0
+      },
+      "passed": false
+    },
+    {
+      "check": "Enquiry button matches visit fee",
+      "expected": "Visit \u20b9200",
+      "actual": "Send enquiry \u00b7 Visit \u20b90",
+      "passed": false
+    },
+    {
+      "check": "Contact form blank validation",
+      "expected": "name and phone errors",
+      "actual": "Contact Karol Realty\nName must be at least 2 characters. Enter a valid 10-digit phone number.\nSend enquiry \u00b7 Visit \u20b90\n\nNever pay token before a visit. Report advance-fee demands.",
+      "passed": true
+    },
+    {
+      "check": "Contact form submit",
+      "expected": "success after local write",
+      "actual": "success",
+      "passed": true
+    },
+    {
+      "check": "City form blank validation",
+      "expected": "validation message",
+      "actual": "shown",
+      "passed": true
+    },
+    {
+      "check": "Existing city validation",
+      "expected": "already live message",
+      "actual": "shown",
+      "passed": true
+    },
+    {
+      "check": "City request submit",
+      "expected": "persist and clear fields",
+      "actual": "",
+      "passed": true
+    },
+    {
+      "check": "Onboarding step 1 validation",
+      "expected": "validation message",
+      "actual": "ught \u2014 payment only unlocks tools & visibility.\n\nContinue \u2192\nEnter your full name (min 2 characters).",
+      "passed": true
+    },
+    {
+      "check": "Onboarding step 2 validation",
+      "expected": "agency error",
+      "actual": " visibility.\n\nDelhi\nGurugram\nNoida\nGreater Noida\nGhaziabad\n\u2190 Back\nContinue \u2192\nEnter your agency name.",
+      "passed": true
+    },
+    {
+      "check": "Onboarding back retains inputs",
+      "expected": "Audit Agency",
+      "actual": "Audit Agency",
+      "passed": true
+    },
+    {
+      "check": "Onboarding submit",
+      "expected": "local application created",
+      "actual": "success",
+      "passed": true
+    },
+    {
+      "check": "New listing validation",
+      "expected": "positive rent required",
+      "actual": "shown",
+      "passed": true
+    },
+    {
+      "check": "New listing submit",
+      "expected": "photo and fee fields present",
+      "actual": {
+        "success": true,
+        "photo_upload": 0,
+        "fee_fields": 0
+      },
+      "passed": false
+    },
+    {
+      "check": "Reconfirm own listing button",
+      "expected": "updates freshness",
+      "actual": "success",
+      "passed": true
+    },
+    {
+      "check": "Broker session cannot switch to another broker",
+      "expected": "Raj Properties",
+      "actual": "BROKER OS \u00b7 Raj Properties\nGood morning, Rajesh.\n\nFreshness is ranking",
+      "passed": true
+    },
+    {
+      "check": "Admin Broker approvals Suspend",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Broker approvals Reject",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 0,
+        "alerts": [
+          "Broker not found"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "check": "Admin Broker approvals Approve",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Flagged listings Expire",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Flagged listings Flag",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Flagged listings Approve",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Pending listings Expire",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Pending listings Flag",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin Pending listings Approve",
+      "expected": "local write succeeds",
+      "actual": {
+        "writes": 1,
+        "alerts": []
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin report Uphold \u00b7 flag listing",
+      "expected": "local write",
+      "actual": {
+        "writes": 2
+      },
+      "passed": true
+    },
+    {
+      "check": "Admin report Dismiss",
+      "expected": "local write",
+      "actual": {
+        "writes": 1
+      },
+      "passed": true
+    },
+    {
+      "check": "Seeker moderation /api/brokers/B7",
+      "expected": 403,
+      "actual": 403,
+      "passed": true
+    },
+    {
+      "check": "Seeker moderation /api/listings/L010",
+      "expected": 403,
+      "actual": 403,
+      "passed": true
+    },
+    {
+      "check": "Seeker moderation /api/reports/RP-331",
+      "expected": 403,
+      "actual": 403,
+      "passed": true
+    },
+    {
+      "check": "Use a different email",
+      "expected": "email form remains visible",
+      "actual": "THIKANA.RENT \u00b7 SIGN IN\nWelcome back.\n\nEnter the 6-digit code from your email.\n\nVerify & sign inUse a different email",
+      "passed": false
+    },
+    {
+      "check": "Invalid OTP feedback",
+      "expected": "error shown",
+      "actual": "shown",
+      "passed": true
+    },
+    {
+      "check": "OTP verification",
+      "expected": "dashboard and session cookie",
+      "actual": {
+        "url": "http://localhost:4317/dashboard",
+        "session_cookie": true
+      },
+      "passed": true
+    },
+    {
+      "check": "POST sign out lands on home",
+      "expected": "GET / 200",
+      "actual": {
+        "status": 200,
+        "method": "POST",
+        "url": "http://localhost:4317/"
+      },
+      "passed": true
+    },
+    {
+      "check": "Auth network failure",
+      "expected": "retry button enabled",
+      "actual": {
+        "buttons": [
+          "Send code"
+        ],
+        "disabled": false
+      },
+      "passed": true
+    },
+    {
+      "check": "Enquiry network failure",
+      "expected": "visible retry error",
+      "actual": {
+        "text": "Contact Raj PropertiesSend enquiry \u00b7 Visit \u20b90\n\nNever pay token before a visit. Report advance-fee demands.",
+        "uncaught": [
+          "Failed to fetch"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "check": "Empty catalog home",
+      "expected": "200 with empty-state guidance",
+      "actual": 500,
+      "passed": false
+    }
+  ],
+  "page_errors": [
+    "Failed to fetch",
+    "Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+  ]
+}

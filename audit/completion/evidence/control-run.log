@@ -1,0 +1,28 @@
+PASS broker button Suspend
+PASS broker button Reject
+PASS broker button Approve
+PASS listing button Approve
+PASS listing button Expire
+PASS listing button Flag
+PASS listing button Approve
+PASS reconfirm button persists availability
+PASS dismiss accepts legacy open report states
+PASS report form persists issue
+PASS uphold report button flags listing
+PASS listing button Approve
+PASS schedule visit button persists
+PASS reschedule visit button persists
+PASS scheduled pipeline requires an explicit next stage
+PASS pipeline stage button persists
+PASS listing form uploads photo and persists
+PASS add another home returns fresh form
+PASS admin actions produced no error alerts
+PASS enquiry network error is visible
+PASS city request network error is visible
+PASS application upload network error is visible
+PASS listing network error preserves input
+PASS listing failure state fits mobile
+PASS visible keyboard focus
+PASS reduced motion respected
+PASS no runtime errors
+27/27 passed

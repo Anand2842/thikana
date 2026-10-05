@@ -1,0 +1,5 @@
+
+> thikana@0.1.0 check
+> tsx scripts/check.ts
+
+Validation, redirect safety, fee and availability checks passed.

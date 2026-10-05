@@ -28,7 +28,9 @@ body {
 }
 
 .card-hover {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s;
 }
 .card-hover:hover {
   transform: translateY(-6px);
@@ -40,4 +42,92 @@ body {
 }
 .no-scrollbar {
   scrollbar-width: none;
+}
+
+* {
+  min-width: 0;
+}
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+input:not([type="checkbox"]):not([type="file"]),
+select,
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  border: 1px solid #b7b6b0;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  color: #0b1526;
+}
+input[type="file"] {
+  display: block;
+  max-width: 100%;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+.button {
+  border-radius: 0.9rem;
+  padding: 0.75rem 1.1rem;
+  background: #0b1526;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 750;
+  text-align: center;
+}
+.button:hover {
+  background: #064e38;
+}
+.button.secondary {
+  border: 1px solid #0b1526;
+  background: #fffdf7;
+  color: #0b1526;
+}
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+button:not(:disabled),
+a {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 3px solid #0b7a55;
+  outline-offset: 4px;
+}
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #0b7a55;
+}
+.bg-saffron {
+  background-color: #b94310;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .card-hover:hover {
+    transform: none;
+  }
+}
+body {
+  overflow-wrap: anywhere;
 }

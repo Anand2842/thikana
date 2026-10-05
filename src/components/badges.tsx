@@ -5,7 +5,9 @@ import type { Listing } from "@/lib/mock-data";
 export function VerifiedBadge({ status }: { status: BrokerStatus }) {
   if (status === "verified")
     return (
-      <span className="bg-pine text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">✓ VERIFIED</span>
+      <span className="bg-pine text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+        ✓ VERIFIED
+      </span>
     );
   if (status === "pending")
     return (
@@ -31,7 +33,9 @@ export function FreshBadge({ listing }: { listing: Listing }) {
     flagged: "bg-red-50 text-red-700 border-red-300",
   };
   return (
-    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${styles[f.tone] ?? styles.recent}`}>
+    <span
+      className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${styles[f.tone] ?? styles.recent}`}
+    >
       {f.label}
     </span>
   );
@@ -45,7 +49,9 @@ export function VerificationPill({ v }: { v: Verification }) {
     stale: "bg-zinc-500 text-white",
   };
   return (
-    <span className={`text-[10px] font-extrabold px-2 py-1 rounded-full uppercase tracking-wide ${map[v]}`}>
+    <span
+      className={`text-[10px] font-extrabold px-2 py-1 rounded-full uppercase tracking-wide ${map[v]}`}
+    >
       {v}
     </span>
   );

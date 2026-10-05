@@ -1,0 +1,6 @@
+{
+  "emailReceived": true,
+  "supabaseEmailConfirmed": true,
+  "lastSignIn": "2026-10-05T21:30:14.004403Z",
+  "evidence": "User supplied the delivered link; Supabase records a successful sign-in. Reopening the one-use link returns the expiry error."
+}

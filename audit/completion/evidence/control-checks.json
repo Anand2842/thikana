@@ -1,0 +1,113 @@
+{
+  "checks": [
+    {
+      "name": "broker button Suspend",
+      "pass": true
+    },
+    {
+      "name": "broker button Reject",
+      "pass": true
+    },
+    {
+      "name": "broker button Approve",
+      "pass": true
+    },
+    {
+      "name": "listing button Approve",
+      "pass": true
+    },
+    {
+      "name": "listing button Expire",
+      "pass": true
+    },
+    {
+      "name": "listing button Flag",
+      "pass": true
+    },
+    {
+      "name": "listing button Approve",
+      "pass": true
+    },
+    {
+      "name": "reconfirm button persists availability",
+      "pass": true
+    },
+    {
+      "name": "dismiss accepts legacy open report states",
+      "pass": true
+    },
+    {
+      "name": "report form persists issue",
+      "pass": true
+    },
+    {
+      "name": "uphold report button flags listing",
+      "pass": true
+    },
+    {
+      "name": "listing button Approve",
+      "pass": true
+    },
+    {
+      "name": "schedule visit button persists",
+      "pass": true
+    },
+    {
+      "name": "reschedule visit button persists",
+      "pass": true
+    },
+    {
+      "name": "scheduled pipeline requires an explicit next stage",
+      "pass": true
+    },
+    {
+      "name": "pipeline stage button persists",
+      "pass": true
+    },
+    {
+      "name": "listing form uploads photo and persists",
+      "pass": true
+    },
+    {
+      "name": "add another home returns fresh form",
+      "pass": true
+    },
+    {
+      "name": "admin actions produced no error alerts",
+      "pass": true
+    },
+    {
+      "name": "enquiry network error is visible",
+      "pass": true
+    },
+    {
+      "name": "city request network error is visible",
+      "pass": true
+    },
+    {
+      "name": "application upload network error is visible",
+      "pass": true
+    },
+    {
+      "name": "listing network error preserves input",
+      "pass": true
+    },
+    {
+      "name": "listing failure state fits mobile",
+      "pass": true
+    },
+    {
+      "name": "visible keyboard focus",
+      "pass": true
+    },
+    {
+      "name": "reduced motion respected",
+      "pass": true
+    },
+    {
+      "name": "no runtime errors",
+      "pass": true
+    }
+  ],
+  "runtimeErrors": []
+}

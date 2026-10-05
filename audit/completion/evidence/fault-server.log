@@ -1,0 +1,40 @@
+
+> thikana@0.1.0 start
+> next start --hostname 127.0.0.1 --port 4338
+
+▲ Next.js 16.3.8
+- Local:         http://127.0.0.1:4338
+- Network:       http://127.0.0.1:4338
+✓ Ready in 140ms
+✓ Running next.config.ts took 31ms
+⨯ Error: Could not load enquiries. Please retry.
+    at dO (.next/server/chunks/ssr/_0yh-c87._.js:194:10315)
+    at async i (.next/server/chunks/ssr/_1_fbogr._.js:1:10132) {
+  digest: '3969479760'
+}
+⨯ Error: {"message":"Invalid API key","hint":"Double check your Supabase `anon` or `service_role` API key."}
+    at ignore-listed frames {
+  digest: '1972990673@E394'
+}
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+⨯ Error: {"message":"Invalid API key","hint":"Double check your Supabase `anon` or `service_role` API key."}
+    at ignore-listed frames {
+  digest: '1972990673@E394'
+}
+⨯ Error: Could not load enquiries. Please retry.
+    at dO (.next/server/chunks/ssr/_0yh-c87._.js:194:10315)
+    at async i (.next/server/chunks/ssr/_1_fbogr._.js:1:10132) {
+  digest: '3969479760'
+}
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable
+Database operation failed unavailable

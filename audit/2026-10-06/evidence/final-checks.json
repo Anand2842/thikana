@@ -1,0 +1,66 @@
+[
+  {
+    "check": "latest proxy /admin",
+    "status": 307,
+    "location": "/auth?next=%2Fadmin"
+  },
+  {
+    "check": "latest proxy /broker/dashboard",
+    "status": 307,
+    "location": "/auth?next=%2Fbroker%2Fdashboard"
+  },
+  {
+    "check": "latest proxy /broker/onboard",
+    "status": 307,
+    "location": "/auth?next=%2Fbroker%2Fonboard"
+  },
+  {
+    "check": "latest proxy /broker/listings/new",
+    "status": 307,
+    "location": "/auth?next=%2Fbroker%2Flistings%2Fnew"
+  },
+  {
+    "check": "new seeker can start onboarding",
+    "status": 307,
+    "location": "/auth?next=%2Fbroker%2Fonboard"
+  },
+  {
+    "check": "broker without profile association",
+    "url": "http://localhost:4317/broker/dashboard?broker=B2",
+    "header": "BROKER OS \u00b7 Saket Homes\nGood morning, Priya.\n\nFreshness is ranking. Reconfirm daily to stay on top. 2 live \u00b7 1 leads in inbox.\n\nDemo session"
+  },
+  {
+    "check": "latest anonymous lead access",
+    "status": 200,
+    "count": 5
+  },
+  {
+    "check": "latest anonymous reconfirm",
+    "status": 200,
+    "verification": "verified"
+  },
+  {
+    "check": "callback redirect backslash",
+    "status": 307,
+    "location": "http://audit.invalid/"
+  },
+  {
+    "check": "latest failed database /api/leads",
+    "status": 201,
+    "source": "mock"
+  },
+  {
+    "check": "latest failed database /api/listings",
+    "status": 201,
+    "source": "mock"
+  },
+  {
+    "check": "latest failed database /api/city-requests",
+    "status": 201,
+    "source": "mock"
+  },
+  {
+    "check": "latest empty home",
+    "status": 500
+  }
+]

@@ -1,0 +1,279 @@
+PASS production route /
+PASS no error boundary /
+PASS production route /properties
+PASS no error boundary /properties
+PASS production route /brokers
+PASS no error boundary /brokers
+PASS production route /auth
+PASS no error boundary /auth
+PASS production route /properties?q=not-a-home
+PASS no error boundary /properties?q=not-a-home
+PASS production route /robots.txt
+PASS production route /sitemap.xml
+PASS production route /properties/L001
+PASS no error boundary /properties/L001
+PASS production route /properties/L005
+PASS no error boundary /properties/L005
+PASS production route /properties/L012
+PASS no error boundary /properties/L012
+PASS production route /properties/L017
+PASS no error boundary /properties/L017
+PASS production route /properties/L004
+PASS no error boundary /properties/L004
+PASS production route /properties/L019
+PASS no error boundary /properties/L019
+PASS production route /properties/L015
+PASS no error boundary /properties/L015
+PASS production route /properties/L009
+PASS no error boundary /properties/L009
+PASS production route /properties/L021
+PASS no error boundary /properties/L021
+PASS production route /properties/L020
+PASS no error boundary /properties/L020
+PASS production route /properties/L002
+PASS no error boundary /properties/L002
+PASS production route /properties/L018
+PASS no error boundary /properties/L018
+PASS production route /properties/L014
+PASS no error boundary /properties/L014
+PASS production route /properties/L008
+PASS no error boundary /properties/L008
+PASS production route /properties/L016
+PASS no error boundary /properties/L016
+PASS production route /properties/L022
+PASS no error boundary /properties/L022
+PASS production route /properties/L011
+PASS no error boundary /properties/L011
+PASS production route /properties/L003
+PASS no error boundary /properties/L003
+PASS production route /properties/L006
+PASS no error boundary /properties/L006
+PASS production route /properties/L007
+PASS no error boundary /properties/L007
+PASS production route /properties/L013
+PASS no error boundary /properties/L013
+PASS production route /brokers/B3
+PASS no error boundary /brokers/B3
+PASS production route /brokers/B2
+PASS no error boundary /brokers/B2
+PASS production route /brokers/B5
+PASS no error boundary /brokers/B5
+PASS production route /brokers/B1
+PASS no error boundary /brokers/B1
+PASS production route /brokers/B10
+PASS no error boundary /brokers/B10
+PASS production route /brokers/B11
+PASS no error boundary /brokers/B11
+PASS production route /brokers/B12
+PASS no error boundary /brokers/B12
+PASS production route /brokers/B7
+PASS no error boundary /brokers/B7
+PASS production route /brokers/B8
+PASS no error boundary /brokers/B8
+PASS production route /brokers/B4
+PASS no error boundary /brokers/B4
+PASS production route /brokers/B6
+PASS no error boundary /brokers/B6
+PASS production route /brokers/B9
+PASS no error boundary /brokers/B9
+PASS production route /properties?city=Delhi
+PASS no error boundary /properties?city=Delhi
+PASS production route /brokers?city=Delhi
+PASS no error boundary /brokers?city=Delhi
+PASS production route /properties?city=Gurugram
+PASS no error boundary /properties?city=Gurugram
+PASS production route /brokers?city=Gurugram
+PASS no error boundary /brokers?city=Gurugram
+PASS production route /properties?city=Noida
+PASS no error boundary /properties?city=Noida
+PASS production route /brokers?city=Noida
+PASS no error boundary /brokers?city=Noida
+PASS production route /properties?city=Greater Noida
+PASS no error boundary /properties?city=Greater Noida
+PASS production route /brokers?city=Greater Noida
+PASS no error boundary /brokers?city=Greater Noida
+PASS production route /properties?city=Ghaziabad
+PASS no error boundary /properties?city=Ghaziabad
+PASS production route /brokers?city=Ghaziabad
+PASS no error boundary /brokers?city=Ghaziabad
+PASS production route /properties?city=Delhi&locality=Dwarka&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Dwarka&sort=low
+PASS production route /properties?city=Delhi&locality=Laxmi Nagar&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Laxmi Nagar&sort=low
+PASS production route /properties?city=Delhi&locality=Saket&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Saket&sort=low
+PASS production route /properties?city=Noida&locality=Sector 137&sort=low
+PASS no error boundary /properties?city=Noida&locality=Sector 137&sort=low
+PASS production route /properties?city=Greater Noida&locality=Pari Chowk&sort=low
+PASS no error boundary /properties?city=Greater Noida&locality=Pari Chowk&sort=low
+PASS production route /properties?city=Gurugram&locality=Golf Course Road&sort=low
+PASS no error boundary /properties?city=Gurugram&locality=Golf Course Road&sort=low
+PASS production route /properties?city=Delhi&locality=Mukherjee Nagar&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Mukherjee Nagar&sort=low
+PASS production route /properties?city=Ghaziabad&locality=Indirapuram&sort=low
+PASS no error boundary /properties?city=Ghaziabad&locality=Indirapuram&sort=low
+PASS production route /properties?city=Greater Noida&locality=Alpha I&sort=low
+PASS no error boundary /properties?city=Greater Noida&locality=Alpha I&sort=low
+PASS production route /properties?city=Noida&locality=Sector 62&sort=low
+PASS no error boundary /properties?city=Noida&locality=Sector 62&sort=low
+PASS production route /properties?city=Delhi&locality=Uttam Nagar&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Uttam Nagar&sort=low
+PASS production route /properties?city=Delhi&locality=Greater Kailash&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Greater Kailash&sort=low
+PASS production route /properties?city=Gurugram&locality=Sohna Road&sort=low
+PASS no error boundary /properties?city=Gurugram&locality=Sohna Road&sort=low
+PASS production route /properties?city=Ghaziabad&locality=Vaishali&sort=low
+PASS no error boundary /properties?city=Ghaziabad&locality=Vaishali&sort=low
+PASS production route /properties?city=Delhi&locality=Rohini&sort=low
+PASS no error boundary /properties?city=Delhi&locality=Rohini&sort=low
+PASS internal link /
+PASS internal link /auth
+PASS internal link /auth?next=/properties/L001
+PASS internal link /broker/onboard
+PASS internal link /brokers
+PASS internal link /brokers/B1
+PASS internal link /brokers/B10
+PASS internal link /brokers/B11
+PASS internal link /brokers/B12
+PASS internal link /brokers/B2
+PASS internal link /brokers/B3
+PASS internal link /brokers/B4
+PASS internal link /brokers/B5
+PASS internal link /brokers/B6
+PASS internal link /brokers/B7
+PASS internal link /brokers/B8
+PASS internal link /brokers/B9
+PASS internal link /brokers?city=Delhi
+PASS internal link /brokers?city=Ghaziabad
+PASS internal link /brokers?city=Greater%20Noida
+PASS internal link /brokers?city=Gurugram
+PASS internal link /brokers?city=Noida
+PASS internal link /dashboard
+PASS internal link /properties
+PASS internal link /properties/L001
+PASS internal link /properties/L002
+PASS internal link /properties/L003
+PASS internal link /properties/L004
+PASS internal link /properties/L005
+PASS internal link /properties/L006
+PASS internal link /properties/L008
+PASS internal link /properties/L009
+PASS internal link /properties/L011
+PASS internal link /properties/L012
+PASS internal link /properties/L014
+PASS internal link /properties/L015
+PASS internal link /properties/L016
+PASS internal link /properties/L017
+PASS internal link /properties/L018
+PASS internal link /properties/L019
+PASS internal link /properties/L020
+PASS internal link /properties/L021
+PASS internal link /properties/L022
+PASS internal link /properties?
+PASS internal link /properties?city=Delhi
+PASS internal link /properties?city=Delhi&locality=Dwarka
+PASS internal link /properties?city=Delhi&locality=Laxmi%20Nagar
+PASS internal link /properties?city=Delhi&locality=Mukherjee%20Nagar
+PASS internal link /properties?city=Delhi&locality=Saket
+PASS internal link /properties?city=Ghaziabad
+PASS internal link /properties?city=Ghaziabad&locality=Indirapuram
+PASS internal link /properties?city=Greater%20Noida
+PASS internal link /properties?city=Greater%20Noida&locality=Pari%20Chowk
+PASS internal link /properties?city=Greater+Noida
+PASS internal link /properties?city=Gurugram
+PASS internal link /properties?city=Gurugram&locality=Golf%20Course%20Road
+PASS internal link /properties?city=Noida
+PASS internal link /properties?city=Noida&locality=Sector%20137
+PASS internal link /properties?locality=Alpha+I
+PASS internal link /properties?locality=Dwarka
+PASS internal link /properties?locality=Golf+Course+Road
+PASS internal link /properties?locality=Greater+Kailash
+PASS internal link /properties?locality=Indirapuram
+PASS internal link /properties?locality=Laxmi+Nagar
+PASS internal link /properties?locality=Mukherjee+Nagar
+PASS internal link /properties?locality=Pari+Chowk
+PASS internal link /properties?locality=Rohini
+PASS internal link /properties?locality=Saket
+PASS internal link /properties?locality=Sector+137
+PASS internal link /properties?locality=Sector+62
+PASS internal link /properties?locality=Sohna+Road
+PASS internal link /properties?locality=Uttam+Nagar
+PASS internal link /properties?locality=Vaishali
+PASS production layout 320 /
+PASS production layout 320 /properties
+PASS production layout 320 /brokers
+PASS production layout 320 /properties/L001
+PASS production layout 320 /properties/L003
+PASS production layout 320 /brokers/B1
+PASS production layout 320 /auth
+PASS production layout 375 /
+PASS production layout 375 /properties
+PASS production layout 375 /brokers
+PASS production layout 375 /properties/L001
+PASS production layout 375 /properties/L003
+PASS production layout 375 /brokers/B1
+PASS production layout 375 /auth
+PASS production layout 768 /
+PASS production layout 768 /properties
+PASS production layout 768 /brokers
+PASS production layout 768 /properties/L001
+PASS production layout 768 /properties/L003
+PASS production layout 768 /brokers/B1
+PASS production layout 768 /auth
+PASS production layout 1440 /
+PASS production layout 1440 /properties
+PASS production layout 1440 /brokers
+PASS production layout 1440 /properties/L001
+PASS production layout 1440 /properties/L003
+PASS production layout 1440 /brokers/B1
+PASS production layout 1440 /auth
+PASS production authenticated /admin
+PASS private layout 320 /admin
+PASS private layout 768 /admin
+PASS private pages use noindex /admin
+PASS production authenticated /dashboard
+PASS private layout 320 /dashboard
+PASS private layout 768 /dashboard
+PASS private pages use noindex /dashboard
+PASS production authenticated /broker/dashboard
+PASS private layout 320 /broker/dashboard
+PASS private layout 768 /broker/dashboard
+PASS private pages use noindex /broker/dashboard
+PASS production authenticated /broker/dashboard?broker=B1
+PASS private layout 320 /broker/dashboard?broker=B1
+PASS private layout 768 /broker/dashboard?broker=B1
+PASS private pages use noindex /broker/dashboard?broker=B1
+PASS production authenticated /broker/onboard
+PASS private layout 320 /broker/onboard
+PASS private layout 768 /broker/onboard
+PASS private pages use noindex /broker/onboard
+PASS production authenticated /properties/L010
+PASS private layout 320 /properties/L010
+PASS private layout 768 /properties/L010
+PASS unknown route returns 404 /properties/not-a-real-home
+PASS unknown route returns 404 /brokers/not-a-real-broker
+PASS unknown route returns 404 /not-a-route
+PASS sitemap excludes private routes
+PASS sitemap matches listing availability L001
+PASS sitemap matches listing availability L005
+PASS sitemap matches listing availability L012
+PASS sitemap matches listing availability L017
+PASS sitemap matches listing availability L004
+PASS sitemap matches listing availability L019
+PASS sitemap matches listing availability L015
+PASS sitemap matches listing availability L009
+PASS sitemap matches listing availability L021
+PASS sitemap matches listing availability L020
+PASS sitemap matches listing availability L002
+PASS sitemap matches listing availability L018
+PASS sitemap matches listing availability L014
+PASS sitemap matches listing availability L008
+PASS sitemap matches listing availability L016
+PASS sitemap matches listing availability L022
+PASS sitemap matches listing availability L011
+PASS sitemap matches listing availability L003
+PASS sitemap matches listing availability L006
+PASS sitemap matches listing availability L007
+PASS sitemap matches listing availability L013
+PASS production runtime errors
+278/278 passed

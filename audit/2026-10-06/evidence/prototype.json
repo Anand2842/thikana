@@ -1,0 +1,136 @@
+[
+  {
+    "view": "home",
+    "visible": "view-home",
+    "buttons": 70,
+    "errors": []
+  },
+  {
+    "view": "properties",
+    "visible": "view-properties",
+    "buttons": 84,
+    "errors": []
+  },
+  {
+    "view": "brokers",
+    "visible": "view-brokers",
+    "buttons": 16,
+    "errors": []
+  },
+  {
+    "view": "property",
+    "visible": "view-property",
+    "buttons": 13,
+    "errors": []
+  },
+  {
+    "view": "broker",
+    "visible": "view-broker",
+    "buttons": 16,
+    "errors": []
+  },
+  {
+    "view": "enquiries",
+    "visible": "view-enquiries",
+    "buttons": 1,
+    "errors": []
+  },
+  {
+    "view": "saved",
+    "visible": "view-saved",
+    "buttons": 8,
+    "errors": []
+  },
+  {
+    "view": "brokerdash",
+    "visible": "view-brokerdash",
+    "buttons": 8,
+    "errors": []
+  },
+  {
+    "view": "admin",
+    "visible": "view-admin",
+    "buttons": 5,
+    "errors": []
+  },
+  {
+    "check": "advertised natural-language search",
+    "results": "0 results in Delhi \u00b7 0 verified today \u00b7 0 unique properties"
+  },
+  {
+    "check": "verified broker quick-search",
+    "active": "view-properties"
+  },
+  {
+    "check": "save property",
+    "cards": 1
+  },
+  {
+    "check": "prototype enquiry",
+    "active": "view-enquiries",
+    "contains_new": true
+  },
+  {
+    "check": "prototype report",
+    "reports": 4
+  },
+  {
+    "check": "broker tab overview",
+    "controls": 2,
+    "errors": []
+  },
+  {
+    "check": "broker tab listings",
+    "controls": 7,
+    "errors": []
+  },
+  {
+    "check": "broker tab add",
+    "controls": 1,
+    "errors": []
+  },
+  {
+    "check": "broker tab leads",
+    "controls": 11,
+    "errors": []
+  },
+  {
+    "check": "broker tab profile",
+    "controls": 1,
+    "errors": []
+  },
+  {
+    "check": "admin tab overview",
+    "controls": 0,
+    "errors": []
+  },
+  {
+    "check": "admin tab verify",
+    "controls": 4,
+    "errors": []
+  },
+  {
+    "check": "admin tab listings",
+    "controls": 42,
+    "errors": []
+  },
+  {
+    "check": "admin tab reports",
+    "controls": 12,
+    "errors": []
+  },
+  {
+    "check": "admin tab dup",
+    "controls": 3,
+    "errors": []
+  },
+  {
+    "check": "gallery thumbnail",
+    "src": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "check": "prototype persistence",
+    "new_enquiry_remains": false,
+    "errors": []
+  }
+]

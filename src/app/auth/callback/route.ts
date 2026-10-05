@@ -1,11 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// PKCE / magic-link code exchange: /auth/callback?code=…&next=…
-function safeNext(raw: string | null): string {
-  if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/";
-}
+import { safeNext } from "@/lib/navigation";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -13,10 +9,18 @@ export async function GET(request: NextRequest) {
   const next = safeNext(url.searchParams.get("next"));
 
   if (!code) {
-    return NextResponse.redirect(new URL("/auth", request.url));
+    return new NextResponse(null, {
+      status: 303,
+      headers: {
+        Location: "/auth?error=The+sign-in+link+expired.+Please+try+again.",
+      },
+    });
   }
 
-  const response = NextResponse.redirect(new URL(next, request.url));
+  const response = new NextResponse(null, {
+    status: 303,
+    headers: { Location: next },
+  });
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -27,16 +31,21 @@ export async function GET(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    return NextResponse.redirect(new URL("/auth", request.url));
+    return new NextResponse(null, {
+      status: 303,
+      headers: {
+        Location: "/auth?error=The+sign-in+link+expired.+Please+try+again.",
+      },
+    });
   }
   return response;
 }

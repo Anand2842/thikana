@@ -1,6 +1,6 @@
 -- Thikana (thikana.rent) · Supabase schema
 -- Apply with: psql "$DATABASE_URL" -f supabase/schema.sql
--- Mirrors prisma/schema.prisma. Columns are snake_case; the app maps
+-- Columns are snake_case; the app maps
 -- rows to camelCase types in src/lib/supabase/data.ts.
 
 create table if not exists "brokers" (

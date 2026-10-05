@@ -1,43 +1,111 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
-
-export default function ContactBrokerForm({ listingId, brokerAgency }: { listingId: string; brokerAgency: string }) {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [msg, setMsg] = useState("");
-  const [done, setDone] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function submit(e: React.FormEvent) {
+import { request } from "@/lib/client-request";
+import { inr } from "@/lib/trust";
+export default function ContactBrokerForm({
+  listingId,
+  brokerAgency,
+  visitFee,
+  signedIn,
+}: {
+  listingId: string;
+  brokerAgency: string;
+  visitFee: number;
+  signedIn: boolean;
+}) {
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState(""),
+    [done, setDone] = useState(false);
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    const res = await fetch("/api/leads", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, listingId, msg }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.errors?.join(" ") ?? "Could not send enquiry.");
-      return;
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    const f = new FormData(e.currentTarget);
+    try {
+      await request("/api/leads", {
+        listingId,
+        name: f.get("name"),
+        phone: f.get("phone"),
+        msg: f.get("msg"),
+      });
+      setDone(true);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
     }
-    setDone(`Enquiry ${data.lead.id} sent to ${brokerAgency}. Typical response ~2h. No advance payment needed.`);
   }
-
-  if (done) return <div className="bg-mist border border-pine/25 rounded-2xl p-4 text-[13.5px] font-semibold text-pinedark">{done}</div>;
-
+  if (done)
+    return (
+      <div
+        role="status"
+        className="bg-mist border border-pine/25 rounded-3xl p-5"
+      >
+        <b>Enquiry sent to {brokerAgency}.</b>
+        <Link className="block underline mt-3" href="/dashboard">
+          View enquiry & schedule a visit →
+        </Link>
+      </div>
+    );
+  if (!signedIn)
+    return (
+      <Link
+        className="button block"
+        href={`/auth?next=/properties/${listingId}`}
+      >
+        Sign in to contact {brokerAgency}
+      </Link>
+    );
   return (
-    <form onSubmit={submit} className="bg-cream border border-line rounded-3xl p-5 space-y-3">
-      <b className="text-[15px]">Contact {brokerAgency}</b>
-      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full h-11 rounded-xl border border-line bg-white px-3 text-[14px]" />
-      <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="10-digit mobile" className="w-full h-11 rounded-xl border border-line bg-white px-3 text-[14px]" />
-      <textarea value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Move-in date, family size, questions…" rows={3} className="w-full rounded-xl border border-line bg-white px-3 py-2 text-[14px]" />
-      {error && <div className="text-[13px] font-semibold text-red-700">{error}</div>}
-      <button className="w-full bg-ink text-white font-extrabold py-3 rounded-2xl hover:bg-pine transition text-[14px]">
-        Send enquiry · Visit ₹0
+    <form
+      onSubmit={submit}
+      className="bg-cream border border-line rounded-3xl p-5 space-y-3"
+    >
+      <b>Contact {brokerAgency}</b>
+      <label>
+        Your name
+        <input
+          name="name"
+          autoComplete="name"
+          required
+          minLength={2}
+          maxLength={100}
+        />
+      </label>
+      <label>
+        Mobile number
+        <input
+          name="phone"
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel-national"
+          required
+          pattern="[0-9]{10}"
+          maxLength={10}
+        />
+      </label>
+      <label>
+        Your questions
+        <textarea
+          name="msg"
+          maxLength={2000}
+          rows={3}
+          placeholder="Move-in date, family size, questions…"
+        />
+      </label>
+      {error && (
+        <p role="alert" className="text-sm text-red-700">
+          {error}
+        </p>
+      )}
+      <button className="button w-full" disabled={busy}>
+        {busy ? "Sending…" : `Send enquiry · Visit ${inr(visitFee)}`}
       </button>
-      <p className="text-[11.5px] text-ink/55 font-medium">Never pay token before a visit. Report advance-fee demands.</p>
+      <p className="text-xs text-ink/65">
+        Never pay a token before a visit. Report advance-fee demands.
+      </p>
     </form>
   );
 }

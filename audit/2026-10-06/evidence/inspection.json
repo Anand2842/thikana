@@ -1,0 +1,2190 @@
+{
+  "pages": [
+    {
+      "route": "/",
+      "status": 200,
+      "final": "/",
+      "h1": [
+        "Find property.Know your broker."
+      ],
+      "buttons": [
+        "Notify me at launch"
+      ],
+      "links": 40,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Which city? e.g. Jaipur",
+          "label": null
+        },
+        {
+          "tag": "SELECT",
+          "type": "select-one",
+          "placeholder": null,
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties",
+      "status": 200,
+      "final": "/properties",
+      "h1": [
+        "Know the fees first."
+      ],
+      "buttons": [],
+      "links": 50,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers",
+      "status": 200,
+      "final": "/brokers",
+      "h1": [
+        "Verified brokers across NCR"
+      ],
+      "buttons": [],
+      "links": 18,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/dashboard",
+      "status": 200,
+      "final": "/dashboard",
+      "h1": [
+        "My Enquiries"
+      ],
+      "buttons": [],
+      "links": 0,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/auth",
+      "status": 200,
+      "final": "/auth",
+      "h1": [
+        "Welcome back."
+      ],
+      "buttons": [
+        "Send code"
+      ],
+      "links": 0,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "placeholder": "you@example.com",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/admin",
+      "status": 200,
+      "final": "/auth?next=%2Fadmin",
+      "h1": [
+        "Welcome back."
+      ],
+      "buttons": [
+        "Send code"
+      ],
+      "links": 0,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "placeholder": "you@example.com",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/broker/dashboard",
+      "status": 200,
+      "final": "/auth?next=%2Fbroker%2Fdashboard",
+      "h1": [
+        "Welcome back."
+      ],
+      "buttons": [
+        "Send code"
+      ],
+      "links": 0,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "placeholder": "you@example.com",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/broker/onboard",
+      "status": 200,
+      "final": "/auth?next=%2Fbroker%2Fonboard",
+      "h1": [
+        "Welcome back."
+      ],
+      "buttons": [
+        "Send code"
+      ],
+      "links": 0,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "placeholder": "you@example.com",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/broker/listings/new",
+      "status": 200,
+      "final": "/auth?next=%2Fbroker%2Flistings%2Fnew",
+      "h1": [
+        "Welcome back."
+      ],
+      "buttons": [
+        "Send code"
+      ],
+      "links": 0,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "placeholder": "you@example.com",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L001",
+      "status": 200,
+      "final": "/properties/L001",
+      "h1": [
+        "2 BHK Apartment \u00b7 Dwarka, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 4,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L005",
+      "status": 200,
+      "final": "/properties/L005",
+      "h1": [
+        "1 BHK Independent Floor \u00b7 Laxmi Nagar, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L012",
+      "status": 200,
+      "final": "/properties/L012",
+      "h1": [
+        "1 BHK Independent Floor \u00b7 Saket, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L017",
+      "status": 200,
+      "final": "/properties/L017",
+      "h1": [
+        "2 BHK Apartment \u00b7 Sector 137, Noida"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L004",
+      "status": 200,
+      "final": "/properties/L004",
+      "h1": [
+        "3 BHK Builder Floor \u00b7 Saket, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L019",
+      "status": 200,
+      "final": "/properties/L019",
+      "h1": [
+        "2 BHK Apartment \u00b7 Pari Chowk, Greater Noida"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L015",
+      "status": 200,
+      "final": "/properties/L015",
+      "h1": [
+        "2 BHK Apartment \u00b7 Golf Course Road, Gurugram"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L009",
+      "status": 200,
+      "final": "/properties/L009",
+      "h1": [
+        "1 BHK Studio \u00b7 Mukherjee Nagar, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L021",
+      "status": 200,
+      "final": "/properties/L021",
+      "h1": [
+        "2 BHK Apartment \u00b7 Indirapuram, Ghaziabad"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L020",
+      "status": 200,
+      "final": "/properties/L020",
+      "h1": [
+        "1 BHK Apartment \u00b7 Alpha I, Greater Noida"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L002",
+      "status": 200,
+      "final": "/properties/L002",
+      "h1": [
+        "2 BHK Apartment \u00b7 Dwarka, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 4,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L018",
+      "status": 200,
+      "final": "/properties/L018",
+      "h1": [
+        "3 BHK Apartment \u00b7 Sector 62, Noida"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L014",
+      "status": 200,
+      "final": "/properties/L014",
+      "h1": [
+        "1 BHK 1 RK \u00b7 Uttam Nagar, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L008",
+      "status": 200,
+      "final": "/properties/L008",
+      "h1": [
+        "3 BHK Apartment \u00b7 Greater Kailash, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L016",
+      "status": 200,
+      "final": "/properties/L016",
+      "h1": [
+        "3 BHK Builder Floor \u00b7 Sohna Road, Gurugram"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L022",
+      "status": 200,
+      "final": "/properties/L022",
+      "h1": [
+        "3 BHK Apartment \u00b7 Vaishali, Ghaziabad"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L011",
+      "status": 200,
+      "final": "/properties/L011",
+      "h1": [
+        "3 BHK Apartment \u00b7 Dwarka, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L003",
+      "status": 200,
+      "final": "/properties/L003",
+      "h1": [
+        "2 BHK Apartment \u00b7 Dwarka, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 4,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L006",
+      "status": 200,
+      "final": "/properties/L006",
+      "h1": [
+        "2 BHK DDA Flat \u00b7 Rohini, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L010",
+      "status": 200,
+      "final": "/properties/L010",
+      "h1": [
+        "2 BHK Barsati \u00b7 Hauz Khas, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L007",
+      "status": 200,
+      "final": "/properties/L007",
+      "h1": [
+        "2 BHK Apartment \u00b7 Karol Bagh, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/L013",
+      "status": 200,
+      "final": "/properties/L013",
+      "h1": [
+        "2 BHK DDA Flat \u00b7 Janakpuri, Delhi"
+      ],
+      "buttons": [
+        "Send enquiry \u00b7 Visit \u20b90"
+      ],
+      "links": 2,
+      "forms": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "Your name",
+          "label": null
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "placeholder": "10-digit mobile",
+          "label": null
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "placeholder": "Move-in date, family size, questions\u2026",
+          "label": null
+        }
+      ],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B2",
+      "status": 200,
+      "final": "/brokers/B2",
+      "h1": [
+        "Saket Homes"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B5",
+      "status": 200,
+      "final": "/brokers/B5",
+      "h1": [
+        "GK Luxury Living"
+      ],
+      "buttons": [],
+      "links": 2,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B1",
+      "status": 200,
+      "final": "/brokers/B1",
+      "h1": [
+        "Raj Properties"
+      ],
+      "buttons": [],
+      "links": 4,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B10",
+      "status": 200,
+      "final": "/brokers/B10",
+      "h1": [
+        "NoidaNest Homes"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B4",
+      "status": 200,
+      "final": "/brokers/B4",
+      "h1": [
+        "Rohini Rentals"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B9",
+      "status": 200,
+      "final": "/brokers/B9",
+      "h1": [
+        "GurgaonNest Realty"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B12",
+      "status": 200,
+      "final": "/brokers/B12",
+      "h1": [
+        "Indirapuram Estates"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B3",
+      "status": 200,
+      "final": "/brokers/B3",
+      "h1": [
+        "Laxmi Estates"
+      ],
+      "buttons": [],
+      "links": 4,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B11",
+      "status": 200,
+      "final": "/brokers/B11",
+      "h1": [
+        "Pari Chowk Properties"
+      ],
+      "buttons": [],
+      "links": 3,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B6",
+      "status": 200,
+      "final": "/brokers/B6",
+      "h1": [
+        "Karol Realty"
+      ],
+      "buttons": [],
+      "links": 2,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B8",
+      "status": 200,
+      "final": "/brokers/B8",
+      "h1": [
+        "QuickDeal"
+      ],
+      "buttons": [],
+      "links": 2,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/brokers/B7",
+      "status": 200,
+      "final": "/brokers/B7",
+      "h1": [
+        "Hauz Khas Homes"
+      ],
+      "buttons": [],
+      "links": 2,
+      "forms": [],
+      "font": [
+        "Fraunces, serif"
+      ]
+    },
+    {
+      "route": "/properties/unknown-audit-id",
+      "status": 404,
+      "final": "/properties/unknown-audit-id",
+      "h1": [
+        "404"
+      ],
+      "buttons": [],
+      "links": 0,
+      "forms": [],
+      "font": [
+        "system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\""
+      ]
+    },
+    {
+      "route": "/brokers/unknown-audit-id",
+      "status": 404,
+      "final": "/brokers/unknown-audit-id",
+      "h1": [
+        "404"
+      ],
+      "buttons": [],
+      "links": 0,
+      "forms": [],
+      "font": [
+        "system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\""
+      ]
+    },
+    {
+      "route": "/does-not-exist",
+      "status": 404,
+      "final": "/does-not-exist",
+      "h1": [
+        "404"
+      ],
+      "buttons": [],
+      "links": 0,
+      "forms": [],
+      "font": [
+        "system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\""
+      ]
+    },
+    {
+      "route": "/robots.txt",
+      "status": 200,
+      "final": "/robots.txt",
+      "h1": [],
+      "buttons": [],
+      "links": 0
+    },
+    {
+      "route": "/sitemap.xml",
+      "status": 200,
+      "final": "/sitemap.xml",
+      "h1": [],
+      "buttons": [],
+      "links": 0
+    },
+    {
+      "route": "/brokers?city=Delhi",
+      "status": 200,
+      "final": "/brokers?city=Delhi",
+      "h1": [
+        "Verified brokers in Delhi"
+      ],
+      "result": [
+        "Payment can never buy verification. 6 verified \u00b7 2 pending/flagged shown separately."
+      ]
+    },
+    {
+      "route": "/brokers?city=Ghaziabad",
+      "status": 200,
+      "final": "/brokers?city=Ghaziabad",
+      "h1": [
+        "Verified brokers in Ghaziabad"
+      ],
+      "result": [
+        "Payment can never buy verification. 1 verified \u00b7 0 pending/flagged shown separately."
+      ]
+    },
+    {
+      "route": "/brokers?city=Greater%20Noida",
+      "status": 200,
+      "final": "/brokers?city=Greater%20Noida",
+      "h1": [
+        "Verified brokers in Greater Noida"
+      ],
+      "result": [
+        "Payment can never buy verification. 1 verified \u00b7 0 pending/flagged shown separately."
+      ]
+    },
+    {
+      "route": "/brokers?city=Gurugram",
+      "status": 200,
+      "final": "/brokers?city=Gurugram",
+      "h1": [
+        "Verified brokers in Gurugram"
+      ],
+      "result": [
+        "Payment can never buy verification. 1 verified \u00b7 0 pending/flagged shown separately."
+      ]
+    },
+    {
+      "route": "/brokers?city=Noida",
+      "status": 200,
+      "final": "/brokers?city=Noida",
+      "h1": [
+        "Verified brokers in Noida"
+      ],
+      "result": [
+        "Payment can never buy verification. 1 verified \u00b7 0 pending/flagged shown separately."
+      ]
+    },
+    {
+      "route": "/properties?",
+      "status": 200,
+      "final": "/properties",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "22 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi",
+      "status": 200,
+      "final": "/properties?city=Delhi",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "14 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Dwarka",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Dwarka",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "4 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Greater%20Kailash",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Greater%20Kailash",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Hauz%20Khas",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Hauz%20Khas",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Karol%20Bagh",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Karol%20Bagh",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Laxmi%20Nagar",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Laxmi%20Nagar",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Mukherjee%20Nagar",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Mukherjee%20Nagar",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Rohini",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Rohini",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Delhi&locality=Saket",
+      "status": 200,
+      "final": "/properties?city=Delhi&locality=Saket",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results in Delhi \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Ghaziabad",
+      "status": 200,
+      "final": "/properties?city=Ghaziabad",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results in Ghaziabad \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Ghaziabad&locality=Indirapuram",
+      "status": 200,
+      "final": "/properties?city=Ghaziabad&locality=Indirapuram",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Ghaziabad \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Ghaziabad&locality=Vaishali",
+      "status": 200,
+      "final": "/properties?city=Ghaziabad&locality=Vaishali",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Ghaziabad \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Greater%20Noida",
+      "status": 200,
+      "final": "/properties?city=Greater%20Noida",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results in Greater Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Greater%20Noida&locality=Alpha%20I",
+      "status": 200,
+      "final": "/properties?city=Greater%20Noida&locality=Alpha%20I",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Greater Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Greater%20Noida&locality=Pari%20Chowk",
+      "status": 200,
+      "final": "/properties?city=Greater%20Noida&locality=Pari%20Chowk",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Greater Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Gurugram",
+      "status": 200,
+      "final": "/properties?city=Gurugram",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results in Gurugram \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Gurugram&locality=Golf%20Course%20Road",
+      "status": 200,
+      "final": "/properties?city=Gurugram&locality=Golf%20Course%20Road",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Gurugram \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Gurugram&locality=Sohna%20Road",
+      "status": 200,
+      "final": "/properties?city=Gurugram&locality=Sohna%20Road",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Gurugram \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Noida",
+      "status": 200,
+      "final": "/properties?city=Noida",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results in Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Noida&locality=Sector%20137",
+      "status": 200,
+      "final": "/properties?city=Noida&locality=Sector%20137",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?city=Noida&locality=Sector%2062",
+      "status": 200,
+      "final": "/properties?city=Noida&locality=Sector%2062",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results in Noida \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Alpha+I",
+      "status": 200,
+      "final": "/properties?locality=Alpha+I",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Dwarka",
+      "status": 200,
+      "final": "/properties?locality=Dwarka",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "4 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Golf+Course+Road",
+      "status": 200,
+      "final": "/properties?locality=Golf+Course+Road",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Greater+Kailash",
+      "status": 200,
+      "final": "/properties?locality=Greater+Kailash",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Hauz+Khas",
+      "status": 200,
+      "final": "/properties?locality=Hauz+Khas",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Indirapuram",
+      "status": 200,
+      "final": "/properties?locality=Indirapuram",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Janakpuri",
+      "status": 200,
+      "final": "/properties?locality=Janakpuri",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Karol+Bagh",
+      "status": 200,
+      "final": "/properties?locality=Karol+Bagh",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Laxmi+Nagar",
+      "status": 200,
+      "final": "/properties?locality=Laxmi+Nagar",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Mukherjee+Nagar",
+      "status": 200,
+      "final": "/properties?locality=Mukherjee+Nagar",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Pari+Chowk",
+      "status": 200,
+      "final": "/properties?locality=Pari+Chowk",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Rohini",
+      "status": 200,
+      "final": "/properties?locality=Rohini",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Saket",
+      "status": 200,
+      "final": "/properties?locality=Saket",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "2 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Sector+137",
+      "status": 200,
+      "final": "/properties?locality=Sector+137",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Sector+62",
+      "status": 200,
+      "final": "/properties?locality=Sector+62",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Sohna+Road",
+      "status": 200,
+      "final": "/properties?locality=Sohna+Road",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Uttam+Nagar",
+      "status": 200,
+      "final": "/properties?locality=Uttam+Nagar",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?locality=Vaishali",
+      "status": 200,
+      "final": "/properties?locality=Vaishali",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "1 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?sort=fresh",
+      "status": 200,
+      "final": "/properties?sort=fresh",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "22 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?sort=high",
+      "status": 200,
+      "final": "/properties?sort=high",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "22 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    },
+    {
+      "route": "/properties?sort=low",
+      "status": 200,
+      "final": "/properties?sort=low",
+      "h1": [
+        "Know the fees first."
+      ],
+      "result": [
+        "22 results across NCR \u00b7 flagged & stale de-ranked automatically"
+      ]
+    }
+  ],
+  "api": [
+    {
+      "route": "/api/listings",
+      "status": 200,
+      "source": "supabase",
+      "count": 22,
+      "fields": [
+        "id",
+        "propId",
+        "title",
+        "city",
+        "locality",
+        "sector",
+        "bhk",
+        "type",
+        "rent",
+        "deposit",
+        "furnishing",
+        "area",
+        "floor",
+        "amenities",
+        "avail",
+        "brok",
+        "brokDays",
+        "visitFee",
+        "otherFee",
+        "photos",
+        "brokerId",
+        "hrs",
+        "verification",
+        "desc",
+        "views",
+        "enq"
+      ]
+    },
+    {
+      "route": "/api/brokers",
+      "status": 200,
+      "source": "supabase",
+      "count": 12,
+      "fields": [
+        "id",
+        "name",
+        "agency",
+        "photo",
+        "verified",
+        "rating",
+        "reviews",
+        "recommend",
+        "accuracy",
+        "responseRate",
+        "responseTime",
+        "cities",
+        "areas",
+        "cats",
+        "exp",
+        "tenure",
+        "policy",
+        "vdate",
+        "complaints",
+        "resolved",
+        "kyc"
+      ]
+    },
+    {
+      "route": "/api/leads",
+      "status": 200,
+      "source": "supabase",
+      "count": 5,
+      "fields": [
+        "id",
+        "listingId",
+        "brokerId",
+        "userName",
+        "phone",
+        "req",
+        "time",
+        "msg",
+        "status",
+        "date",
+        "visit",
+        "mine"
+      ]
+    },
+    {
+      "route": "/api/city-requests",
+      "status": 200,
+      "source": "supabase",
+      "count": 2,
+      "fields": [
+        "id",
+        "city",
+        "name",
+        "phone",
+        "userType",
+        "note",
+        "status",
+        "date"
+      ]
+    }
+  ],
+  "errors": [],
+  "responsive": [
+    {
+      "route": "/",
+      "width": 320,
+      "document": 355,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Broker",
+          "right": 352
+        },
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        },
+        {
+          "tag": "A",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi\n\u2605 4.9 (",
+          "right": 355
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Priya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "\u2605 4.9 (132) \u00b7 98% response \u00b7 ~45m",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket\nHauz Khas\nGreater Kailash",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "1 month brokerage \u00b7 No visit fee",
+          "right": 334
+        }
+      ]
+    },
+    {
+      "route": "/properties",
+      "width": 320,
+      "document": 345,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Broker",
+          "right": 352
+        },
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/brokers",
+      "width": 320,
+      "document": 355,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Broker",
+          "right": 352
+        },
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        },
+        {
+          "tag": "A",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi\n\u2605 4.9 (",
+          "right": 355
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED\nPriya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket Homes\n\u2713 VERIFIED",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Priya Sharma \u00b7 6y exp \u00b7 Delhi",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "\u2605 4.9 (132) \u00b7 98% response \u00b7 ~45m",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "Saket\nHauz Khas\nGreater Kailash",
+          "right": 334
+        },
+        {
+          "tag": "DIV",
+          "text": "1 month brokerage \u00b7 No visit fee",
+          "right": 334
+        }
+      ]
+    },
+    {
+      "route": "/properties/L003",
+      "width": 320,
+      "document": 345,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Broker",
+          "right": 352
+        },
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/auth",
+      "width": 320,
+      "document": 345,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 345
+        },
+        {
+          "tag": "A",
+          "text": "Broker",
+          "right": 352
+        },
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "width": 375,
+      "document": 375,
+      "overflow": [
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/properties",
+      "width": 375,
+      "document": 375,
+      "overflow": [
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/brokers",
+      "width": 375,
+      "document": 375,
+      "overflow": [
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/properties/L003",
+      "width": 375,
+      "document": 375,
+      "overflow": [
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/auth",
+      "width": 375,
+      "document": 375,
+      "overflow": [
+        {
+          "tag": "A",
+          "text": "Admin",
+          "right": 419
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "document": 777,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 777
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 777
+        }
+      ]
+    },
+    {
+      "route": "/properties",
+      "width": 768,
+      "document": 777,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 777
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 777
+        }
+      ]
+    },
+    {
+      "route": "/brokers",
+      "width": 768,
+      "document": 777,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 777
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 777
+        }
+      ]
+    },
+    {
+      "route": "/properties/L003",
+      "width": 768,
+      "document": 777,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 777
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 777
+        }
+      ]
+    },
+    {
+      "route": "/auth",
+      "width": 768,
+      "document": 777,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "text": "List as broker\nSign in",
+          "right": 777
+        },
+        {
+          "tag": "A",
+          "text": "Sign in",
+          "right": 777
+        }
+      ]
+    }
+  ]
+}

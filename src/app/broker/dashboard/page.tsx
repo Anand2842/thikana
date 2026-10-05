@@ -1,95 +1,156 @@
 import Link from "next/link";
-import { fetchBrokers, fetchLeadsSvc, fetchListings, fetchScopedLeads } from "@/lib/supabase/data";
-import { freshness, inr } from "@/lib/trust";
+import { redirect, notFound } from "next/navigation";
+import {
+  fetchBrokers,
+  fetchListings,
+  fetchScopedLeads,
+} from "@/lib/supabase/data";
+import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
+import { inr, freshness } from "@/lib/trust";
 import { VerificationPill } from "@/components/badges";
 import ReconfirmButton from "@/components/reconfirm-button";
-import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
-
-const DEFAULT_SESSION = "B1";
-
+import LeadActions from "@/components/lead-actions";
 export default async function BrokerDashboardPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const sp = await searchParams;
-  const paramBroker = typeof sp.broker === "string" ? sp.broker : undefined;
-  // Signed-in brokers see their own dashboard (session wins). Everyone else —
-  // logged-out demo, admins previewing brokers — uses ?broker= as before.
-  const sessionUser = await getSessionUser();
-  const sessionBrokerId = userBrokerId(sessionUser);
-  const role = userRole(sessionUser);
-  const requested =
-    role === "broker" && sessionBrokerId
-      ? sessionBrokerId
-      : (paramBroker ?? DEFAULT_SESSION);
-  const [brokers, scopedLeads, allListings] = await Promise.all([
-    fetchBrokers(),
-    // Brokers query only their own inbox; admins (previewing) read all then filter below.
-    // Never fall back to the full table for unknown callers (this page is gated, but defense in depth).
-    role === "admin"
-      ? fetchLeadsSvc()
-      : sessionUser
-        ? fetchScopedLeads({ userId: sessionUser.id, role, brokerId: sessionBrokerId })
-        : Promise.resolve([]),
+  const user = await getSessionUser();
+  if (!user) redirect("/auth?next=/broker/dashboard");
+  const role = userRole(user),
+    sp = await searchParams;
+  if (role === "seeker")
+    return (
+      <main className="max-w-xl mx-auto px-4 py-16">
+        <h1 className="display text-3xl font-black">
+          Start your broker profile.
+        </h1>
+        <p className="mt-3">
+          Apply with identity and business proof to access your inventory and
+          lead inbox.
+        </p>
+        <Link href="/broker/onboard" className="button inline-block mt-6">
+          Apply as a broker
+        </Link>
+      </main>
+    );
+  const brokerId =
+    role === "admin" && typeof sp.broker === "string"
+      ? sp.broker
+      : userBrokerId(user);
+  const brokers = await fetchBrokers();
+  if (!brokerId)
+    return (
+      <main className="max-w-7xl mx-auto px-4 py-10">
+        <h1 className="display text-3xl font-black">
+          Choose a broker to preview.
+        </h1>
+        <div className="flex flex-wrap gap-3 mt-6">
+          {brokers.map((b) => (
+            <Link
+              key={b.id}
+              className="button secondary"
+              href={`/broker/dashboard?broker=${b.id}`}
+            >
+              {b.agency}
+            </Link>
+          ))}
+        </div>
+      </main>
+    );
+  const broker = brokers.find((b) => b.id === brokerId);
+  if (!broker) notFound();
+  const [listings, leads] = await Promise.all([
     fetchListings(),
+    fetchScopedLeads({ userId: user.id, role, brokerId }),
   ]);
-  const allLeads = scopedLeads;
-  const broker = brokers.find((b) => b.id === requested) ?? brokers.find((b) => b.id === DEFAULT_SESSION)!;
-  const SESSION = broker.id;
-  const mine = allListings.filter((l) => l.brokerId === SESSION);
-  const inbox = allLeads.filter((l) => l.brokerId === SESSION);
-  const listingById = new Map(allListings.map((l) => [l.id, l]));
-
+  const mine = listings.filter((l) => l.brokerId === brokerId),
+    inbox = leads.filter((l) => l.brokerId === brokerId);
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <div className="text-[11px] font-extrabold tracking-[.2em] text-pine">BROKER OS · {broker.agency}</div>
-      <h1 className="display font-black text-[36px]">Good morning, {broker.name.split(" ")[0]}.</h1>
-      <p className="text-ink/60 text-[14px]">Freshness is ranking. Reconfirm daily to stay on top. {mine.length} live · {inbox.length} leads in inbox.</p>
-      <div className="mt-3 flex flex-wrap gap-2 text-[12px] font-bold">
-        <span className="py-2 text-ink/50">Demo session:</span>
-        {brokers.filter((b) => b.verified === "verified").map((b) => (
-          <Link
-            key={b.id}
-            href={`/broker/dashboard?broker=${b.id}`}
-            className={`px-3 py-1.5 rounded-full border ${b.id === SESSION ? "bg-ink text-white border-ink" : "bg-cream border-line"}`}
-          >
-            {b.agency}
+      <div className="eyebrow">BROKER DASHBOARD · {broker.agency}</div>
+      <h1 className="display text-4xl font-black mt-2">
+        Welcome, {broker.name.split(" ")[0]}.
+      </h1>
+      <p className="mt-3 text-ink/65">
+        {mine.length} listings · {inbox.length} enquiries · Status:{" "}
+        {broker.verified}
+      </p>
+      {broker.verified !== "verified" && (
+        <div
+          role="status"
+          className="bg-mist border border-line rounded-3xl p-6 mt-6"
+        >
+          Your application is {broker.verified}. Listing creation unlocks after
+          our team approves your documents.
+          <Link className="block underline mt-3" href="/broker/onboard">
+            Update application and documents →
           </Link>
+        </div>
+      )}
+      <div className="flex flex-wrap gap-3 mt-6">
+        {broker.verified === "verified" && (
+          <Link className="button" href="/broker/listings/new">
+            + New listing
+          </Link>
+        )}
+        <Link className="button secondary" href={`/brokers/${broker.id}`}>
+          Public profile
+        </Link>
+      </div>
+      <h2 className="display text-2xl font-black mt-10">
+        Inventory & freshness
+      </h2>
+      <div className="space-y-3 mt-4">
+        {mine.map((l) => (
+          <article
+            key={l.id}
+            className="bg-cream border border-line rounded-2xl p-5 flex flex-wrap items-center gap-3"
+          >
+            <VerificationPill v={l.verification} />
+            <Link
+              className="underline font-bold text-sm"
+              href={`/properties/${l.id}`}
+            >
+              {l.title} · {inr(l.rent)}/mo
+            </Link>
+            <span className="text-xs text-ink/65">{freshness(l).label}</span>
+            {["verified", "stale"].includes(l.verification) &&
+              broker.verified === "verified" && (
+                <ReconfirmButton listingId={l.id} propId={l.propId} />
+              )}
+          </article>
         ))}
+        {!mine.length && (
+          <p className="text-sm text-ink/65">No listings yet.</p>
+        )}
       </div>
-
-      <h2 className="font-extrabold text-[18px] mt-8">Inventory freshness</h2>
-      <div className="mt-3 space-y-2">
-        {mine.map((l) => {
-          const f = freshness(l);
-          return (
-            <div key={l.id} className="bg-cream border border-line rounded-2xl p-4 flex flex-wrap items-center gap-3 text-[13.5px]">
-              <VerificationPill v={l.verification} />
-              <b>{l.propId}</b><span>{l.bhk} BHK {l.locality} · {inr(l.rent)}/mo</span>
-              <span className="text-ink/60 font-semibold">{f.label}</span>
-              <span className="flex-1" />
-              <ReconfirmButton listingId={l.id} propId={l.propId} />
-            </div>
-          );
-        })}
-      </div>
-
-      <h2 className="font-extrabold text-[18px] mt-8">Lead inbox</h2>
-      <div className="mt-3 space-y-2">
+      <h2 className="display text-2xl font-black mt-10">Lead inbox</h2>
+      <div className="space-y-3 mt-4">
         {inbox.map((l) => (
-          <div key={l.id} className="bg-paper border border-line rounded-2xl p-4 text-[13.5px]">
-            <b>{l.id}</b> · {l.userName} · {listingById.get(l.listingId)?.propId} · {l.status}
-            <div className="text-ink/60">{l.msg}</div>
-          </div>
+          <article
+            key={l.id}
+            className="bg-cream border border-line rounded-3xl p-5"
+          >
+            <b>{l.userName}</b>
+            <p className="text-sm mt-2">
+              {l.phone} · {l.status}
+            </p>
+            <p className="text-sm text-ink/65 mt-2">{l.msg}</p>
+            <p className="text-sm mt-2">
+              Visit:{" "}
+              {l.visitAt
+                ? new Date(l.visitAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                  }) + " IST"
+                : "Not scheduled"}
+            </p>
+            <LeadActions lead={l} manage own={false} reviewed={false} />
+          </article>
         ))}
-        {inbox.length === 0 && <p className="text-ink/60">No leads yet.</p>}
-        <div className="text-[12.5px] text-ink/55">Full pipeline ({allLeads.length} leads) — see <Link className="font-bold underline" href="/dashboard">seeker dashboard</Link>.</div>
-      </div>
-
-      <div className="mt-8 flex gap-3">
-        <Link href="/broker/listings/new" className="bg-ink text-white font-bold text-[13.5px] px-6 py-3 rounded-2xl">+ New listing</Link>
-        <Link href="/broker/onboard" className="border-2 border-ink font-bold text-[13.5px] px-6 py-3 rounded-2xl">Onboarding preview</Link>
+        {!inbox.length && (
+          <p className="text-sm text-ink/65">No enquiries yet.</p>
+        )}
       </div>
     </main>
   );

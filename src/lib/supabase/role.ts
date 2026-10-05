@@ -21,7 +21,7 @@ function readClient(cookieStore: Awaited<ReturnType<typeof cookies>>) {
           // Read-only check — session refresh happens in middleware.
         },
       },
-    }
+    },
   );
 }
 
@@ -41,12 +41,7 @@ export function userRole(user: User | null): Role {
 }
 
 export function userBrokerId(user: User | null): string | null {
-  const id = (user?.app_metadata as { broker_id?: unknown } | undefined)?.broker_id;
+  const id = (user?.app_metadata as { broker_id?: unknown } | undefined)
+    ?.broker_id;
   return typeof id === "string" && id ? id : null;
-}
-
-export function canAccess(role: Role, required: Role): boolean {
-  if (role === "admin") return true;
-  if (required === "broker") return role === "broker";
-  return true; // required === "seeker": any signed-in user
 }

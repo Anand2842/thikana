@@ -1,0 +1,540 @@
+{
+  "checks": [
+    {
+      "name": "public /",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties/L001",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties/L003",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties/L007",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /brokers/B1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /brokers/B7",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties?city=Noida",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties?city=Delhi&locality=Dwarka&sort=low",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public /properties?q=missing-home",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous leads blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous city requests blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/leads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/listings",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/reports",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/reviews",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "anonymous write /api/saved",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "cron requires secret",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pending inventory hidden",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "disclosed visit fee",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "other fees disclosed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "All locality clears filter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "empty results guidance",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "real Supabase password sessions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "seeker sees own leads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "other seeker sees no private leads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "broker sees assigned leads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "non-admin moderation blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unassigned broker reconfirm blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flagged reconfirm blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unknown enquiry rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flagged enquiry rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/leads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/listings",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/reports",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/reviews",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "malformed payload /api/city-requests",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved home persisted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "enquiry persisted with owner and actual broker",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "other user cannot change enquiry",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "visit schedules",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "future visit cannot be confirmed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "premature review blocked",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "broker pipeline update",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "seeker can start broker onboarding",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pending broker application persisted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pending applicant can update documents",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pending broker cannot publish",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "admin can review private proofs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "approve broker",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing pending and hidden publicly",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "owner can preview pending listing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "admin approves listing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "listing published in database",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "listing fees persisted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reconfirm owned listing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new listing enquiry uses real broker",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "report persisted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "uphold report atomically",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flagged listing cannot be reconfirmed by owner",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flagged listing cannot accept enquiries",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "approval clears flags",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flags cleared",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "suspend broker retains records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "suspension flags owned inventory",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reject broker with listings succeeds",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /properties",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /properties/L001",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /properties/L003",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /properties/L007",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /brokers/B1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 320 /auth",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /properties",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /properties/L001",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /properties/L003",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /properties/L007",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /brokers/B1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 375 /auth",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /properties",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /properties/L001",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /properties/L003",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /properties/L007",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /brokers/B1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 768 /auth",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /properties",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /brokers",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /properties/L001",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /properties/L003",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /properties/L007",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /brokers/B1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no overflow 1440 /auth",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "private mobile /dashboard",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "private mobile /broker/dashboard",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "private mobile /admin",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "private mobile /broker/onboard",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no browser runtime errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "sign-out revokes local session",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "runtimeErrors": []
+}

@@ -1,0 +1,29 @@
+{
+  "browser": {
+    "passed": 107,
+    "total": 107,
+    "runtimeErrors": 0
+  },
+  "extended": {
+    "passed": 29,
+    "total": 29,
+    "runtimeErrors": 0
+  },
+  "control": {
+    "passed": 27,
+    "total": 27,
+    "runtimeErrors": 0
+  },
+  "failure": {
+    "passed": 12,
+    "total": 12,
+    "runtimeErrors": null
+  },
+  "production": {
+    "passed": 278,
+    "total": 278,
+    "runtimeErrors": 0
+  },
+  "publicRouteCount": 65,
+  "internalLinkCount": 73
+}

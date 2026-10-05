@@ -1,0 +1,13 @@
+
+> thikana@0.1.0 migrate
+> tsx --env-file=.env scripts/migrate.ts
+
+Applied schema.sql
+Applied migration-002-phase1-cities.sql
+Applied migration-003-lead-ownership.sql
+Applied migration-004-completion.sql
+Applied migration-005-broker-submission.sql
+Applied migration-006-integrity.sql
+Applied migration-007-review-privacy.sql
+Applied migration-008-application-and-report-states.sql
+Applied migration-009-atomic-listings.sql

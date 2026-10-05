@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ReconfirmButton({ listingId, propId }: { listingId: string; propId: string }) {
+export default function ReconfirmButton({
+  listingId,
+  propId,
+}: {
+  listingId: string;
+  propId: string;
+}) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const router = useRouter();
@@ -12,7 +18,9 @@ export default function ReconfirmButton({ listingId, propId }: { listingId: stri
     setBusy(true);
     setMsg(null);
     try {
-      const res = await fetch(`/api/listings/${listingId}/reconfirm`, { method: "POST" });
+      const res = await fetch(`/api/listings/${listingId}/reconfirm`, {
+        method: "POST",
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setMsg(`${propId} reconfirmed — ranking restored.`);
       router.refresh();
@@ -32,7 +40,9 @@ export default function ReconfirmButton({ listingId, propId }: { listingId: stri
       >
         {busy ? "Working…" : "Reconfirm now"}
       </button>
-      {msg && <span className="text-[12px] font-semibold text-pinedark">{msg}</span>}
+      {msg && (
+        <span className="text-[12px] font-semibold text-pinedark">{msg}</span>
+      )}
     </span>
   );
 }

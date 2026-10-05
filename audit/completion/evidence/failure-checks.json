@@ -1,0 +1,52 @@
+{
+  "checks": [
+    {
+      "name": "public reads work with invalid service key /",
+      "pass": true
+    },
+    {
+      "name": "public reads work with invalid service key /properties",
+      "pass": true
+    },
+    {
+      "name": "public reads work with invalid service key /brokers",
+      "pass": true
+    },
+    {
+      "name": "public reads work with invalid service key /properties/L001",
+      "pass": true
+    },
+    {
+      "name": "private read returns 503 rather than demo data",
+      "pass": true
+    },
+    {
+      "name": "failed write returns 503 /api/leads",
+      "pass": true
+    },
+    {
+      "name": "failed write returns 503 /api/saved",
+      "pass": true
+    },
+    {
+      "name": "failed write returns 503 /api/reports",
+      "pass": true
+    },
+    {
+      "name": "failed write returns 503 /api/reviews",
+      "pass": true
+    },
+    {
+      "name": "failed write returns 503 /api/city-requests",
+      "pass": true
+    },
+    {
+      "name": "provider failure is visible and preserves input",
+      "pass": true
+    },
+    {
+      "name": "rate limit rejects eleventh request",
+      "pass": true
+    }
+  ]
+}

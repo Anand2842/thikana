@@ -1,64 +1,108 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchScopedLeads, fetchListings, fetchBrokers } from "@/lib/supabase/data";
+import { redirect } from "next/navigation";
+import {
+  fetchScopedLeads,
+  fetchListings,
+  fetchBrokers,
+  fetchSavedIds,
+  fetchReviewedIds,
+} from "@/lib/supabase/data";
 import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
+import ListingCard from "@/components/listing-card";
+import LeadActions from "@/components/lead-actions";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function DashboardPage() {
   const user = await getSessionUser();
-  if (!user) {
-    return (
-      <main className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <h1 className="display font-black text-[36px]">My Enquiries</h1>
-        <p className="text-ink/60 text-[14px] mt-2 font-medium">Sign in to see your enquiries. Brokers and seekers share one pipeline per enquiry.</p>
-        <Link href="/auth?next=/dashboard" className="mt-6 inline-block bg-ink text-white font-extrabold text-[14px] px-8 py-3.5 rounded-2xl hover:bg-pine transition">
-          Sign in →
-        </Link>
-      </main>
-    );
-  }
-  const role = userRole(user);
-  const [leads, listings, brokers] = await Promise.all([
-    fetchScopedLeads({ userId: user.id, role, brokerId: userBrokerId(user) }),
+  if (!user) redirect("/auth?next=/dashboard");
+  const role = userRole(user),
+    brokerId = userBrokerId(user);
+  const [leads, listings, brokers, saved, reviewed] = await Promise.all([
+    fetchScopedLeads({ userId: user.id, role, brokerId }),
     fetchListings(),
     fetchBrokers(),
+    fetchSavedIds(user.id),
+    fetchReviewedIds(user.id),
   ]);
-  const listingById = new Map(listings.map((l) => [l.id, l]));
-  const brokerById = new Map(brokers.map((b) => [b.id, b]));
-
+  const byListing = new Map(listings.map((l) => [l.id, l])),
+    byBroker = new Map(brokers.map((b) => [b.id, b]));
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <h1 className="display font-black text-[36px]">My Enquiries</h1>
-      <p className="text-ink/60 text-[14px] font-medium">
-        {role === "admin"
-          ? "Admin view — full pipeline. Moderation lives in the admin console."
-          : role === "broker"
-            ? "Leads assigned to your listings. Reviews unlock after a verified visit."
-            : "Your enquiries, with the same pipeline status your broker sees."}
+      <div className="eyebrow">YOUR NEXT ADDRESS</div>
+      <h1 className="display text-4xl font-black">My homes & enquiries</h1>
+      <p className="mt-3 text-ink/65">
+        Saved homes, shared enquiry status and visits — all in one place.
       </p>
-      <div className="mt-6 space-y-3">
-        {leads.map((l) => {
-          const li = listingById.get(l.listingId);
-          const b = brokerById.get(l.brokerId);
-          return (
-            <div key={l.id} className="bg-cream border border-line rounded-3xl p-5">
-              <div className="flex flex-wrap items-center gap-3 justify-between">
-                <b>{l.id} · {li ? `${li.bhk} BHK ${li.locality}, ${li.city}` : l.listingId} · {b?.agency}</b>
-                <span className="text-[12px] font-extrabold bg-ink text-white px-3 py-1.5 rounded-full">{l.status}</span>
-              </div>
-              <p className="mt-2 text-[13.5px] text-ink/70">{l.msg}</p>
-              <div className="mt-1 text-[12.5px] text-ink/55 font-semibold">Visit: {l.visit} · {l.date}</div>
+      <h2 className="display text-2xl font-black mt-8">
+        Enquiries ({leads.length})
+      </h2>
+      <div className="space-y-4 mt-4">
+        {leads.map((l) => (
+          <article
+            key={l.id}
+            className="bg-cream border border-line rounded-3xl p-5"
+          >
+            <div className="flex flex-wrap justify-between gap-3">
+              <Link
+                className="font-bold underline"
+                href={`/properties/${l.listingId}`}
+              >
+                {byListing.get(l.listingId)?.title ?? l.listingId} ·{" "}
+                {byBroker.get(l.brokerId)?.agency}
+              </Link>
+              <span className="text-xs font-bold bg-ink text-white px-3 py-2 rounded-full">
+                {l.status}
+              </span>
             </div>
-          );
-        })}
-        {leads.length === 0 && (
-          <div className="bg-cream border border-line rounded-3xl p-8 text-center">
+            <p className="text-sm mt-3">{l.msg}</p>
+            <p className="text-xs text-ink/65 mt-2">
+              Visit:{" "}
+              {l.visitAt
+                ? new Date(l.visitAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                  }) + " IST"
+                : "Not scheduled"}{" "}
+              · Enquired {l.date}
+            </p>
+            <LeadActions
+              lead={l}
+              manage={role === "admin" || l.brokerId === brokerId}
+              own={l.ownerId === user.id}
+              reviewed={reviewed.includes(l.id)}
+            />
+          </article>
+        ))}
+        {!leads.length && (
+          <div className="bg-cream border border-line rounded-3xl p-8">
             <b>No enquiries yet.</b>
-            <p className="text-[13px] text-ink/55 mt-1">Browse verified homes and contact a broker — it will show up here.</p>
-            <Link href="/properties" className="mt-4 inline-block bg-ink text-white text-[13px] font-bold px-6 py-3 rounded-2xl">Browse homes</Link>
+            <p className="text-sm mt-2">
+              Contact a broker from a property page to start.
+            </p>
+            <Link className="button inline-block mt-4" href="/properties">
+              Browse homes
+            </Link>
           </div>
         )}
       </div>
-      {role === "admin" && (
-        <p className="mt-6 text-[13px] text-ink/55">Moderation queues live in the <Link className="font-bold underline" href="/admin">admin console</Link>.</p>
+      <h2 className="display text-2xl font-black mt-10">
+        Saved homes ({saved.length})
+      </h2>
+      <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {listings
+          .filter((l) => saved.includes(l.id))
+          .map((l) => (
+            <ListingCard
+              key={l.id}
+              listing={l}
+              broker={byBroker.get(l.brokerId)}
+            />
+          ))}
+      </div>
+      {!saved.length && (
+        <p className="text-sm mt-4 text-ink/65">
+          Use “Save home” on a property page to build your shortlist.
+        </p>
       )}
     </main>
   );

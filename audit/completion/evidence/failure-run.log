@@ -1,0 +1,13 @@
+PASS public reads work with invalid service key /
+PASS public reads work with invalid service key /properties
+PASS public reads work with invalid service key /brokers
+PASS public reads work with invalid service key /properties/L001
+PASS private read returns 503 rather than demo data
+PASS failed write returns 503 /api/leads
+PASS failed write returns 503 /api/saved
+PASS failed write returns 503 /api/reports
+PASS failed write returns 503 /api/reviews
+PASS failed write returns 503 /api/city-requests
+PASS provider failure is visible and preserves input
+PASS rate limit rejects eleventh request
+12/12 passed

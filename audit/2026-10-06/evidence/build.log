@@ -1,0 +1,52 @@
+
+> thikana@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 84ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.8s
+  Running TypeScript ...
+  Finished TypeScript in 3.3s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/21) ...
+  Generating static pages using 7 workers (5/21) 
+  Generating static pages using 7 workers (10/21) 
+  Generating static pages using 7 workers (15/21) 
+✓ Generating static pages using 7 workers (21/21) in 475ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ƒ /api/brokers
+├ ƒ /api/brokers/[id]
+├ ƒ /api/city-requests
+├ ƒ /api/cron/expire
+├ ƒ /api/leads
+├ ƒ /api/listings
+├ ƒ /api/listings/[id]
+├ ƒ /api/listings/[id]/reconfirm
+├ ƒ /api/reports/[id]
+├ ○ /auth
+├ ƒ /auth/callback
+├ ƒ /auth/signout
+├ ƒ /broker/dashboard
+├ ○ /broker/listings/new
+├ ○ /broker/onboard
+├ ƒ /brokers
+├ ƒ /brokers/[id]
+├ ƒ /dashboard
+├ ƒ /properties
+├ ƒ /properties/[id]
+├ ○ /robots.txt
+└ ƒ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
