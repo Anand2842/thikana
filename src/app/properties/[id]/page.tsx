@@ -172,7 +172,7 @@ export default async function PropertyPage({
             </div>
           )}
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 lg:sticky lg:top-32 self-start">
           <div className="bg-cream border border-line rounded-3xl p-6">
             <div className="flex flex-wrap gap-2">
               <VerificationPill v={listing.verification} />

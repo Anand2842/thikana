@@ -7,7 +7,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
   return (
     <Link
       href={`/brokers/${broker.id}`}
-      className="bg-cream border border-line rounded-3xl p-5 card-hover block"
+      className="bg-white rounded-3xl p-5 shadow-soft card-hover block"
     >
       <div className="flex items-center gap-3">
         <Photo
@@ -35,7 +35,7 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         {broker.areas.slice(0, 3).map((a) => (
           <span
             key={a}
-            className="text-[11px] font-bold bg-paper border border-line px-2.5 py-1 rounded-full"
+            className="text-[11px] font-bold bg-paper px-2.5 py-1 rounded-full"
           >
             {a}
           </span>

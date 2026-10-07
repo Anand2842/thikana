@@ -48,45 +48,79 @@ export default async function Home() {
   const offers = [...groups.values()].find((g) => g.length > 1) ?? [];
   return (
     <div>
-      <section className="bg-ink text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16 grid lg:grid-cols-2 gap-10 items-center">
+      <section className="overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 lg:pt-20 pb-10 grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <div className="inline-block bg-white/10 border border-white/20 rounded-full px-4 py-2 text-xs font-bold">
+            <div className="inline-block bg-pine/10 text-pinedark rounded-full px-4 py-2 text-xs font-bold">
               NCR · 5 cities · Local brokers
             </div>
-            <h1 className="display text-5xl sm:text-6xl font-black tracking-tight leading-[1.02] mt-6">
+            <h1 className="display text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.02] mt-6">
               Find a home.
               <br />
-              <span className="text-gold">Know your broker.</span>
+              <span className="text-pine">Know your broker.</span>
             </h1>
-            <p className="text-white/75 mt-5 leading-relaxed max-w-lg">
+            <p className="text-ink/70 mt-5 leading-relaxed max-w-lg text-[17px]">
               Current availability, verified brokers and every charge up front.
               Compare the same home across brokers before you plan a visit.
             </p>
             <form
               action="/properties"
-              className="mt-7 bg-white rounded-2xl p-2 flex flex-wrap sm:flex-nowrap gap-2"
+              className="mt-8 bg-white rounded-full p-2 pl-2 flex flex-col sm:flex-row sm:items-center gap-1 shadow-lift border border-ink/10 sm:rounded-full rounded-3xl"
             >
-              <label className="grow text-ink">
-                <span className="sr-only">Search homes</span>
+              <label className="flex-1 px-4 py-2 sm:border-r sm:border-ink/10">
+                <span className="block text-[10px] font-extrabold uppercase tracking-widest text-ink/50">
+                  Where
+                </span>
                 <input
                   name="q"
                   maxLength={100}
-                  placeholder="Try Dwarka, Sector 62 or 2 BHK"
-                  className="!border-0 !mt-0"
+                  placeholder="Dwarka, Sector 62, 2 BHK"
+                  className="!border-0 !mt-0 !p-0 text-[14px] bg-transparent"
                 />
               </label>
-              <button className="button shrink-0">Find homes →</button>
+              <label className="px-4 py-2 sm:border-r sm:border-ink/10 sm:w-36">
+                <span className="block text-[10px] font-extrabold uppercase tracking-widest text-ink/50">
+                  City
+                </span>
+                <select
+                  name="city"
+                  defaultValue=""
+                  className="!border-0 !mt-0 !p-0 text-[14px] bg-transparent"
+                >
+                  <option value="">All NCR</option>
+                  {PHASE1_CITIES.map((c) => (
+                    <option key={c}>{c}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="px-4 py-2 sm:w-36">
+                <span className="block text-[10px] font-extrabold uppercase tracking-widest text-ink/50">
+                  Max rent
+                </span>
+                <input
+                  name="budget"
+                  type="number"
+                  min={1}
+                  placeholder="₹ / month"
+                  className="!border-0 !mt-0 !p-0 text-[14px] bg-transparent"
+                />
+              </label>
+              <button
+                className="bg-pine text-white font-bold rounded-full w-12 h-12 shrink-0 grid place-items-center text-xl max-sm:w-full max-sm:h-11"
+                aria-label="Search homes"
+              >
+                →
+              </button>
             </form>
-            <div className="mt-5 flex flex-wrap gap-4 text-sm">
-              <Link href="/brokers" className="underline">
+            <div className="mt-5 flex flex-wrap gap-4 text-sm font-semibold">
+              <Link href="/brokers" className="underline underline-offset-4">
                 Meet verified brokers →
               </Link>
-              <Link href="/broker/onboard" className="underline">
+              <Link href="/broker/onboard" className="underline underline-offset-4">
                 List your property →
               </Link>
             </div>
-            <p className="mt-5 text-xs text-white/65">
+            <p className="mt-5 text-xs text-ink/55">
               {reviews.length} published reviews · Verification is granted after
               human review.
             </p>
@@ -94,38 +128,38 @@ export default async function Home() {
           {hero ? (
             <Link
               href={`/properties/${hero.id}`}
-              className="relative rounded-3xl overflow-hidden border border-white/20 block"
+              className="relative rounded-[28px] overflow-hidden block shadow-lift group"
             >
               <Photo
                 eager
                 src={hero.photos[0]}
                 alt={hero.title}
-                className="w-full h-80 sm:h-[420px] object-cover"
+                className="w-full h-80 sm:h-[460px] object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink to-transparent p-5 pt-20">
-                <div className="text-xs font-bold text-emerald-300">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-5 pt-20 text-white">
+                <div className="text-[11px] font-extrabold tracking-widest text-emerald-300">
                   AVAILABLE · VERIFIED BROKER
                 </div>
-                <h2 className="display text-2xl font-black mt-2">
+                <div className="display text-2xl font-black mt-1">
                   {hero.title}
-                </h2>
-                <div className="flex flex-wrap justify-between gap-3 mt-2">
+                </div>
+                <div className="flex flex-wrap justify-between gap-3 mt-1 text-[14px]">
                   <span>
                     {hero.locality}, {hero.city}
                   </span>
                   <b>{inr(hero.rent)}/mo</b>
                 </div>
-                <span className="block mt-3 text-sm text-gold">
+                <span className="block mt-2 text-sm text-gold font-semibold">
                   Move-in estimate {inr(moveInTotal(hero))} · View all fees →
                 </span>
               </div>
             </Link>
           ) : (
-            <div className="border border-white/20 rounded-3xl p-10">
+            <div className="border border-ink/15 rounded-[28px] p-10 bg-white">
               <h2 className="display text-3xl font-black">
                 Your next address starts here.
               </h2>
-              <p className="mt-4">
+              <p className="mt-4 text-ink/65">
                 New homes appear after a broker and listing review.
               </p>
               <Link className="button inline-block mt-5" href="/brokers">
@@ -134,7 +168,7 @@ export default async function Home() {
             </div>
           )}
         </div>
-        <div className="border-t border-white/10">
+        <div className="border-t border-ink/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 sm:grid-cols-4 gap-5">
             {[
               [active.length, "Available homes"],
@@ -143,8 +177,8 @@ export default async function Home() {
               [5, "NCR cities"],
             ].map(([v, n]) => (
               <div key={n} className="text-center">
-                <div className="display text-3xl font-black text-gold">{v}</div>
-                <div className="text-xs font-bold uppercase tracking-widest text-white/65 mt-1">
+                <div className="display text-3xl font-black">{v}</div>
+                <div className="text-xs font-bold uppercase tracking-widest text-ink/50 mt-1">
                   {n}
                 </div>
               </div>
@@ -174,17 +208,19 @@ export default async function Home() {
               <Link
                 key={l.city + l.n}
                 href={`/properties?city=${encodeURIComponent(l.city)}&locality=${encodeURIComponent(l.n)}`}
-                className="bg-cream border border-line rounded-3xl overflow-hidden card-hover"
+                className="group bg-white rounded-3xl overflow-hidden shadow-soft card-hover"
               >
-                <Photo
-                  src={l.photo}
-                  alt={l.n}
-                  className="w-full h-28 object-cover"
-                />
+                <div className="overflow-hidden">
+                  <Photo
+                    src={l.photo}
+                    alt={l.n}
+                    className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                </div>
                 <div className="p-4">
                   <b>{l.n}</b>
                   <p className="text-xs text-pine font-bold mt-1">{l.city}</p>
-                  <p className="text-xs text-ink/65 mt-2">
+                  <p className="text-xs text-ink/60 mt-1">
                     {l.count} homes · From {inr(l.rent)}
                   </p>
                 </div>
@@ -214,7 +250,7 @@ export default async function Home() {
           </div>
         </section>
         {offers.length > 1 && (
-          <section className="mt-12 bg-cream border-2 border-gold rounded-3xl p-5 sm:p-9">
+          <section className="mt-12 bg-white border border-gold/50 rounded-[28px] p-5 sm:p-9 shadow-lift">
             <div className="eyebrow">ONE HOME · DIFFERENT OFFERS</div>
             <h2 className="display text-3xl font-black mt-2">
               Compare the fees before you decide.
@@ -226,7 +262,7 @@ export default async function Home() {
               {offers.map((l) => (
                 <div
                   key={l.id}
-                  className="bg-paper border border-line rounded-2xl p-4 flex flex-wrap justify-between items-center gap-3"
+                  className="bg-paper border border-ink/10 rounded-2xl p-4 flex flex-wrap justify-between items-center gap-3"
                 >
                   <div>
                     <b>{byBroker.get(l.brokerId)?.agency}</b>

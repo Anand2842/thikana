@@ -43,15 +43,61 @@ export function Gallery({
   title: string;
 }) {
   const [index, setIndex] = useState(0);
+  if (photos.length < 2)
+    return (
+      <Photo
+        eager
+        src={photos[0]}
+        alt={title}
+        className="w-full h-64 sm:h-96 object-cover rounded-3xl"
+      />
+    );
+  const at = (i: number) => photos[((i % photos.length) + photos.length) % photos.length];
+  const pick = (src: string) => setIndex(Math.max(0, photos.indexOf(src)));
   return (
     <div>
-      <div className="relative">
+      {/* Desktop mosaic: selected moment large, next two alongside. */}
+      <div className="hidden sm:grid grid-cols-3 gap-2 h-96">
+        <button
+          type="button"
+          onClick={() => pick(at(index))}
+          className="col-span-2 h-full rounded-3xl overflow-hidden text-left"
+          aria-label={`View photo ${index + 1} of ${photos.length}`}
+        >
+          <Photo
+            eager
+            key={at(index)}
+            src={at(index)}
+            alt={`${title} — photo ${index + 1} of ${photos.length}`}
+            className="w-full h-full object-cover"
+          />
+        </button>
+        <div className="grid grid-rows-2 gap-2 h-full">
+          {[1, 2].map((off) => (
+            <button
+              key={off}
+              type="button"
+              onClick={() => setIndex((index + off) % photos.length)}
+              className="rounded-2xl overflow-hidden text-left"
+              aria-label={`View photo ${((index + off) % photos.length) + 1} of ${photos.length}`}
+            >
+              <Photo
+                src={at(index + off)}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Mobile: single moment with position. */}
+      <div className="relative sm:hidden">
         <Photo
           eager
           key={photos[index]}
           src={photos[index]}
           alt={`${title} — photo ${index + 1} of ${photos.length}`}
-          className="w-full h-64 sm:h-96 object-cover rounded-3xl border border-line"
+          className="w-full h-64 object-cover rounded-3xl"
         />
         {photos.length > 1 && (
           <span className="absolute bottom-3 right-3 text-[11px] font-bold bg-ink/70 text-white px-2 py-1 rounded-full">

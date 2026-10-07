@@ -14,48 +14,40 @@ export default function ListingCard({
   return (
     <Link
       href={`/properties/${listing.id}`}
-      className="bg-cream border border-line rounded-3xl overflow-hidden card-hover block"
+      className="group block"
+      aria-label={`${listing.bhk} BHK ${listing.type} in ${listing.locality}, ${listing.city}, ${inr(listing.rent)} per month`}
     >
-      <div className="relative">
+      <div className="relative overflow-hidden rounded-2xl">
         <Photo
           src={listing.photos[0]}
-          alt={listing.title}
-          className="w-full h-52 object-cover"
+          alt=""
+          className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-        <div className="absolute top-3 left-3 flex gap-2">
+        <div className="absolute top-3 left-3">
           <VerificationPill v={listing.verification} />
-          <span className="bg-ink/80 text-white text-[11px] font-mono px-2.5 py-1 rounded-full">
-            {listing.propId}
-          </span>
         </div>
       </div>
-      <div className="p-5">
+      <div className="pt-3 px-1">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <div className="font-extrabold text-[16px]">
-              {listing.bhk} BHK {listing.type} · {listing.locality},{" "}
-              {listing.city}
-            </div>
-            <div className="text-[12.5px] text-ink/60 font-medium">
-              {listing.sector}
-            </div>
+          <div className="font-bold text-[15px] leading-snug">
+            {listing.locality}, {listing.city}
           </div>
-          <div className="text-right shrink-0">
-            <div className="font-black text-[19px]">
-              {inr(listing.rent)}
-              <span className="text-[11px] font-semibold text-ink/50">/mo</span>
-            </div>
-            <div className="text-[11px] font-bold text-pine">
-              Brokerage {listing.brok} · Visit{" "}
-              {listing.visitFee === 0 ? "₹0" : `₹${listing.visitFee}`}
-            </div>
+          <div className="text-[13px] font-semibold text-ink/70 shrink-0">
+            ★ {broker?.rating ?? "—"}
           </div>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2 items-center justify-between">
-          <FreshBadge listing={listing} />
-          <span className="text-[12px] font-semibold text-ink/60">
-            ★ {broker?.rating ?? "—"} · {broker?.agency}
+        <div className="text-[13px] text-ink/55 mt-0.5">
+          {listing.bhk} BHK {listing.type} · {broker?.agency}
+        </div>
+        <div className="mt-1 text-[15px]">
+          <b>{inr(listing.rent)}</b>
+          <span className="font-medium text-ink/60">/mo</span>
+          <span className="text-[12px] font-semibold text-pine ml-2">
+            + {listing.brokDays}d brokerage
           </span>
+        </div>
+        <div className="mt-1.5">
+          <FreshBadge listing={listing} />
         </div>
       </div>
     </Link>

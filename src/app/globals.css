@@ -2,14 +2,14 @@
 
 @theme {
   --color-ink: #0b1526;
-  --color-paper: #f7f6f1;
-  --color-cream: #fffdf7;
+  --color-paper: #faf8f3;
+  --color-cream: #ffffff;
   --color-pine: #0b7a55;
   --color-pinedark: #064e38;
   --color-saffron: #e96a2b;
   --color-saffrondark: #c24e14;
   --color-gold: #c9a86a;
-  --color-line: #e8e1d1;
+  --color-line: #ece5d8;
   --color-mist: #eff6f1;
   --font-display: "Fraunces", serif;
   --font-sans: "Inter", sans-serif;
@@ -18,6 +18,8 @@
   --motion-standard: 240ms;
   --motion-emphasis: 320ms;
   --motion-sheet: 400ms;
+  --shadow-soft: 0 12px 32px -20px rgba(11, 21, 38, 0.28);
+  --shadow-lift: 0 20px 44px -22px rgba(11, 21, 38, 0.35);
   --z-sticky: 40;
   --z-popover: 50;
   --z-sheet: 60;
@@ -26,7 +28,7 @@
 }
 
 body {
-  background: #f7f6f1;
+  background: #faf8f3;
   color: #0b1526;
   font-family: Inter, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -81,21 +83,29 @@ input[type="file"] {
   font-size: 0.8rem;
 }
 .button {
-  border-radius: 0.9rem;
-  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.5rem;
   background: #0b1526;
   color: white;
   font-size: 0.875rem;
   font-weight: 750;
   text-align: center;
+  transition: background var(--motion-micro) ease-out, transform var(--motion-micro) ease-out;
 }
 .button:hover {
   background: #064e38;
 }
+.button:active {
+  transform: scale(0.98);
+}
 .button.secondary {
-  border: 1px solid #0b1526;
-  background: #fffdf7;
+  border: 1px solid rgba(11, 21, 38, 0.2);
+  background: white;
   color: #0b1526;
+}
+.button.secondary:hover {
+  background: #faf8f3;
+  border-color: #0b1526;
 }
 button,
 a,

@@ -37,29 +37,29 @@ export default function Navbar() {
     ...(role === "admin" ? [{ href: "/admin", label: "Admin" }] : []),
   ];
   return (
-    <header className="sticky top-0 z-(--z-sticky) bg-ink text-white border-b border-white/10">
+    <header className="sticky top-0 z-(--z-sticky) bg-paper/85 backdrop-blur-md text-ink border-b border-ink/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2 flex-wrap">
         <Link href="/" className="display font-black text-xl whitespace-nowrap">
-          Thikana<span className="text-gold">.rent</span>
-          <span className="hidden sm:inline ml-2 text-[10px] font-sans bg-emerald-300 text-ink px-2 py-1 rounded-full">
+          Thikana<span className="text-pine">.rent</span>
+          <span className="hidden sm:inline ml-2 text-[10px] font-sans bg-pine/10 text-pinedark px-2 py-1 rounded-full font-bold">
             NCR · 5 CITIES
           </span>
         </Link>
         <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
           <Link
-            className="border border-white/25 px-3 py-2 rounded-full"
+            className="border border-ink/20 px-4 py-2 rounded-full hover:border-ink"
             href={role === "broker" ? "/broker/dashboard" : "/broker/onboard"}
           >
             {role === "broker" ? "My business" : "List a home"}
           </Link>
           {user ? (
             <form action="/auth/signout" method="post">
-              <button className="bg-pine px-3 py-2 rounded-full">
+              <button className="bg-ink text-white px-4 py-2 rounded-full">
                 Sign out
               </button>
             </form>
           ) : (
-            <Link className="bg-pine px-3 py-2 rounded-full" href="/auth">
+            <Link className="bg-pine text-white px-4 py-2 rounded-full" href="/auth">
               Sign in
             </Link>
           )}
@@ -77,7 +77,7 @@ export default function Navbar() {
               key={l.href}
               href={l.href}
               aria-current={active ? "page" : undefined}
-              className={`px-3 py-2 rounded-full ${active ? "bg-white text-ink underline underline-offset-4 decoration-2" : "hover:bg-white/10"}`}
+              className={`px-3 py-2 rounded-full ${active ? "bg-ink text-white underline underline-offset-4 decoration-2" : "hover:bg-ink/5"}`}
             >
               {l.label}
             </Link>
