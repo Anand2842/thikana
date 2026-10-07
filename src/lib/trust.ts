@@ -25,12 +25,20 @@ export function freshness(l: Listing): Freshness {
 
 export const STALE_AFTER_HRS = 168;
 
-export function needsReconfirm(l: Listing) {
-  return l.hrs >= STALE_AFTER_HRS || l.verification === "stale";
-}
+// Server snapshot timestamp. Call once per render and pass down, so time
+// comparisons stay stable within a single server render.
+export const nowMs = () => Date.now();
 
 export function isActive(l: Listing) {
-  return l.verification === "verified" && l.hrs < STALE_AFTER_HRS;
+  // Availability is part of active: Taken / On Hold homes leave search,
+  // sitemap, broker inventories and enquiry intake (all filter via isActive).
+  // Legacy rows without the field default to Available in mapListing.
+  return (
+    l.verification === "verified" &&
+    l.hrs < STALE_AFTER_HRS &&
+    l.availabilityStatus !== "Taken" &&
+    l.availabilityStatus !== "OnHold"
+  );
 }
 
 export const LEAD_STAGES = [

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { authorize, invalid, unavailable } from "@/lib/api";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -26,6 +27,10 @@ export async function POST(req: Request) {
     )
       return invalid(["Choose a file up to 5 MB."]);
     const bytes = new Uint8Array(await file.arrayBuffer());
+    // Content hash lets listing intake flag the same file re-uploaded under
+    // a different URL or filename. Resized/cropped variants hash differently
+    // and remain a manual-review gap.
+    const sha256 = createHash("sha256").update(bytes).digest("hex");
     const type =
       bytes[0] === 255 && bytes[1] === 216
         ? "image/jpeg"
@@ -51,6 +56,17 @@ export async function POST(req: Request) {
       ]);
     const db = createServiceClient();
     if (kind === "photo") {
+      // DECISION: any caller with a broker row may upload kind=photo to their
+      // own pending profile — no verified-status gate. The verified gate
+      // blocked UNVERIFIED applicants from setting a profile photo at all
+      // (onboard/edit flows submit photo as a public URL on their own row).
+      // Abuse reasoning: rate-limited (20/min per user, like all uploads),
+      // 5 MB + magic-byte checked as today, stored under the uploader's own
+      // user-id prefix, and the URL only ever renders if saved on the
+      // uploader's own broker row (self-update PATCH enforces ownership and
+      // cities/areas edits never change verified status). Worst case is one
+      // photo on one's own pending profile, which KYC reviews before
+      // approval. Callers with no broker row keep the 403 below.
       const brokerId = userBrokerId(user);
       if (!brokerId)
         return NextResponse.json(
@@ -59,11 +75,11 @@ export async function POST(req: Request) {
         );
       const { data: b, error } = await db
         .from("brokers")
-        .select("verified")
+        .select("id")
         .eq("id", brokerId)
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      if (b.verified !== "verified")
+      if (!b)
         return NextResponse.json(
           { error: "Broker approval required." },
           { status: 403 },
@@ -78,6 +94,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         path,
+        sha256,
         url:
           kind === "photo"
             ? db.storage.from(bucket).getPublicUrl(path).data.publicUrl

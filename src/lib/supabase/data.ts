@@ -3,11 +3,14 @@ import {
   type Broker,
   type Listing,
   type Lead,
+  type LeadMessage,
   type Review,
   type Report,
   type CityRequest,
 } from "../mock-data";
 import { createClient, createServiceClient } from "./server";
+import type { Role } from "./role";
+import { text } from "../validation";
 
 const hasEnv =
   !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -38,6 +41,8 @@ export function mapBroker(r: any): Broker {
     complaints: r.complaints,
     resolved: r.resolved,
     kyc: r.kyc,
+    businessAddress: r.business_address ?? "",
+    moderationNote: r.moderation_note ?? "",
   };
 }
 
@@ -62,8 +67,11 @@ export function mapListing(r: any): Listing {
     brok: r.brok,
     brokDays: r.brok_days,
     visitFee: r.visit_fee,
+    visitFeeRefundable: r.visit_fee_refundable ?? false,
     otherFee: r.other_fee,
+    otherFeeNote: r.other_fee_note ?? "",
     photos: r.photos ?? [],
+    photoHashes: r.photo_hashes ?? [],
     brokerId: r.broker_id,
     hrs: Math.max(
       0,
@@ -78,6 +86,11 @@ export function mapListing(r: any): Listing {
     views: r.views,
     enq: r.enq,
     flags: r.flags?.length ? r.flags : undefined,
+    ownerName: r.owner_name ?? "",
+    ownerAuthorized: r.owner_authorized ?? false,
+    ownerRelationship: r.owner_relationship ?? "agent",
+    availabilityStatus: r.availability_status ?? "Available",
+    moderationNote: r.moderation_note ?? "",
   };
 }
 
@@ -98,8 +111,13 @@ export function mapLead(r: any): Lead {
     visitAt: r.visit_at,
     seekerVisited: r.seeker_visited,
     brokerVisited: r.broker_visited,
+    visitProposedBy: r.visit_proposed_by ?? null,
+    visitAccepted: r.visit_accepted ?? false,
+    outcome: r.outcome ?? null,
     mine: r.mine ?? false,
     ownerId: r.owner_id ?? null,
+    createdAt: r.created_at ?? null,
+    firstResponseAt: r.first_response_at ?? null,
   };
 }
 
@@ -120,11 +138,24 @@ export function mapReport(r: any): Report {
   return {
     id: r.id,
     listingId: r.listing_id,
+    brokerId: r.broker_id ?? null,
+    targetType: r.target_type === "broker" ? "broker" : "listing",
     reason: r.reason,
     details: r.details,
     reporter: r.reporter,
     status: r.status,
     date: r.date,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mapLeadMessage(r: any): LeadMessage {
+  return {
+    id: r.id,
+    leadId: r.lead_id,
+    senderId: r.sender_id,
+    body: r.body,
+    createdAt: r.created_at,
   };
 }
 
@@ -167,6 +198,45 @@ export async function fetchListings(): Promise<Listing[]> {
 export async function fetchListing(id: string): Promise<Listing | undefined> {
   const all = await fetchListings();
   return all.find((l) => l.id === id);
+}
+
+// Service-role full catalog (admin console only — bypasses the public
+// non-pending RLS filter so pending/flagged queues are visible).
+export async function fetchListingsSvc(): Promise<Listing[]> {
+  if (!hasEnv || !process.env.SUPABASE_SERVICE_ROLE_KEY)
+    throw new Error("Supabase is not configured.");
+  const sb = createServiceClient();
+  const { data, error } = await sb
+    .from("listings")
+    .select("*")
+    .order("last_confirmed_at", { ascending: false });
+  if (error || !data) throw error ?? new Error("empty");
+  return data.map(mapListing);
+}
+
+// Role-aware single-listing read: public catalog first, then a privileged
+// preview for admins and the owning broker (pending moderation).
+export async function fetchListingVisible(
+  id: string,
+  scope: { role: Role; brokerId: string | null },
+): Promise<Listing | undefined> {
+  const pub = await fetchListing(id).catch(() => undefined);
+  if (pub) return pub;
+  if (scope.role !== "admin" && !scope.brokerId) return undefined;
+  try {
+    const sb = createServiceClient();
+    const { data, error } = await sb
+      .from("listings")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (error || !data) return undefined;
+    const l = mapListing(data);
+    if (scope.role === "admin" || l.brokerId === scope.brokerId) return l;
+    return undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function fetchSameProp(propId: string): Promise<Listing[]> {
@@ -288,8 +358,7 @@ export async function fetchScopedLeads(scope: LeadScope): Promise<Lead[]> {
   }
 }
 
-export async function fetchSavedIds(userId: string): Promise<string[]> {
-  const { data, error } = await createServiceClient()
+export async function fetchSavedIds(userId: string): Promise<string[]> {  const { data, error } = await createServiceClient()
     .from("saved_listings")
     .select("listing_id")
     .eq("owner_id", userId);
@@ -303,4 +372,211 @@ export async function fetchReviewedIds(userId: string): Promise<string[]> {
     .eq("owner_id", userId);
   if (error) throw error;
   return data.map((r) => r.lead_id);
+}
+
+// Messages for one enquiry, visible only to its participants (owner seeker,
+// assigned broker) and admins. Callers must scope the lead first.
+export async function fetchLeadMessages(leadId: string): Promise<LeadMessage[]> {
+  const { data, error } = await createServiceClient()
+    .from("lead_messages")
+    .select("*")
+    .eq("lead_id", leadId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return data.map(mapLeadMessage);
+}
+
+// Reports filed by one user, for tenant-visible complaint progress.
+export async function fetchMyReports(userId: string): Promise<Report[]> {
+  const { data, error } = await createServiceClient()
+    .from("reports")
+    .select("*")
+    .eq("owner_id", userId)
+    .order("id", { ascending: false });
+  if (error) throw error;
+  return data.map(mapReport);
+}
+
+// Audit trail for admin moderation decisions (admin console only).
+export interface AdminAction {
+  id: number;
+  actorId: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  detail: string;
+  createdAt: string;
+}
+export async function logAdminAction(
+  actorId: string,
+  action: string,
+  targetType: string,
+  targetId: string,
+  detail = "",
+): Promise<void> {
+  const { error } = await createServiceClient()
+    .from("admin_actions")
+    .insert({
+      actor_id: actorId,
+      action,
+      target_type: targetType,
+      target_id: targetId,
+      detail: detail.slice(0, 1000),
+    });
+  if (error) throw error;
+}
+export async function fetchAdminActions(limit = 30): Promise<AdminAction[]> {
+  const { data, error } = await createServiceClient()
+    .from("admin_actions")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    actorId: r.actor_id,
+    action: r.action,
+    targetType: r.target_type,
+    targetId: r.target_id,
+    detail: r.detail ?? "",
+    createdAt: r.created_at,
+  }));
+}
+
+// KYC review checklist for one broker application. Document paths stay
+// private; only presence + contact confirmation + address are exposed.
+export interface KycCheck {
+  hasIdentity: boolean;
+  hasBusiness: boolean;
+  emailConfirmed: boolean;
+  phoneConfirmed: boolean;
+  phoneOtpStatus: string;
+  hasAddress: boolean;
+  missing: string[];
+}
+export async function fetchApplicantChecks(
+  brokerId: string,
+): Promise<KycCheck> {
+  const db = createServiceClient();
+  const [{ data: app }, { data: broker }] = await Promise.all([
+    db
+      .from("broker_applications")
+      .select("owner_id,phone,identity_path,business_path")
+      .eq("broker_id", brokerId)
+      .maybeSingle(),
+    db.from("brokers").select("business_address").eq("id", brokerId).maybeSingle(),
+  ]);
+  let emailConfirmed = false,
+    phoneConfirmed = false;
+  if (app?.owner_id) {
+    try {
+      const { data } = await db.auth.admin.getUserById(app.owner_id);
+      emailConfirmed = !!data.user?.email_confirmed_at;
+      phoneConfirmed = !!data.user?.phone_confirmed_at;
+    } catch {
+      // Auth lookup failure must not abort moderation — surfaced as unchecked.
+    }
+  }
+  const missing: string[] = [];
+  if (!app?.identity_path) missing.push("identity proof");
+  if (!app?.business_path) missing.push("business proof");
+  if (!emailConfirmed) missing.push("confirmed email");
+  if (!text(app?.phone ?? "")) missing.push("contact phone");
+  if (!text(broker?.business_address ?? "")) missing.push("business address");
+  return {
+    hasIdentity: !!app?.identity_path,
+    hasBusiness: !!app?.business_path,
+    emailConfirmed,
+    // Phone OTP needs an SMS provider (ops blocker): presence is required,
+    // verification is labeled, not faked. See phoneOtpStatus below.
+    phoneConfirmed,
+    phoneOtpStatus:
+      "Phone OTP verification needs an SMS provider — phone is on file, not OTP-verified.",
+    hasAddress: !!text(broker?.business_address ?? ""),
+    missing,
+  };
+}
+
+// Investigator/reporter notes on a report.
+export interface ReportNote {
+  id: string;
+  reportId: string;
+  authorId: string;
+  body: string;
+  createdAt: string;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mapReportNote(r: any): ReportNote {
+  return {
+    id: r.id,
+    reportId: r.report_id,
+    authorId: r.author_id,
+    body: r.body,
+    createdAt: r.created_at,
+  };
+}
+export async function fetchReportNotes(
+  reportIds: string[],
+): Promise<ReportNote[]> {
+  if (!reportIds.length) return [];
+  const { data, error } = await createServiceClient()
+    .from("report_notes")
+    .select("*")
+    .in("report_id", reportIds)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map(mapReportNote);
+}
+export async function fetchBrokerVerification(brokerId: string): Promise<{
+  identitySubmitted: boolean;
+  businessSubmitted: boolean;
+  reviewedAt: string | null;
+}> {
+  const { data, error } = await createServiceClient()
+    .from("broker_applications")
+    .select("identity_path,business_path,created_at")
+    .eq("broker_id", brokerId)
+    .maybeSingle();
+  if (error) throw error;
+  return {
+    identitySubmitted: !!data?.identity_path,
+    businessSubmitted: !!data?.business_path,
+    reviewedAt: data?.created_at ?? null,
+  };
+}
+
+// Unread message counts per lead for one viewer (inbox badges).
+// Unread = messages with created_at after the viewer's last_read_at in
+// lead_reads (migration-014); a lead with no read row counts all its
+// messages as unread. Bulk-fetched with .in() (two queries, no per-lead
+// N+1). Server-side only (service client, bypasses RLS).
+export async function fetchUnreadCounts(
+  userId: string,
+  leadIds: string[],
+): Promise<Map<string, number>> {
+  const counts = new Map<string, number>();
+  if (leadIds.length === 0) return counts;
+  const sb = createServiceClient();
+  const [{ data: msgs, error: msgError }, { data: reads, error: readError }] =
+    await Promise.all([
+      sb.from("lead_messages").select("lead_id,created_at").in("lead_id", leadIds),
+      sb
+        .from("lead_reads")
+        .select("lead_id,last_read_at")
+        .eq("user_id", userId)
+        .in("lead_id", leadIds),
+    ]);
+  if (msgError) throw msgError;
+  if (readError) throw readError;
+  const lastRead = new Map(
+    (reads ?? []).map((r) => [r.lead_id as string, Date.parse(r.last_read_at as string)]),
+  );
+  for (const m of msgs ?? []) {
+    const lid = m.lead_id as string,
+      at = Date.parse(m.created_at as string),
+      seen = lastRead.get(lid);
+    if (seen === undefined || at > seen)
+      counts.set(lid, (counts.get(lid) ?? 0) + 1);
+  }
+  return counts;
 }

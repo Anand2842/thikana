@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authorize, unavailable } from "@/lib/api";
+import { authorize, requireAal2, unavailable } from "@/lib/api";
 import { createServiceClient } from "@/lib/supabase/server";
 import { userBrokerId, userRole } from "@/lib/supabase/role";
 export async function POST(
@@ -27,6 +27,11 @@ export async function POST(
         { error: "This is not your listing." },
         { status: 403 },
       );
+    // Admin reconfirms need a TOTP-verified session.
+    if (userRole(user) === "admin") {
+      const mfa = await requireAal2();
+      if (mfa) return mfa;
+    }
     if (!["verified", "stale"].includes(l.verification))
       return NextResponse.json(
         { error: "A flagged or pending listing needs admin review." },

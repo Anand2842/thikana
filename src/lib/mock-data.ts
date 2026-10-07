@@ -9,7 +9,6 @@ export const PHASE1_CITIES = [
   "Greater Noida",
   "Ghaziabad",
 ] as const;
-export type City = (typeof PHASE1_CITIES)[number];
 
 export interface Broker {
   id: string;
@@ -33,6 +32,8 @@ export interface Broker {
   complaints: number;
   resolved: number;
   kyc: string;
+  businessAddress?: string;
+  moderationNote?: string;
 }
 
 export interface Listing {
@@ -54,8 +55,11 @@ export interface Listing {
   brok: string;
   brokDays: number;
   visitFee: number;
+  visitFeeRefundable?: boolean;
   otherFee: number;
+  otherFeeNote?: string;
   photos: string[];
+  photoHashes?: string[];
   brokerId: string;
   hrs: number;
   verification: Verification;
@@ -63,6 +67,11 @@ export interface Listing {
   views: number;
   enq: number;
   flags?: string[];
+  ownerName?: string;
+  ownerAuthorized?: boolean;
+  ownerRelationship?: string;
+  availabilityStatus?: string;
+  moderationNote?: string;
 }
 
 export interface Lead {
@@ -81,7 +90,12 @@ export interface Lead {
   visitAt?: string | null;
   seekerVisited?: boolean;
   brokerVisited?: boolean;
+  visitProposedBy?: string | null;
+  visitAccepted?: boolean;
+  outcome?: string | null;
   ownerId?: string | null;
+  createdAt?: string | null;
+  firstResponseAt?: string | null;
 }
 
 export interface Review {
@@ -96,11 +110,21 @@ export interface Review {
 export interface Report {
   id: string;
   listingId: string;
+  brokerId?: string | null;
+  targetType?: "listing" | "broker";
   reason: string;
   details: string;
   reporter: string;
   status: string;
   date: string;
+}
+
+export interface LeadMessage {
+  id: string;
+  leadId: string;
+  senderId: string;
+  body: string;
+  createdAt: string;
 }
 
 export interface CityRequest {
@@ -1215,56 +1239,3 @@ export const reports: Report[] = [
     date: "02 Oct 2026",
   },
 ];
-
-export const localities = [
-  { n: "Dwarka", city: "Delhi", img: IMG.a, avg: "₹24k", c: 214 },
-  { n: "Saket", city: "Delhi", img: IMG.f, avg: "₹42k", c: 132 },
-  { n: "Laxmi Nagar", city: "Delhi", img: IMG.e, avg: "₹13k", c: 186 },
-  { n: "Rohini", city: "Delhi", img: IMG.d, avg: "₹18k", c: 149 },
-  { n: "Karol Bagh", city: "Delhi", img: IMG.g, avg: "₹21k", c: 98 },
-  { n: "Greater Kailash", city: "Delhi", img: IMG.h, avg: "₹58k", c: 76 },
-  { n: "Mukherjee Nagar", city: "Delhi", img: IMG.j, avg: "₹11k", c: 164 },
-  { n: "Hauz Khas", city: "Delhi", img: IMG.k, avg: "₹31k", c: 88 },
-  { n: "Golf Course Road", city: "Gurugram", img: IMG.f, avg: "₹38k", c: 96 },
-  { n: "Sohna Road", city: "Gurugram", img: IMG.i, avg: "₹22k", c: 118 },
-  { n: "Sector 137", city: "Noida", img: IMG.c, avg: "₹20k", c: 104 },
-  { n: "Sector 62", city: "Noida", img: IMG.h, avg: "₹24k", c: 87 },
-  { n: "Pari Chowk", city: "Greater Noida", img: IMG.e, avg: "₹15k", c: 72 },
-  { n: "Alpha I", city: "Greater Noida", img: IMG.j, avg: "₹12k", c: 65 },
-  { n: "Indirapuram", city: "Ghaziabad", img: IMG.b, avg: "₹14k", c: 91 },
-  { n: "Vaishali", city: "Ghaziabad", img: IMG.d, avg: "₹13k", c: 68 },
-];
-
-export const cityRequests: CityRequest[] = [
-  {
-    id: "CR-101",
-    city: "Jaipur",
-    name: "Sample demand",
-    phone: "98XXXXXXX",
-    userType: "seeker",
-    note: "Expansion signal",
-    status: "New",
-    date: "4 Oct 2026",
-  },
-  {
-    id: "CR-102",
-    city: "Lucknow",
-    name: "Sample demand",
-    phone: "98XXXXXXX",
-    userType: "broker",
-    note: "Expansion signal",
-    status: "New",
-    date: "3 Oct 2026",
-  },
-];
-
-export const getBroker = (id: string) => brokers.find((b) => b.id === id);
-export const getListing = (id: string) => listings.find((l) => l.id === id);
-export const sameProp = (propId: string) =>
-  listings.filter((l) => l.propId === propId);
-export const brokerListings = (brokerId: string) =>
-  listings.filter((l) => l.brokerId === brokerId);
-export const brokerReviews = (brokerId: string) =>
-  reviews.filter((r) => r.brokerId === brokerId);
-export const brokerLeads = (brokerId: string) =>
-  leads.filter((l) => l.brokerId === brokerId);

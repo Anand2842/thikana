@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  fetchListing,
+  fetchListingVisible,
   fetchBroker,
   fetchSameProp,
   fetchReviews,
@@ -19,7 +19,7 @@ import { FreshBadge, VerificationPill } from "@/components/badges";
 import { Gallery } from "@/components/photo";
 import Photo from "@/components/photo";
 import PropertyActions from "@/components/property-actions";
-import { getSessionUser } from "@/lib/supabase/role";
+import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
 import ContactBrokerForm from "@/components/contact-broker-form";
 
 export default async function PropertyPage({
@@ -28,7 +28,13 @@ export default async function PropertyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const listing = await fetchListing(id);
+  const user = await getSessionUser();
+  // Public catalog first; admins and the owning broker can also preview
+  // listings that are still pending moderation.
+  const listing = await fetchListingVisible(id, {
+    role: userRole(user),
+    brokerId: userBrokerId(user),
+  });
   if (!listing) notFound();
   const broker = await fetchBroker(listing.brokerId);
   const brokers = await fetchBrokers();
@@ -37,7 +43,6 @@ export default async function PropertyPage({
       isActive(l) &&
       brokers.find((b) => b.id === l.brokerId)?.verified === "verified",
   );
-  const user = await getSessionUser();
   const saved = user ? (await fetchSavedIds(user.id)).includes(id) : false;
   const available = isActive(listing) && broker?.verified === "verified";
   const brokerReviewCount = (await fetchReviews(listing.brokerId)).length;
@@ -139,9 +144,21 @@ export default async function PropertyPage({
                 <b className="block">
                   {listing.visitFee === 0 ? "₹0" : `₹${listing.visitFee}`}
                 </b>
+                {listing.visitFee > 0 && (
+                  <span className="text-[11px] font-semibold text-ink/60">
+                    {listing.visitFeeRefundable
+                      ? "Refundable"
+                      : "Non-refundable — pay only after verifying the property in person"}
+                  </span>
+                )}
               </div>
               <div className="bg-paper border border-line rounded-2xl p-3">
                 Other fees<b className="block">{inr(listing.otherFee)}</b>
+                {listing.otherFeeNote && (
+                  <span className="text-[11px] font-semibold text-ink/60">
+                    {listing.otherFeeNote}
+                  </span>
+                )}
               </div>
               <div className="bg-ink text-white rounded-2xl p-3">
                 Estimated move-in total
@@ -150,6 +167,16 @@ export default async function PropertyPage({
             </div>
             <p className="mt-3 text-sm">
               {listing.furnishing} · Available: {listing.avail}
+            </p>
+            <p className="mt-1 text-xs text-ink/65">
+              Owner authorization:{" "}
+              {!listing.ownerRelationship
+                ? "not provided"
+                : listing.ownerRelationship === "owner"
+                  ? "Listed by the owner-broker"
+                  : listing.ownerRelationship === "subagent"
+                    ? "Marketed by a sub-agent for the owner"
+                    : "Marketed by an authorized agent of the owner"}
             </p>
             <p className="mt-2 text-xs text-ink/65">
               Total includes first month’s rent, refundable deposit, brokerage,

@@ -2,7 +2,6 @@
 
 @theme {
   --color-ink: #0b1526;
-  --color-ink2: #13233d;
   --color-paper: #f7f6f1;
   --color-cream: #fffdf7;
   --color-pine: #0b7a55;
@@ -35,13 +34,6 @@ body {
 .card-hover:hover {
   transform: translateY(-6px);
   box-shadow: 0 22px 50px -18px rgba(11, 21, 38, 0.35);
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  scrollbar-width: none;
 }
 
 * {
@@ -112,9 +104,6 @@ a {
   font-weight: 800;
   letter-spacing: 0.18em;
   color: #0b7a55;
-}
-.bg-saffron {
-  background-color: #b94310;
 }
 @media (prefers-reduced-motion: reduce) {
   *,

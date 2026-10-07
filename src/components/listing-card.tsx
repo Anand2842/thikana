@@ -46,7 +46,8 @@ export default function ListingCard({
               <span className="text-[11px] font-semibold text-ink/50">/mo</span>
             </div>
             <div className="text-[11px] font-bold text-pine">
-              Brokerage {listing.brok}
+              Brokerage {listing.brok} · Visit{" "}
+              {listing.visitFee === 0 ? "₹0" : `₹${listing.visitFee}`}
             </div>
           </div>
         </div>

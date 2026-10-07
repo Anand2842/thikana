@@ -1,6 +1,6 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { getSessionUser, userRole, type Role } from "./supabase/role";
+import { getAssurance, getSessionUser, userRole, type Role } from "./supabase/role";
 import { object } from "./validation";
 
 export async function authorize(role?: Role) {
@@ -21,7 +21,32 @@ export async function authorize(role?: Role) {
         { status: 403 },
       ),
     };
+  // Password-only admin sessions cannot touch moderation APIs: admin role
+  // requires a TOTP-verified session (aal2). Enroll/verify at /admin/mfa.
+  if (role === "admin") {
+    const mfa = await requireAal2();
+    if (mfa) return { user: null, response: mfa };
+  }
   return { user, response: null };
+}
+// Single choke point for admin privilege: signed-in + admin role +
+// TOTP-verified session. Every moderation path must go through this or
+// authorize("admin") — never a bare role check.
+export async function requireAdmin() {
+  const { user, response } = await authorize("admin");
+  if (response) return { user: null, response };
+  return { user, response: null };
+}
+// Standalone step-up check for handlers that branch on admin role manually
+// instead of calling authorize("admin").
+export async function requireAal2() {
+  const { current } = await getAssurance();
+  if (current !== "aal2")
+    return NextResponse.json(
+      { error: "Admin MFA required. Verify at /admin/mfa." },
+      { status: 403 },
+    );
+  return null;
 }
 export async function body(req: Request) {
   return object(await req.json().catch(() => null));

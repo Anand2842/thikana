@@ -76,7 +76,9 @@ export async function POST(req: Request) {
       brok_days: b.brokDays,
       brok: `${b.brokDays} days`,
       visit_fee: b.visitFee,
+      visit_fee_refundable: b.visitFeeRefundable === true,
       other_fee: b.otherFee,
+      other_fee_note: text(b.otherFeeNote).slice(0, 500),
       area: b.area,
       floor: text(b.floor).slice(0, 100),
       furnishing: b.furnishing,
@@ -88,8 +90,18 @@ export async function POST(req: Request) {
         .filter(Boolean)
         .slice(0, 20),
       photos: b.photos,
+      photo_hashes: Array.isArray(b.photoHashes) ? b.photoHashes : [],
       broker_id: brokerId,
+      owner_name: text(b.ownerName).slice(0, 100),
+      owner_relationship: text(b.ownerRelationship),
+      // Reachable only after validateListing accepts authorized as true/"on"/"true";
+      // derive (don't hardcode) so a direct RPC caller can't self-assert either.
+      owner_authorized:
+        b.authorized === true ||
+        b.authorized === "on" ||
+        b.authorized === "true",
       verification: "pending",
+      availability_status: "Available",
       last_confirmed_at: new Date().toISOString(),
     };
     const { data, error } = await db.rpc("submit_listing", {
@@ -97,6 +109,62 @@ export async function POST(req: Request) {
       address: text(b.address),
     });
     if (error) throw error;
+    // Duplicate-photo check: same photo URL(s) OR same uploaded file bytes
+    // reused under a different property ID. Byte hashes catch re-uploaded
+    // copies under new URLs; resized/cropped variants remain a manual-review
+    // gap. Keeps verification pending; staff reviews the system report.
+    // Never fails the listing insert.
+    try {
+      const urls = Array.isArray(b.photos)
+        ? (b.photos as unknown[]).filter(
+            (u): u is string => typeof u === "string" && u.length > 0,
+          )
+        : [];
+      const hashes = Array.isArray(b.photoHashes)
+        ? (b.photoHashes as unknown[]).filter(
+            (h): h is string => typeof h === "string" && h.length > 0,
+          )
+        : [];
+      const matched = new Map<string, string>();
+      if (urls.length) {
+        const { data: dupes } = await db
+          .from("listings")
+          .select("id,prop_id")
+          .overlaps("photos", urls)
+          .neq("prop_id", propId);
+        for (const r of (dupes ?? []) as { prop_id: string }[])
+          matched.set(r.prop_id, "Exact photo URL match");
+      }
+      if (hashes.length) {
+        const { data: dupes } = await db
+          .from("listings")
+          .select("id,prop_id")
+          .overlaps("photo_hashes", hashes)
+          .neq("prop_id", propId);
+        for (const r of (dupes ?? []) as { prop_id: string }[])
+          if (!matched.has(r.prop_id))
+            matched.set(r.prop_id, "Identical photo file match");
+      }
+      if (matched.size) {
+        const propIds = [...matched.keys()];
+        const kinds = [...new Set(matched.values())].join(" + ");
+        await db.from("reports").insert({
+          id: `R-${crypto.randomUUID()}`,
+          listing_id: (data as { id: string }).id,
+          reason: "Duplicate photos",
+          details: `${kinds} with ${propIds.length} existing listing(s) under different propert${propIds.length === 1 ? "y" : "ies"}: ${propIds.join(", ")}`,
+          reporter: "System · hash-match",
+          status: "Open",
+          date: new Date().toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
+        });
+      }
+    } catch {
+      // photo-duplicate check is best-effort; listing insert already succeeded
+    }
     return NextResponse.json({ listing: mapListing(data) }, { status: 201 });
   } catch (e) {
     return unavailable(e);

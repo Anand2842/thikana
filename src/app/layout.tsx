@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
@@ -53,6 +54,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               guarantee.
             </span>
             <span>Transparent fees. Current availability. Human review.</span>
+            <nav
+              aria-label="Legal and support"
+              className="flex gap-4 text-[12.5px] font-bold"
+            >
+              <Link className="underline" href="/support">
+                Support
+              </Link>
+              <Link className="underline" href="/terms">
+                Terms
+              </Link>
+              <Link className="underline" href="/privacy">
+                Privacy
+              </Link>
+            </nav>
           </div>
         </footer>
       </body>

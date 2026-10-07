@@ -36,9 +36,24 @@ async function main() {
   if (leadIds.length) {
     const { error } = await db.from("reviews").delete().in("lead_id", leadIds);
     if (error) throw error;
+    const msgs = await db.from("lead_messages").delete().in("lead_id", leadIds);
+    if (msgs.error) throw msgs.error;
+    const reads = await db.from("lead_reads").delete().in("lead_id", leadIds);
+    if (reads.error) throw reads.error;
     const r = await db.from("leads").delete().in("id", leadIds);
     if (r.error) throw r.error;
   }
+  const ownReports = await db.from("reports").select("id").eq("owner_id", qa.id);
+  if (ownReports.error) throw ownReports.error;
+  const reportIds = (ownReports.data ?? []).map((r) => r.id);
+  if (reportIds.length) {
+    const rn = await db.from("report_notes").delete().in("report_id", reportIds);
+    if (rn.error) throw rn.error;
+    const rr = await db.from("reports").delete().in("id", reportIds);
+    if (rr.error) throw rr.error;
+  }
+  const acted = await db.from("admin_actions").delete().eq("actor_id", qa.id);
+  if (acted.error) throw acted.error;
   for (const id of brokerIds) {
     const { data: ls, error } = await db
       .from("listings")
@@ -69,12 +84,13 @@ async function main() {
       if (r.error) throw r.error;
     }
   }
-  const city = await db
-    .from("city_requests")
-    .delete()
-    .eq("name", "QA City Request")
-    .eq("city", "QA Demo City");
-  if (city.error) throw city.error;
+  for (const q of [
+    { col: "owner_id", val: qa.id },
+    { col: "name", val: "QA City Request" },
+  ]) {
+    const city = await db.from("city_requests").delete().eq(q.col, q.val);
+    if (city.error) throw city.error;
+  }
   const r = await db.auth.admin.deleteUser(qa.id);
   if (r.error) throw r.error;
   rmSync(".local/qa-account.json");

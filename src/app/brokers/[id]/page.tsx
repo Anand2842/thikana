@@ -5,10 +5,13 @@ import { notFound } from "next/navigation";
 import {
   fetchBroker,
   fetchBrokerListings,
+  fetchBrokerVerification,
   fetchReviews,
 } from "@/lib/supabase/data";
+import { getSessionUser } from "@/lib/supabase/role";
 import { VerifiedBadge } from "@/components/badges";
 import ListingCard from "@/components/listing-card";
+import BrokerReportForm from "@/components/broker-report-form";
 
 export default async function BrokerPage({
   params,
@@ -20,6 +23,29 @@ export default async function BrokerPage({
   if (!broker) notFound();
   const mine = (await fetchBrokerListings(broker.id)).filter(isActive);
   const revs = await fetchReviews(broker.id);
+  const user = await getSessionUser();
+  const verification = await fetchBrokerVerification(broker.id);
+  const checks: [string, boolean, string][] = [
+    [
+      "Identity proof submitted",
+      verification.identitySubmitted,
+      verification.reviewedAt
+        ? `Received ${verification.reviewedAt.slice(0, 10)}`
+        : "Not received",
+    ],
+    [
+      "Business proof submitted",
+      verification.businessSubmitted,
+      verification.reviewedAt
+        ? `Received ${verification.reviewedAt.slice(0, 10)}`
+        : "Not received",
+    ],
+    [
+      "Human review completed",
+      broker.verified === "verified",
+      broker.vdate || "Pending human review",
+    ],
+  ];
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -45,7 +71,11 @@ export default async function BrokerPage({
               {broker.cities.join(", ")}
             </div>
             <div className="mt-2 text-[13px] font-bold text-gold">
-              ★ {broker.rating || "—"} ({broker.reviews})
+              {broker.reviews > 0 ? (
+                <>★ {broker.rating} ({broker.reviews})</>
+              ) : (
+                <>No verified reviews yet</>
+              )}
             </div>
             <div className="mt-1 text-[12.5px] text-white/65">
               Response time: {broker.responseTime}
@@ -65,8 +95,35 @@ export default async function BrokerPage({
               </span>
             ))}
           </div>
+          {broker.businessAddress ? (
+            <div className="mt-2 text-white/60 text-[12.5px]">
+              {broker.businessAddress}
+            </div>
+          ) : null}
           <div className="mt-2 text-white/60 text-[12.5px]">
             Verification: {broker.vdate || "Pending human review"}
+          </div>
+          <div className="mt-4">
+            <b className="text-[12px] tracking-wide text-white/80">
+              COMPLETED CHECKS
+            </b>
+            <ul className="mt-2 space-y-1.5">
+              {checks.map(([label, done, note]) => (
+                <li
+                  key={label}
+                  className="flex items-center justify-between gap-3 text-[12.5px]"
+                >
+                  <span>
+                    <span aria-hidden>{done ? "✓" : "○"}</span> {label}
+                  </span>
+                  <span className="text-white/60">{note}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-[11.5px] text-white/55">
+              Verification covers the broker’s identity and business documents.
+              It does not guarantee any single property or transaction.
+            </p>
           </div>
         </div>
       </div>
@@ -100,6 +157,13 @@ export default async function BrokerPage({
             visit.
           </p>
         )}
+      </div>
+      <div className="mt-8 max-w-xl">
+        <BrokerReportForm
+          brokerId={broker.id}
+          brokerName={broker.agency}
+          signedIn={!!user}
+        />
       </div>
     </main>
   );

@@ -25,7 +25,11 @@ export default function BrokerCard({ broker }: { broker: Broker }) {
         </div>
       </div>
       <div className="mt-3 text-[12.5px] font-semibold text-ink/70">
-        ★ {broker.rating || "—"} ({broker.reviews}) · {broker.responseTime}
+        {broker.reviews > 0 ? (
+          <>★ {broker.rating} ({broker.reviews}) · {broker.responseTime}</>
+        ) : (
+          <>No verified reviews yet · {broker.responseTime}</>
+        )}
       </div>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {broker.areas.slice(0, 3).map((a) => (

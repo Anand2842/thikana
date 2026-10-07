@@ -4,12 +4,13 @@ import {
   fetchBrokers,
   fetchListings,
   fetchScopedLeads,
+  fetchUnreadCounts,
 } from "@/lib/supabase/data";
-import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
+import { getAssurance, getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
 import { inr, freshness } from "@/lib/trust";
 import { VerificationPill } from "@/components/badges";
 import ReconfirmButton from "@/components/reconfirm-button";
-import LeadActions from "@/components/lead-actions";
+import LeadInbox from "@/components/lead-inbox";
 export default async function BrokerDashboardPage({
   searchParams,
 }: {
@@ -19,6 +20,11 @@ export default async function BrokerDashboardPage({
   if (!user) redirect("/auth?next=/broker/dashboard");
   const role = userRole(user),
     sp = await searchParams;
+  // Admin preview of another broker's inbox needs a TOTP-verified session.
+  if (role === "admin") {
+    const { current } = await getAssurance();
+    if (current !== "aal2") redirect("/admin/mfa");
+  }
   if (role === "seeker")
     return (
       <main className="max-w-xl mx-auto px-4 py-16">
@@ -66,6 +72,12 @@ export default async function BrokerDashboardPage({
   ]);
   const mine = listings.filter((l) => l.brokerId === brokerId),
     inbox = leads.filter((l) => l.brokerId === brokerId);
+  const unread = Object.fromEntries(
+    (await fetchUnreadCounts(
+      user.id,
+      inbox.map((l) => l.id),
+    )) ?? new Map(),
+  );
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="eyebrow">BROKER DASHBOARD · {broker.agency}</div>
@@ -76,6 +88,14 @@ export default async function BrokerDashboardPage({
         {mine.length} listings · {inbox.length} enquiries · Status:{" "}
         {broker.verified}
       </p>
+      {(broker.moderationNote ?? "").trim() !== "" && (
+        <div
+          role="status"
+          className="bg-mist border border-line rounded-3xl p-6 mt-6"
+        >
+          <b>Moderation note:</b> {broker.moderationNote}
+        </div>
+      )}
       {broker.verified !== "verified" && (
         <div
           role="status"
@@ -96,6 +116,12 @@ export default async function BrokerDashboardPage({
         )}
         <Link className="button secondary" href={`/brokers/${broker.id}`}>
           Public profile
+        </Link>
+        <Link
+          className="button secondary"
+          href={`/broker/onboard?state=edit&broker=${broker.id}`}
+        >
+          Edit profile
         </Link>
       </div>
       <h2 className="display text-2xl font-black mt-10">
@@ -119,6 +145,17 @@ export default async function BrokerDashboardPage({
               broker.verified === "verified" && (
                 <ReconfirmButton listingId={l.id} propId={l.propId} />
               )}
+            {(l.moderationNote ?? "").trim() !== "" && (
+              <p className="w-full text-xs font-semibold text-ink/70">
+                Moderation feedback: {l.moderationNote}
+              </p>
+            )}
+            <Link
+              className="text-[12px] font-extrabold underline"
+              href={`/broker/listings/${l.id}/edit`}
+            >
+              Edit
+            </Link>
           </article>
         ))}
         {!mine.length && (
@@ -126,32 +163,12 @@ export default async function BrokerDashboardPage({
         )}
       </div>
       <h2 className="display text-2xl font-black mt-10">Lead inbox</h2>
-      <div className="space-y-3 mt-4">
-        {inbox.map((l) => (
-          <article
-            key={l.id}
-            className="bg-cream border border-line rounded-3xl p-5"
-          >
-            <b>{l.userName}</b>
-            <p className="text-sm mt-2">
-              {l.phone} · {l.status}
-            </p>
-            <p className="text-sm text-ink/65 mt-2">{l.msg}</p>
-            <p className="text-sm mt-2">
-              Visit:{" "}
-              {l.visitAt
-                ? new Date(l.visitAt).toLocaleString("en-IN", {
-                    timeZone: "Asia/Kolkata",
-                  }) + " IST"
-                : "Not scheduled"}
-            </p>
-            <LeadActions lead={l} manage own={false} reviewed={false} />
-          </article>
-        ))}
-        {!inbox.length && (
-          <p className="text-sm text-ink/65">No enquiries yet.</p>
-        )}
-      </div>
+      <LeadInbox
+        leads={inbox}
+        listings={listings}
+        userId={user.id}
+        unread={unread}
+      />
     </main>
   );
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authorize, body, invalid, unavailable } from "@/lib/api";
+import { authorize, body, invalid, requireAal2, unavailable } from "@/lib/api";
 import { validateLead, text } from "@/lib/validation";
 import { createServiceClient } from "@/lib/supabase/server";
 import { userBrokerId, userRole } from "@/lib/supabase/role";
@@ -9,6 +9,11 @@ import { checkRateLimit } from "@/lib/ratelimit";
 export async function GET() {
   const { user, response } = await authorize();
   if (response) return response;
+  // Admin-wide reads need a TOTP-verified session; everyone else is scoped.
+  if (userRole(user) === "admin") {
+    const mfa = await requireAal2();
+    if (mfa) return mfa;
+  }
   try {
     return NextResponse.json({
       leads: await fetchScopedLeads({
@@ -32,6 +37,12 @@ export async function POST(req: Request) {
   if (limited) return limited;
   const b = await body(req),
     errors = validateLead(b);
+  const reqText = text(b.req),
+    timeText = text(b.time);
+  if (reqText.length > 500)
+    errors.push("Requirements must be under 500 characters.");
+  if (timeText.length > 100)
+    errors.push("Preferred time must be under 100 characters.");
   if (errors.length) return invalid(errors);
   try {
     const db = createServiceClient();
@@ -71,6 +82,8 @@ export async function POST(req: Request) {
         user_name: text(b.name),
         phone: text(b.phone),
         msg: text(b.msg),
+        req: reqText,
+        time: timeText,
         owner_id: user!.id,
         date: new Date().toISOString().slice(0, 10),
       })

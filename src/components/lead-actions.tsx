@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { request } from "@/lib/client-request";
+import LeadMessages from "@/components/lead-messages";
 import type { Lead } from "@/lib/mock-data";
 import { LEAD_STAGES } from "@/lib/trust";
 const manualStages: readonly string[] = LEAD_STAGES.filter(
@@ -12,11 +13,13 @@ export default function LeadActions({
   manage,
   own,
   reviewed,
+  ownId,
 }: {
   lead: Lead;
   manage: boolean;
   own: boolean;
   reviewed: boolean;
+  ownId: string;
 }) {
   const router = useRouter(),
     [busy, setBusy] = useState(false),
@@ -40,6 +43,9 @@ export default function LeadActions({
     }
   }
   const confirmed = (own && lead.seekerVisited) || (!own && lead.brokerVisited);
+  const proposed = !!lead.visitAt && !lead.visitAccepted;
+  const proposedByMe = proposed && lead.visitProposedBy === ownId;
+  const visitAgreed = !!lead.visitAt && !!lead.visitAccepted;
   return (
     <div className="mt-4 flex flex-wrap gap-3 items-start">
       {!lead.seekerVisited && !lead.brokerVisited && (
@@ -67,6 +73,33 @@ export default function LeadActions({
           </form>
         </details>
       )}
+      {proposed && proposedByMe && (
+        <span
+          role="status"
+          className="text-xs font-bold bg-mist border border-line px-3 py-2 rounded-full"
+        >
+          Proposed by you — awaiting other side
+        </span>
+      )}
+      {proposed && !proposedByMe && (
+        <button
+          className="button"
+          disabled={busy}
+          onClick={() => run({ action: "accept" })}
+        >
+          Accept proposed visit
+        </button>
+      )}
+      {visitAgreed && (
+        <span className="text-xs font-bold bg-pine/10 border border-pine/25 px-3 py-2 rounded-full">
+          Visit confirmed for{" "}
+          {lead.visitAt
+            ? new Date(lead.visitAt).toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+              }) + " IST"
+            : ""}
+        </span>
+      )}
       {lead.visitAt && !confirmed && (
         <button
           className="button secondary"
@@ -86,12 +119,14 @@ export default function LeadActions({
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            const f = new FormData(e.currentTarget);
             void run({
               action: "status",
-              status: new FormData(e.currentTarget).get("status"),
+              status: f.get("status"),
+              outcome: f.get("outcome") || undefined,
             });
           }}
-          className="flex gap-2 items-end"
+          className="flex gap-2 items-end flex-wrap"
         >
           <label>
             Pipeline
@@ -119,6 +154,14 @@ export default function LeadActions({
                   {s}
                 </option>
               ))}
+            </select>
+          </label>
+          <label>
+            Outcome (when closing)
+            <select name="outcome" defaultValue={lead.outcome ?? ""}>
+              <option value="">—</option>
+              <option value="booked">Booked</option>
+              <option value="not_interested">Not interested</option>
             </select>
           </label>
           <button className="button" disabled={busy}>
@@ -173,6 +216,23 @@ export default function LeadActions({
             </form>
           </details>
         ))}
+      {lead.visitAt && !(lead.seekerVisited && lead.brokerVisited) && (
+        <button
+          className="button secondary"
+          disabled={busy}
+          onClick={() => {
+            if (
+              window.confirm(
+                "Cancel this scheduled visit? Both sides will see it as cancelled.",
+              )
+            )
+              void run({ action: "cancel" });
+          }}
+        >
+          Cancel visit
+        </button>
+      )}
+      <LeadMessages leadId={lead.id} ownId={ownId} />
       {message && (
         <p role="status" className="w-full text-sm">
           {message}

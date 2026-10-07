@@ -23,12 +23,28 @@ export default function ContactBrokerForm({
     setBusy(true);
     setError("");
     const f = new FormData(e.currentTarget);
+    const budgetRaw = String(f.get("budget") ?? "").trim(),
+      moveIn = String(f.get("moveIn") ?? "").trim(),
+      tenantType = String(f.get("tenantType") ?? "").trim(),
+      notes = String(f.get("msg") ?? "").trim();
+    const parts: string[] = [];
+    if (budgetRaw) {
+      const n = Number(budgetRaw);
+      parts.push(
+        `Budget: ≤ ₹${Number.isFinite(n) && n > 0 ? Math.round(n).toLocaleString("en-IN") : budgetRaw}`,
+      );
+    }
+    if (moveIn) parts.push(`Move-in: ${moveIn}`);
+    if (tenantType) parts.push(`Type: ${tenantType}`);
+    if (notes) parts.push(`Notes: ${notes}`);
     try {
       await request("/api/leads", {
         listingId,
         name: f.get("name"),
         phone: f.get("phone"),
         msg: f.get("msg"),
+        req: parts.join("; ").slice(0, 500),
+        time: moveIn,
       });
       setDone(true);
     } catch (e) {
@@ -85,6 +101,30 @@ export default function ContactBrokerForm({
           pattern="[0-9]{10}"
           maxLength={10}
         />
+      </label>
+      <label>
+        Monthly rent ceiling (₹, optional)
+        <input
+          name="budget"
+          type="number"
+          min={1}
+          max={10000000}
+          step={1}
+          placeholder="e.g. 25000"
+        />
+      </label>
+      <label>
+        Move-in date (optional)
+        <input name="moveIn" type="date" />
+      </label>
+      <label>
+        Tenant type (optional)
+        <select name="tenantType" defaultValue="">
+          <option value="">Select…</option>
+          <option value="Family">Family</option>
+          <option value="Student">Student</option>
+          <option value="Working professional">Working professional</option>
+        </select>
       </label>
       <label>
         Your questions

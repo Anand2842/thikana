@@ -1,5 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createClient } from "./server";
 import type { User } from "@supabase/supabase-js";
 
 export type Role = "admin" | "broker" | "seeker";
@@ -8,26 +7,9 @@ export type Role = "admin" | "broker" | "seeker";
 // Assign via Supabase dashboard (Authentication → Users) or SQL in README.
 // Hierarchy: admin can access everything; broker can access broker routes.
 
-function readClient(cookieStore: Awaited<ReturnType<typeof cookies>>) {
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll() {
-          // Read-only check — session refresh happens in middleware.
-        },
-      },
-    },
-  );
-}
-
 export async function getSessionUser(): Promise<User | null> {
   try {
-    const sb = readClient(await cookies());
+    const sb = await createClient();
     const { data } = await sb.auth.getUser();
     return data.user ?? null;
   } catch {
@@ -44,4 +26,24 @@ export function userBrokerId(user: User | null): string | null {
   const id = (user?.app_metadata as { broker_id?: unknown } | undefined)
     ?.broker_id;
   return typeof id === "string" && id ? id : null;
+}
+
+// Authenticator Assurance Level for the current session. Admin console and
+// admin APIs require "aal2" (TOTP enrolled + verified); password or email
+// OTP alone yields "aal1".
+export async function getAssurance(): Promise<{
+  current: string | null;
+  next: string | null;
+}> {
+  try {
+    const sb = await createClient();
+    const { data, error } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (error) return { current: null, next: null };
+    return {
+      current: data.currentLevel,
+      next: data.nextLevel,
+    };
+  } catch {
+    return { current: null, next: null };
+  }
 }

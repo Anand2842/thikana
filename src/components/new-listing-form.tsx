@@ -18,12 +18,15 @@ export default function NewListingPage() {
         .split(/\n/)
         .map((s) => s.trim())
         .filter(Boolean);
+      const photoHashes: string[] = [];
       for (const file of f.getAll("files")) {
         if (file instanceof File && file.size) {
           const upload = new FormData();
           upload.set("file", file);
           upload.set("kind", "photo");
-          photos.push((await request("/api/uploads", upload)).url);
+          const done = await request("/api/uploads", upload);
+          photos.push(done.url);
+          if (typeof done.sha256 === "string") photoHashes.push(done.sha256);
         }
       }
       const b: Record<string, unknown> = Object.fromEntries(f);
@@ -39,6 +42,8 @@ export default function NewListingPage() {
       ])
         b[k] = Number(f.get(k));
       b.photos = photos;
+      b.photoHashes = photoHashes;
+      b.visitFeeRefundable = f.get("visitFeeRefundable") === "on";
       const data = await request("/api/listings", b);
       setId(data.listing.id);
       setMessage(
@@ -204,6 +209,22 @@ export default function NewListingPage() {
               />
             </label>
           ))}
+          <label className="flex items-start gap-2">
+            <input
+              name="visitFeeRefundable"
+              type="checkbox"
+              className="mt-1"
+            />
+            <span>Visit fee is refundable</span>
+          </label>
+          <label>
+            Other fee explanation
+            <input
+              name="otherFeeNote"
+              maxLength={500}
+              placeholder="Required when other fees are non-zero"
+            />
+          </label>
           <label className="sm:col-span-2">
             Description
             <textarea
@@ -213,6 +234,31 @@ export default function NewListingPage() {
               maxLength={4000}
               rows={4}
             />
+          </label>
+          <label className="sm:col-span-2">
+            Owner name (as per ownership proof)
+            <input
+              name="ownerName"
+              required
+              minLength={2}
+              maxLength={100}
+              placeholder="Full name of owner/landlord"
+            />
+          </label>
+          <label>
+            Your relationship to this property
+            <select name="ownerRelationship" defaultValue="agent">
+              <option value="owner">I own this unit</option>
+              <option value="agent">I am the owner&apos;s agent</option>
+              <option value="subagent">I am a sub-agent</option>
+            </select>
+          </label>
+          <label className="sm:col-span-2 flex items-start gap-2">
+            <input name="authorized" type="checkbox" required className="mt-1" />
+            <span>
+              I confirm I am authorized by the owner/landlord to market this
+              property
+            </span>
           </label>
           <label className="sm:col-span-2">
             Upload photos (up to 8)

@@ -71,6 +71,12 @@ export async function POST(req: Request) {
           cities: [text(b.city)],
           areas: b.areas,
           policy: text(b.policy),
+          photo: text(b.photo),
+          business_address: text(b.businessAddress),
+          exp: typeof b.exp === "number" ? b.exp : 0,
+          cats: Array.isArray(b.cats)
+            ? b.cats.map((v) => text(v)).filter(Boolean)
+            : [],
         },
         application: {
           owner_id: user!.id,
