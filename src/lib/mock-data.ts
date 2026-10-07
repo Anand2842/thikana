@@ -72,6 +72,8 @@ export interface Listing {
   ownerRelationship?: string;
   availabilityStatus?: string;
   moderationNote?: string;
+  revision?: number;
+  sourceDraftId?: string | null;
 }
 
 export interface Lead {

@@ -84,6 +84,11 @@ export default async function BrokerDashboardPage({
       <h1 className="display text-4xl font-black mt-2">
         Welcome, {broker.name.split(" ")[0]}.
       </h1>
+      <nav aria-label="Broker responsibilities" className="flex flex-wrap gap-4 mt-3 text-sm font-bold">
+        <Link className="underline" href="/broker-agreement">Broker Agreement</Link>
+        <Link className="underline" href="/privacy">Privacy Notice</Link>
+        <Link className="underline" href="/support/privacy">Privacy &amp; appeals</Link>
+      </nav>
       <p className="mt-3 text-ink/65">
         {mine.length} listings · {inbox.length} enquiries · Status:{" "}
         {broker.verified}
@@ -110,9 +115,14 @@ export default async function BrokerDashboardPage({
       )}
       <div className="flex flex-wrap gap-3 mt-6">
         {broker.verified === "verified" && (
-          <Link className="button" href="/broker/listings/new">
-            + New listing
-          </Link>
+          <>
+            <Link className="button" href="/broker/listings/new">
+              + New listing
+            </Link>
+            <Link className="button secondary" href="/broker/inventory">
+              Add homes fast
+            </Link>
+          </>
         )}
         <Link className="button secondary" href={`/brokers/${broker.id}`}>
           Public profile

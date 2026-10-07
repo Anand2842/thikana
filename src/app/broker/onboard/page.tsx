@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PHASE1_CITIES } from "@/lib/mock-data";
 import { request } from "@/lib/client-request";
 import { createClient } from "@/lib/supabase/client";
+import { POLICY_VERSION } from "@/lib/policies";
 
 interface EditInitial {
   agency: string;
@@ -139,6 +140,10 @@ export default function BrokerOnboardPage() {
         businessAddress,
         exp,
         cats,
+        acceptBrokerTerms: f.get("acceptBrokerTerms") === "on",
+        consentVerification: f.get("consentVerification") === "on",
+        policyVersion: POLICY_VERSION,
+        privacyVersion: POLICY_VERSION,
       });
       const { error } = await createClient().auth.refreshSession();
       if (error) throw error;
@@ -302,6 +307,17 @@ export default function BrokerOnboardPage() {
               before uploading. Documents are private and available only to our
               review team.
             </p>
+            <div className="sm:col-span-2 border-t border-line pt-4 space-y-3 text-sm">
+              <label className="flex items-start gap-3">
+                <input className="mt-1 w-4 h-4 shrink-0" type="checkbox" name="acceptBrokerTerms" required />
+                <span>I am at least 18 and authorised to represent this agency. I accept the <Link className="underline" href="/broker-agreement" target="_blank" rel="noopener noreferrer">Broker Agreement</Link> and <Link className="underline" href="/terms" target="_blank" rel="noopener noreferrer">Terms of use</Link>.</span>
+              </label>
+              <label className="flex items-start gap-3">
+                <input className="mt-1 w-4 h-4 shrink-0" type="checkbox" name="consentVerification" required />
+                <span>I consent to private review of my identity and business proof for verification and related case handling described in the <Link className="underline" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Notice</Link>. I can request withdrawal through Privacy &amp; appeals.</span>
+              </label>
+              <p className="text-xs text-ink/55">Version {POLICY_VERSION}. No marketing permission is included. The team cannot approve an application without the required verification checks.</p>
+            </div>
           </>
         )}
         <button className="button sm:col-span-2" disabled={busy}>

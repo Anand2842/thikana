@@ -12,8 +12,8 @@ export default function SupportPage() {
           <p className="mt-1">
             File a report from the property or broker page with details and,
             if possible, dates and screenshots described in text. Our team
-            reviews every report — confirmed violations can automatically flag
-            listings and suspend brokers. Track progress under “My reports” on
+            reviews reports. Repeated reports can trigger protective restrictions;
+            an allegation is not a finding. Track progress under “My reports” on
             your dashboard.
           </p>
         </section>
@@ -28,9 +28,10 @@ export default function SupportPage() {
         <section>
           <h2 className="font-extrabold text-lg">Data requests</h2>
           <p className="mt-1">
-            For corrections or deletion of your personal data, file a report
-            with reason “Other” describing your request, and our team will
-            follow up within 7 days.
+            Use <Link className="underline font-bold" href="/support/privacy">Privacy &amp; appeals</Link>
+            {" "}for access, correction, deletion, consent withdrawal or an appeal.
+            No broker/property report is required. The team targets acknowledgement
+            within 24 hours and general resolution within seven days, applying shorter required deadlines.
           </p>
         </section>
         <p className="text-sm">

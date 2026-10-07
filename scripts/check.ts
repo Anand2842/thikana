@@ -10,6 +10,7 @@ import {
 } from "../src/lib/validation";
 import { isActive, moveInTotal } from "../src/lib/trust";
 import { listings } from "../src/lib/mock-data";
+import { POLICY_VERSION, validateBrokerAcceptance, validatePrivacyRequest } from "../src/lib/policies";
 for (const value of [
   null,
   [],
@@ -130,4 +131,12 @@ assert.deepEqual(
   }),
   [],
 );
-console.log("Validation, redirect safety, fee and availability checks passed.");
+const acceptance = { acceptBrokerTerms: true, consentVerification: true, policyVersion: POLICY_VERSION, privacyVersion: POLICY_VERSION };
+assert.deepEqual(validateBrokerAcceptance(acceptance), []);
+for (const change of [{ acceptBrokerTerms: false }, { acceptBrokerTerms: "true" }, { consentVerification: false }, { policyVersion: "old-version" }, { privacyVersion: "old-version" }])
+  assert.ok(validateBrokerAcceptance({ ...acceptance, ...change }).length);
+const privacyRequest = { kind: "Deletion", email: "person@example.com", details: "Please close my account and explain any retained records." };
+assert.deepEqual(validatePrivacyRequest(privacyRequest), []);
+for (const change of [{ kind: "Delete everyone" }, { email: "not-an-email" }, { details: "short" }, { details: "x".repeat(2001) }])
+  assert.ok(validatePrivacyRequest({ ...privacyRequest, ...change }).length);
+console.log("Validation, redirect safety, fees, availability and policy checks passed.");

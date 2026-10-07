@@ -91,6 +91,8 @@ export function mapListing(r: any): Listing {
     ownerRelationship: r.owner_relationship ?? "agent",
     availabilityStatus: r.availability_status ?? "Available",
     moderationNote: r.moderation_note ?? "",
+    revision: r.revision ?? 1,
+    sourceDraftId: r.source_draft_id ?? null,
   };
 }
 

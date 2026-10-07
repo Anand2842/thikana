@@ -49,12 +49,19 @@ export async function POST(
         { status: 409 },
       );
     // Conditional update prevents reconfirmation racing with moderation.
+    const { data: current, error: ce } = await db
+      .from("listings")
+      .select("revision")
+      .eq("id", id)
+      .single();
+    if (ce) throw ce;
     const { data, error: save } = await db
       .from("listings")
       .update({
         hrs: 0,
         last_confirmed_at: new Date().toISOString(),
         verification: "verified",
+        revision: (current.revision ?? 1) + 1,
       })
       .eq("id", id)
       .in("verification", ["verified", "stale"])

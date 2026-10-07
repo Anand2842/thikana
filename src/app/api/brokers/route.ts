@@ -5,6 +5,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/ratelimit";
 import { userRole } from "@/lib/supabase/role";
 import { fetchBrokers } from "@/lib/supabase/data";
+import { POLICY_VERSION, validateBrokerAcceptance } from "@/lib/policies";
 export async function GET() {
   try {
     return NextResponse.json({ brokers: await fetchBrokers() });
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
   });
   if (limited) return limited;
   const b = await body(req),
-    errors = validateBroker(b);
+    errors = [...validateBroker(b), ...validateBrokerAcceptance(b)];
   if (errors.length) return invalid(errors);
   if (
     ![b.identityPath, b.businessPath].every(
@@ -83,6 +84,8 @@ export async function POST(req: Request) {
           phone: text(b.phone),
           identity_path: b.identityPath,
           business_path: b.businessPath,
+          agreement_version: POLICY_VERSION,
+          privacy_version: POLICY_VERSION,
         },
       });
       if (error) throw error;

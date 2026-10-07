@@ -1,57 +1,19 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Terms — Thikana" };
+import Link from "next/link";
+import PolicyPage, { OperatorDetails } from "@/components/policy-page";
+import { STALE_AFTER_HRS } from "@/lib/trust";
+export const metadata: Metadata = { title: "Terms of use — Thikana" };
 export default function TermsPage() {
-  return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
-      <div className="eyebrow">THE FINE PRINT</div>
-      <h1 className="display text-4xl font-black mt-2">Terms of use</h1>
-      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-ink/80">
-        <p>
-          Thikana is a marketplace that connects tenants with independent
-          brokers. Thikana is not a party to any rental agreement and does not
-          act as an agent for either side.
-        </p>
-        <section>
-          <h2 className="font-extrabold text-lg">1. Verification meaning</h2>
-          <p className="mt-1">
-            A “verified” badge means our team checked specific identity and
-            business documents on a specific date, shown on the broker profile.
-            It is not a guarantee of any property, transaction, or outcome.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">2. Listings and fees</h2>
-          <p className="mt-1">
-            Brokers must publish rent, deposit, brokerage, visit fee and any
-            other mandatory charge before contacting a tenant. Never pay a token
-            or advance before verifying the property in person and confirming
-            the recipient’s identity.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">3. Fair use</h2>
-          <p className="mt-1">
-            Do not post false information, copy another broker’s photos, demand
-            hidden charges, or misuse another user’s personal details. Accounts
-            that breach these terms may be suspended after review.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">4. Reports and moderation</h2>
-          <p className="mt-1">
-            Reports are reviewed by our team. Repeated confirmed violations can
-            flag listings and suspend brokers automatically. You can track your
-            reports’ status on your dashboard.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">5. Liability</h2>
-          <p className="mt-1">
-            To the extent permitted by law, Thikana is not liable for losses
-            arising from rental transactions arranged through the platform.
-          </p>
-        </section>
-      </div>
-    </main>
-  );
+  return <PolicyPage title="Know where everyone stands." audience="TERMS OF USE" intro="The rules for finding a home, working with a broker and resolving a problem on Thikana." sections={[
+    { title: "The marketplace and its operator", body: <><OperatorDetails /><p>Thikana connects people seeking rental homes with independent brokers. The landlord and tenant enter their own rental agreement; the broker is responsible for the services and charges they agree with you. Thikana provides discovery, enquiries, messages, visits, reviews and moderation. It does not currently collect rental deposits, hold escrow or guarantee a tenancy.</p></> },
+    { title: "Accounts and eligibility", body: <p>Account holders must be at least 18 and able to enter an agreement. Provide accurate information, use your own account and protect your credentials. An agency representative must have authority to act for that agency. Tell the team promptly if your account is compromised. Staff use named accounts with multi-factor authentication.</p> },
+    { title: "What verification means", body: <p>A verification badge describes specific checks completed by the review team. Read the check details on the broker profile. Document review does not establish legal title or guarantee a property’s condition, safety, price or availability. A phone number on file is not OTP-verified while phone verification is pending. Inspect the property and check the landlord’s authority and agreement before paying.</p> },
+    { title: "Listings, availability and photos", body: <p>Brokers need the owner’s permission to advertise and permission to use the photos they publish. Describe the real location, condition, availability and costs. Material edits can require fresh review. Taken and On Hold homes are unavailable for new enquiries. Homes not reconfirmed within {STALE_AFTER_HRS / 24} days leave active search until reconfirmed or reviewed. Identify illustrative renders and material photo edits; do not disguise the real condition.</p> },
+    { title: "Charges, cancellations and refunds", body: <><p>Check rent, deposit, brokerage, visit fee, refundability and every mandatory additional fee before agreeing to a visit or payment. Brokerage quoted in days is monthly rent × quoted days ÷ 30, rounded to a whole rupee. A move-in estimate is not a receipt or a binding landlord offer.</p><p>The person collecting a fee must state the recipient, amount, due point, cancellation conditions and refund deadline in writing. Brokers must honour their disclosed policy. A generic “non-refundable” label does not remove rights provided by law. Thikana does not currently collect these fees or process broker refunds. Keep receipts and report changed quotes, hidden charges or refused agreed refunds.</p></> },
+    { title: "Enquiries, visits and reviews", body: <p>An enquiry shares your contact information and message with the selected broker. Either participant can propose a visit; the other must accept. Confirm attendance truthfully after the visit. Reviews must describe your own experience and meet visit-confirmation requirements. Do not fabricate visits, buy reviews, impersonate users or threaten someone to change a rating.</p> },
+    { title: "Fair use and content permission", body: <p>Do not publish misleading or unlawful content, expose private documents, harass users, scrape personal information or bypass access restrictions. You retain your rights in submitted content and give Thikana permission to store, display and moderate it as needed to operate the marketplace. Private verification documents are used for verification and case handling, not public advertising. Do not upload another person’s information without authority and appropriate notice.</p> },
+    { title: "Reports, moderation and appeals", body: <><p>Reports and automated signals can place inventory or accounts under review or temporary restriction. An allegation is not proof. Staff examine evidence, request replies and record decisions. Actions can include corrections, hiding a listing, suspension or reinstatement. Urgent restrictions may contain a credible safety or fraud risk.</p><p>Report property or broker conduct from the relevant page. Track the case and reply through your dashboard. Use <Link href="/support/privacy">Privacy & appeals</Link> for an appeal, account-access problem or data request. You do not need to complain about an unrelated broker. Our operating target is acknowledgement within 24 hours and resolution within seven days for general grievances, applying shorter legally required deadlines where relevant. A response explains evidence needed and any lawful next step; statutory escalation routes remain available.</p></> },
+    { title: "Responsibility and disputes", body: <p>Brokers are responsible for their representations, permissions, services and agreed fees; landlords and tenants are responsible for the rental agreement. Thikana is responsible for its own service and data handling. To the extent permitted by law, it does not guarantee third-party transactions or compensate every third-party loss. These terms preserve liability and consumer rights that cannot legally be excluded. Indian law applies; statutory forums and courts with jurisdiction remain available. Raising a support case does not remove other lawful remedies.</p> },
+    { title: "Leaving and policy changes", body: <p>You may stop using the service or request account closure through <Link href="/support/privacy">Privacy & appeals</Link>. Closure does not cancel a tenancy, a broker’s refund obligation or lawful evidence retention. Material policy changes are dated and presented before affected future activity. New broker applications record acceptance; a new version is not treated as evidence that you accepted an earlier one.</p> },
+  ]} />;
 }

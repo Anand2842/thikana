@@ -1,45 +1,17 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Privacy — Thikana" };
+import Link from "next/link";
+import PolicyPage, { OperatorDetails } from "@/components/policy-page";
+export const metadata: Metadata = { title: "Privacy Notice — Thikana" };
 export default function PrivacyPage() {
-  return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
-      <div className="eyebrow">YOUR DATA</div>
-      <h1 className="display text-4xl font-black mt-2">Privacy notice</h1>
-      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-ink/80">
-        <section>
-          <h2 className="font-extrabold text-lg">What we collect</h2>
-          <p className="mt-1">
-            Account details (name, email, phone), enquiries and visit
-            scheduling, saved homes, reviews, reports, and broker KYC documents
-            (identity and business proof) submitted during onboarding.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">How we use it</h2>
-          <p className="mt-1">
-            To operate the marketplace: matching enquiries, scheduling visits,
-            verifying brokers, moderating reports, and keeping listings fresh.
-            KYC documents are visible only to our review team, never to other
-            users.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">Sharing</h2>
-          <p className="mt-1">
-            When you contact a broker, your name, phone number and message are
-            shared with that broker so the visit can happen. We do not sell
-            personal data.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-extrabold text-lg">Retention</h2>
-          <p className="mt-1">
-            Enquiry and visit records are kept for 3 years for dispute
-            resolution, then anonymized. You can ask for correction or deletion
-            of your data through the support page.
-          </p>
-        </section>
-      </div>
-    </main>
-  );
+  return <PolicyPage title="Your details have a purpose." audience="PRIVACY NOTICE" intro="What we collect, who can see it and how to ask for access, correction, deletion or withdrawal of consent." sections={[
+    { title: "Who handles your information", body: <><OperatorDetails /><p>This notice covers tenants, brokers, people making enquiries/requests and staff. The operator is responsible for platform processing. Independent brokers also take responsibility for information used in their own business. Ask a broker about records they keep outside Thikana.</p></> },
+    { title: "Information and purposes", body: <ul><li><b>Accounts:</b> name, email, supplied phone, role and sign-in/session information for access and security.</li><li><b>Broker verification:</b> agency details, business address, areas served, photo and identity/business proof for human verification, eligibility and related fraud investigations.</li><li><b>Properties:</b> photos, address, owner/agent declarations, costs and availability for publishing inventory and checking authority. The catalog includes owner names and authority declarations. Full-address matching records are kept in a separate restricted table; do not put private address or identity details in a public description.</li><li><b>Enquiries and visits:</b> contact details, requirements, messages, visits, confirmations and outcomes to connect selected participants and track their enquiry.</li><li><b>Saves, reviews and reports:</b> saved homes, review content, complaints, evidence replies and decisions for dashboards, experience sharing and moderation.</li><li><b>Privacy and appeals:</b> contact email, requested action, case details and responses for identifying requests, checking authority and recording outcomes.</li><li><b>Staff and security:</b> staff identities, MFA-related authentication records, moderation actions and relevant security records for access control, accountability and incidents.</li></ul> },
+    { title: "Public information and private access", body: <><p>Broker profiles, listings and permitted reviews are public and may be indexed by search engines. Keep private details out of descriptions and reviews. Saves and private conversations are not public.</p><p>An enquiry shares your name, phone, requirements and message with the selected broker. Authorised review/support staff may access information needed for verification or case handling. KYC files are not public profile photos; they stay in private storage with reviewer access. Investigation replies are visible to the reporter and authorised staff. Avoid unrelated people’s private information in evidence.</p></> },
+    { title: "Providers and hosting", body: <p>Supabase provides authentication, sign-in emails, database and storage in this workspace. Any deployment host, email/SMS or analytics providers must be disclosed when used. Provider-pending features do not mean those providers already receive your data. Hosting locations appear in the operator details above. Infrastructure may process data outside India; we do not promise India-only hosting. Lawful authority requests are assessed and disclosures limited to what is required. We do not sell personal data.</p> },
+    { title: "Consent and choices", body: <><p>Broker agreement acceptance is separate from permission for private document review. Applications record policy versions and server-recorded acceptance times. You can decline verification consent, but we cannot approve a broker without necessary checks. Request withdrawal, correction or closure through <Link href="/support/privacy">Privacy & appeals</Link>. The team explains any effect on verification, enquiries or lawful retained records.</p><p>Optional marketing permission is not bundled into verification. Thikana does not currently run advertising profiling or require unrelated marketing permission for enquiries. Future optional uses require a separate choice. Do not send full identity numbers, passwords or payment credentials in requests.</p></> },
+    { title: "Retention and deletion", body: <ul><li><b>Accounts/profiles:</b> kept while the service relationship is active and reviewed for removal when closure is requested, subject to unresolved disputes or legal duties.</li><li><b>KYC/application files:</b> kept while application or verification review is needed. After rejection, withdrawal or closure, request removal; staff remove unnecessary proof when no appeal, fraud case or lawful hold requires it. No automatic document-expiry timer is claimed.</li><li><b>Enquiries, visits and city-interest requests:</b> contact fields are redacted after three calendar years from creation and messages attached to aged enquiries are removed on scheduled passes. This is a product dispute policy, not a universal legal retention period. Remaining status/relationship records are not described as fully anonymous.</li><li><b>Complaints, privacy requests, acceptances and audits:</b> kept for case handling/accountability. Staff review necessity at case closure and after three years. Longer retention requires a documented dispute, legal duty or investigation. Staff-account deletion does not silently remove moderation history.</li><li><b>Backups/security:</b> follow actual provider rotation/retention and relevant legal duties. Deletion responses explain remaining backup or held copies; live deletion does not mean instant removal from every backup.</li></ul> },
+    { title: "Your requests and complaints", body: <p>Use <Link href="/support/privacy">Privacy & appeals</Link> for access, correction, deletion/closure, consent withdrawal or a handling complaint. No account is required to submit: give a contact email and keep the reference. Signed-in users can track their own requests and staff responses there. We check identity/authority before releasing or changing another person’s information. Our target is acknowledgement within 24 hours and general resolution within seven days, applying shorter legally required deadlines. Responses explain any lawful exception or next step. Knowing an email address alone does not authorise an account change.</p> },
+    { title: "Cookies, safeguards and incidents", body: <p>Essential authentication cookies maintain your session. Security checks may use request/IP information for abuse prevention. Unconfigured advertising or analytics cookies are not described as active. Staff use MFA; role checks and private storage restrict access. No service can promise zero risk. After an incident, the team investigates, contains access and gives required notifications explaining affected data, protective steps and assistance.</p> },
+    { title: "Age and notice changes", body: <><p>Accounts are intended for adults aged 18 and over. Contact the team if a child’s information has been submitted; this service is not an invitation to upload children’s documents. Material changes are dated and presented before new affected collection/use. Existing acceptance records keep their recorded version.</p><p>India’s data-protection rules have phased commencement. This notice does not claim pending legal review, integrations or operational procedures are complete. Applicable rights and escalation routes remain available. See the <a href="https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf">official DPDP Rules</a> and <a href="https://www.meity.gov.in/static/uploads/2026/02/550681ab908f8afb135b0ad42816a1c9.pdf">current intermediary rules</a>.</p></> },
+  ]} />;
 }

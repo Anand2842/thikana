@@ -52,6 +52,7 @@ export default async function AdminPage({
     .from("broker_applications")
     .select("*");
   if (appError) throw appError;
+  const applicationByBroker = new Map((applications ?? []).map(a => [a.broker_id, a]));
   // One bad document or applicant lookup must never abort the whole
   // console: each item resolves independently, failures degrade to unchecked.
   const proofs = new Map<
@@ -224,6 +225,10 @@ export default async function AdminPage({
         TRUST OPERATIONS
       </div>
       <h1 className="display font-black text-[36px]">Admin moderation</h1>
+      <nav aria-label="Staff responsibilities" className="flex flex-wrap gap-4 mt-3 text-sm font-bold">
+        <Link className="underline" href="/admin/policy">Staff policy</Link>
+        <Link className="underline" href="/admin/privacy-requests">Privacy &amp; appeals queue</Link>
+      </nav>
       <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3 text-center">
         {[
           ["Pending brokers", pendingBrokers.length],
@@ -377,6 +382,12 @@ export default async function AdminPage({
               </span>
             )}
             <BrokerButtons id={b.id} />
+            <div className="w-full text-xs text-ink/70">
+              {([
+                ["Agreement accepted", applicationByBroker.get(b.id)?.agreement_version, applicationByBroker.get(b.id)?.agreement_accepted_at],
+                ["Verification consent", applicationByBroker.get(b.id)?.privacy_version, applicationByBroker.get(b.id)?.verification_consented_at],
+              ] as const).map(([label, version, at]) => <p key={label}>{label}: {version && at ? `${version} · ${new Date(at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}` : "Not recorded for this application — do not infer historic acceptance."}</p>)}
+            </div>
             <span className="w-full text-xs text-ink/70">
               Checks:{" "}
               {(

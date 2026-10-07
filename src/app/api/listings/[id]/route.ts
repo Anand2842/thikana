@@ -336,6 +336,9 @@ export async function PATCH(
     // cosmetic edits (title/desc/amenities/floor/sector/avail) keep the
     // current verification state. Nothing else is appended.
     if (REREVIEW_FIELDS.some(has)) patch.verification = "pending";
+    // Every writer advances the revision so later bulk inventory actions can
+    // rely on monotonic revisions for conflict detection.
+    patch.revision = (existing.revision ?? 1) + 1;
 
     const { data: updated, error: save } = await db
       .from("listings")

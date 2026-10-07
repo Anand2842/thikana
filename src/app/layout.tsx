@@ -56,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <span>Transparent fees. Current availability. Human review.</span>
             <nav
               aria-label="Legal and support"
-              className="flex gap-4 text-[12.5px] font-bold"
+              className="flex flex-wrap gap-4 text-[12.5px] font-bold"
             >
               <Link className="underline" href="/support">
                 Support
@@ -67,6 +67,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Link className="underline" href="/privacy">
                 Privacy
               </Link>
+              <Link className="underline" href="/broker-agreement">Broker Agreement</Link>
+              <Link className="underline" href="/support/privacy">Privacy &amp; appeals</Link>
             </nav>
           </div>
         </footer>

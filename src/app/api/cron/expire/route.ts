@@ -6,16 +6,24 @@ export async function POST(req: Request) {
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const { data, error } = await createServiceClient()
+    const { data: stale, error: se } = await createServiceClient()
       .from("listings")
-      .update({ verification: "stale" })
+      .select("id,revision")
       .eq("verification", "verified")
-      .lte("last_confirmed_at", new Date(Date.now() - 604800000).toISOString())
-      .select("id");
-    if (error) throw error;
+      .lte("last_confirmed_at", new Date(Date.now() - 604800000).toISOString());
+    if (se) throw se;
+    const ids = (stale ?? []).map((l) => l.id as string);
+    // Per-row revision bumps keep monotonicity for bulk conflict detection.
+    for (const l of (stale ?? []) as { id: string; revision: number }[]) {
+      const { error } = await createServiceClient()
+        .from("listings")
+        .update({ verification: "stale", revision: (l.revision ?? 1) + 1 })
+        .eq("id", l.id);
+      if (error) throw error;
+    }
     return NextResponse.json({
-      expired: data.map((l) => l.id),
-      count: data.length,
+      expired: ids,
+      count: ids.length,
     });
   } catch (e) {
     return unavailable(e);
