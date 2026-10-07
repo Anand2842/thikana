@@ -114,6 +114,10 @@ export function validateListing(value: unknown) {
 }
 export function validPhotoUrl(v: unknown) {
   if (typeof v !== "string" || v.length > 2048) return false;
+  // Private inventory assets resolve to same-origin route URLs. The submit
+  // path only injects server-verified asset URLs; the media endpoint
+  // enforces owner/reviewer/public visibility per request.
+  if (/^\/api\/inventory-media\/A-[0-9a-f-]{36}$/.test(v)) return true;
   try {
     const u = new URL(v);
     return u.protocol === "https:" && !u.username && !u.password;

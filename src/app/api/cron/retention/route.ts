@@ -55,11 +55,38 @@ export async function POST(req: Request) {
       .not("name", "eq", "[redacted]")
       .select("id");
     if (ce && ce.code !== "42703") throw ce;
+    // Unfinished media uploads (reserved, never completed) expire after 24
+    // hours: delete the ledger row and the stored bytes together. Ready
+    // assets follow draft/listing retention via their parent references.
+    const { data: staleAssets, error: ae } = await db
+      .from("inventory_assets")
+      .select("id,storage_path")
+      .eq("state", "reserved")
+      .lt("reserved_until", new Date().toISOString());
+    if (ae) throw ae;
+    const stale = (staleAssets ?? []) as { id: string; storage_path: string }[];
+    let assetsCleared = 0;
+    if (stale.length) {
+      const { error: adel } = await db
+        .from("inventory_assets")
+        .delete()
+        .in(
+          "id",
+          stale.map((a) => a.id),
+        );
+      if (adel) throw adel;
+      assetsCleared = stale.length;
+      const { error: robj } = await db.storage
+        .from("inventory-media")
+        .remove(stale.map((a) => a.storage_path));
+      if (robj) throw robj;
+    }
     return NextResponse.json({
       anonymized: oldIds,
       count: oldIds.length,
       messagesCleared,
       cityRequests: (oldReqs ?? []).length,
+      uploadsCleared: assetsCleared,
     });
   } catch (e) {
     return unavailable(e);

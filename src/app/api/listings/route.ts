@@ -32,6 +32,16 @@ export async function POST(req: Request) {
   const b = await body(req),
     errors = submitValidationErrors(b);
   if (errors.length) return invalid(errors);
+  // The direct form has no draft context, so private asset references are
+  // never accepted here — inventory photos submit through their own draft.
+  const rawPhotos = Array.isArray(b.photos) ? b.photos : [];
+  if (
+    rawPhotos.some(
+      (u): u is string =>
+        typeof u === "string" && u.startsWith("/api/inventory-media/"),
+    )
+  )
+    return invalid(["Upload inventory photos through the draft workspace."]);
   try {
     const { listing } = await submitListing({ body: b, brokerId });
     return NextResponse.json({ listing }, { status: 201 });

@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { request } from "@/lib/client-request";
+import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { PHASE1_CITIES } from "@/lib/mock-data";
 import { draftReadiness } from "@/lib/inventory";
 
@@ -235,6 +236,15 @@ function DraftEditor({ draft }: { draft: Draft }) {
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  // Assignment tray: this draft's private uploads, loaded on mount so a
+  // reloaded editor resumes exactly where the broker left off.
+  const [assets, setAssets] = useState<
+    { id: string; kind: string; state: string; mime: string; bytes: number }[]
+  >([]);
+  useEffect(() => {
+    void refreshAssets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.id]);
   // Serialized saves: blur flushes immediately; overlapping saves chain
   // instead of racing, and the indicator only says Saved when no newer
   // snapshot is pending or in flight.
@@ -353,34 +363,69 @@ function DraftEditor({ draft }: { draft: Draft }) {
   }
 
   async function uploadPhotos(files: FileList | null) {
-    if (!files?.length) return;
+    if (!files?.length || !draft) return;
     setBusy(true);
     setMessage("");
     try {
-      const cur = stateRef.current.fields;
-      const urls = Array.isArray(cur.photos) ? [...(cur.photos as string[])] : [];
-      const hashes = Array.isArray(
-        (cur as Record<string, unknown>).photoHashes,
-      )
-        ? [...((cur as Record<string, unknown>).photoHashes as string[])]
-        : [];
-      for (const file of Array.from(files).slice(0, 8 - urls.length)) {
-        const upload = new FormData();
-        upload.set("file", file);
-        upload.set("kind", "photo");
-        const done = await request("/api/uploads", upload);
-        urls.push(done.url);
-        if (typeof done.sha256 === "string") hashes.push(done.sha256);
+      // Private asset flow: reserve a server-chosen path, upload straight
+      // to storage, then let the server verify bytes before trusting.
+      const sb = createBrowserSupabase();
+      for (const file of Array.from(files)) {
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type))
+          throw new Error(`${file.name}: choose JPEG, PNG or WEBP.`);
+        if (file.size > 5 * 1024 * 1024)
+          throw new Error(`${file.name}: photo must be under 5 MB.`);
+        const slot = await request("/api/broker/drafts/assets", {
+          draftId: draft.id,
+          kind: "photo",
+          mime: file.type,
+          bytes: file.size,
+        });
+        const { error: ue } = await sb.storage
+          .from("inventory-media")
+          .uploadToSignedUrl(slot.path, slot.token, file);
+        if (ue) throw new Error(`${file.name}: upload failed. Try again.`);
+        await request(`/api/broker/drafts/assets/${slot.asset.id}/complete`, {}, "POST");
       }
-      const next = { ...cur, photos: urls, photoHashes: hashes };
-      stateRef.current = { ...stateRef.current, fields: next };
-      setFields(next);
-      schedulePersist();
+      await refreshAssets();
     } catch (e) {
       setMessage((e as Error).message);
-      setSaveState("unsaved");
+      await refreshAssets();
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function refreshAssets() {
+    if (!draft) return;
+    try {
+      const res = await fetch(
+        `/api/broker/drafts/assets?draftId=${encodeURIComponent(draft.id)}`,
+        { method: "GET" },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "Could not load photos.");
+      setAssets(
+        (Array.isArray(data.assets) ? data.assets : []) as {
+          id: string;
+          kind: string;
+          state: string;
+          mime: string;
+          bytes: number;
+        }[],
+      );
+    } catch {
+      // Tray is best-effort; drafts and autosave keep working.
+    }
+  }
+
+  async function removeAsset(assetId: string) {
+    setMessage("");
+    try {
+      await request(`/api/broker/drafts/assets/${assetId}`, {}, "DELETE");
+      await refreshAssets();
+    } catch (e) {
+      setMessage((e as Error).message);
     }
   }
 
@@ -405,7 +450,23 @@ function DraftEditor({ draft }: { draft: Draft }) {
     }
   }
 
-  const readiness = draftReadiness(fields, confirmations);
+  const baseReadiness = draftReadiness(fields, confirmations);
+  // Asset-backed photos count toward readiness exactly like pasted URLs:
+  // the submit path resolves both. Only the photos gap can be filled this way.
+  const readyAssets = assets.filter(
+    (a) => a.kind === "photo" && a.state === "ready",
+  ).length;
+  const urlPhotos = Array.isArray(fields.photos) ? fields.photos.length : 0;
+  const photosCovered = urlPhotos + readyAssets >= 1;
+  const readiness = {
+    ready:
+      baseReadiness.ready ||
+      (photosCovered &&
+        baseReadiness.missing.every((m) => m === "photos")),
+    missing: photosCovered
+      ? baseReadiness.missing.filter((m) => m !== "photos")
+      : baseReadiness.missing,
+  };
   const input =
     "w-full rounded-xl border border-line bg-white px-3 py-2 text-[14px]";
 
@@ -580,9 +641,43 @@ function DraftEditor({ draft }: { draft: Draft }) {
           onChange={(e) => void uploadPhotos(e.target.files)}
           aria-label="Upload photos"
         />
+        {assets.length > 0 && (
+          <ul className="grid grid-cols-3 gap-2 mt-3" aria-label="Attached photos">
+            {assets.map((a) => (
+              <li
+                key={a.id}
+                className="relative rounded-xl overflow-hidden border border-line bg-white"
+              >
+                {a.state === "ready" ? (
+                  // Same-origin cookie auth: the browser sends the session.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={`/api/inventory-media/${a.id}`}
+                    alt="Attached home photo"
+                    className="w-full h-24 object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-24 flex items-center justify-center text-xs text-ink/60 px-2 text-center">
+                    {a.state === "failed"
+                      ? "Failed — reselect this photo"
+                      : "Uploading…"}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 text-xs bg-ink text-cream rounded-full px-2 py-0.5"
+                  onClick={() => void removeAsset(a.id)}
+                  aria-label="Remove photo"
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
         <p className="text-xs text-ink/60 mt-1">
-          {(Array.isArray(fields.photos) ? fields.photos.length : 0)} photo(s)
-          attached. Uploads are validated server-side.
+          {urlPhotos + readyAssets} photo(s) attached — uploads stay private
+          until the listing is approved.
         </p>
       </section>
 

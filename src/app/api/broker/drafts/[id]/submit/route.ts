@@ -7,6 +7,7 @@ import {
   checkDuplicatePhotos,
   submitValidationErrors,
 } from "@/lib/listing-submit";
+import { resolveDraftPhotos } from "@/lib/inventory-media";
 import { mapListing } from "@/lib/supabase/data";
 import { checkRateLimit } from "@/lib/ratelimit";
 
@@ -62,10 +63,30 @@ export async function POST(
         },
         { status: 409 },
       );
-    const fields = {
+    const fields: Record<string, unknown> = {
       ...((dr.fields ?? {}) as Record<string, unknown>),
       authorized: true,
     };
+    // Ready photo assets resolve into permanent route URLs; screenshots are
+    // never included. Byte hashes feed duplicate detection so re-uploaded
+    // copies under new URLs are still caught.
+    const assets = await resolveDraftPhotos(db, id as string);
+    const urlPhotos = (
+      Array.isArray(fields.photos) ? (fields.photos as unknown[]) : []
+    ).filter((u): u is string => typeof u === "string" && u.length > 0);
+    fields.photos = [...urlPhotos, ...assets.urls].slice(0, 8);
+    // A pasted /api/inventory-media/ reference must resolve to one of this
+    // draft's own verified assets — no borrowing another unit's photos.
+    const known = new Set(assets.urls);
+    const foreign = urlPhotos.filter(
+      (u) => u.startsWith("/api/inventory-media/") && !known.has(u),
+    );
+    if (foreign.length)
+      return invalid(["Unknown photo reference. Upload the photo to this home."]);
+    const fieldHashes = (
+      Array.isArray(fields.photoHashes) ? (fields.photoHashes as unknown[]) : []
+    ).filter((h): h is string => typeof h === "string" && h.length > 0);
+    fields.photoHashes = [...fieldHashes, ...assets.hashes];
     const errors = submitValidationErrors(fields);
     if (errors.length) return invalid(errors);
     const { row, propId } = buildListingRow(fields, brokerId, id as string);
