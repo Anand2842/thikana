@@ -26,6 +26,7 @@ alter table listings add column if not exists source_request_id text;
 -- link); the originating request ID is stamped on the listing for grouped
 -- admin review. Old 5-arg calls keep working via the default.
 drop function if exists public.submit_draft_listing(text,text,int,jsonb,text);
+drop function if exists public.submit_draft_listing(text,text,int,jsonb,text,text);
 create function public.submit_draft_listing(p_draft_id text, p_broker_id text, p_expected_revision integer, p_listing jsonb, p_address text, p_source_request_id text default null)
 returns jsonb
 language plpgsql

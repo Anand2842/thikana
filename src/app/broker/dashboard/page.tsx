@@ -10,6 +10,7 @@ import { getAssurance, getSessionUser, userBrokerId, userRole } from "@/lib/supa
 import { inr, freshness } from "@/lib/trust";
 import { VerificationPill } from "@/components/badges";
 import ReconfirmButton from "@/components/reconfirm-button";
+import BulkInventoryActions from "@/components/bulk-inventory-actions";
 import LeadInbox from "@/components/lead-inbox";
 export default async function BrokerDashboardPage({
   searchParams,
@@ -137,6 +138,15 @@ export default async function BrokerDashboardPage({
       <h2 className="display text-2xl font-black mt-10">
         Inventory & freshness
       </h2>
+      <BulkInventoryActions
+        listings={mine.map((l) => ({
+          id: l.id,
+          title: l.title,
+          revision: l.revision ?? 1,
+          verification: l.verification,
+          availabilityStatus: l.availabilityStatus,
+        }))}
+      />
       <div className="space-y-3 mt-4">
         {mine.map((l) => (
           <article

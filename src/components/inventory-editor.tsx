@@ -29,6 +29,14 @@ function str(v: unknown): string {
   return typeof v === "string" ? v : (v ?? "").toString();
 }
 
+function newBatchRequestId(): string {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    return `web-${Date.now()}`;
+  }
+}
+
 export default function InventoryEditor({
   drafts,
   buildings,
@@ -72,10 +80,7 @@ export default function InventoryEditor({
     setBatchResults([]);
     try {
       const data = await request("/api/broker/drafts/submit", {
-        requestId:
-          typeof crypto !== "undefined" && "randomUUID" in crypto
-            ? crypto.randomUUID()
-            : `web-${Date.now()}`,
+        requestId: newBatchRequestId(),
         items,
       });
       setBatchResults(data.results ?? []);

@@ -1,79 +1,75 @@
 import { NextResponse } from "next/server";
-import { authorize, requireAal2, unavailable } from "@/lib/api";
+import { authorize, body, invalid, unavailable } from "@/lib/api";
 import { createServiceClient } from "@/lib/supabase/server";
-import { userBrokerId, userRole } from "@/lib/supabase/role";
-export async function POST(
-  _req: Request,
-  ctx: { params: Promise<{ id: string }> },
-) {
+import { userBrokerId } from "@/lib/supabase/role";
+import { checkRateLimit } from "@/lib/ratelimit";
+
+// Reconfirm one listing through the same guarded operation as bulk
+// availability actions: ownership, revision, live broker approval and
+// review eligibility are rechecked inside one transaction, so a concurrent
+// suspension or moderation decision cannot be overwritten.
+export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { user, response } = await authorize("broker");
   if (response) return response;
+  const brokerId = userBrokerId(user);
+  if (!brokerId)
+    return NextResponse.json(
+      { error: "Complete broker onboarding first." },
+      { status: 403 },
+    );
+  const limited = checkRateLimit(req, {
+    limit: 20,
+    windowMs: 60000,
+    key: `reconfirm:${user!.id}`,
+  });
+  if (limited) return limited;
   const { id } = await ctx.params;
+  const b = await body(req).catch(() => ({} as Record<string, unknown>));
   try {
     const db = createServiceClient();
-    const { data: l, error } = await db
-      .from("listings")
-      .select("broker_id,verification")
-      .eq("id", id)
-      .maybeSingle();
-    if (error) throw error;
-    if (!l)
-      return NextResponse.json(
-        { error: "Listing not found." },
-        { status: 404 },
-      );
-    if (userRole(user) !== "admin" && l.broker_id !== userBrokerId(user))
-      return NextResponse.json(
-        { error: "This is not your listing." },
-        { status: 403 },
-      );
-    // Admin reconfirms need a TOTP-verified session.
-    if (userRole(user) === "admin") {
-      const mfa = await requireAal2();
-      if (mfa) return mfa;
+    // The editor may send the revision it loaded; otherwise resolve the
+    // current one. Either way the RPC rechecks everything atomically.
+    let expectedRevision =
+      typeof b.expectedRevision === "number" ? b.expectedRevision : null;
+    if (expectedRevision === null) {
+      const { data: current, error: ce } = await db
+        .from("listings")
+        .select("revision")
+        .eq("id", id)
+        .maybeSingle();
+      if (ce) throw ce;
+      if (!current)
+        return NextResponse.json(
+          { error: "Listing not found." },
+          { status: 404 },
+        );
+      expectedRevision = (current as { revision: number }).revision ?? 1;
     }
-    if (!["verified", "stale"].includes(l.verification))
-      return NextResponse.json(
-        { error: "A flagged or pending listing needs admin review." },
-        { status: 409 },
-      );
-    const { data: broker, error: be } = await db
-      .from("brokers")
-      .select("verified")
-      .eq("id", l.broker_id)
-      .single();
-    if (be) throw be;
-    if (broker.verified !== "verified")
-      return NextResponse.json(
-        { error: "Broker approval is required." },
-        { status: 409 },
-      );
-    // Conditional update prevents reconfirmation racing with moderation.
-    const { data: current, error: ce } = await db
-      .from("listings")
-      .select("revision")
-      .eq("id", id)
-      .single();
-    if (ce) throw ce;
-    const { data, error: save } = await db
-      .from("listings")
-      .update({
-        hrs: 0,
-        last_confirmed_at: new Date().toISOString(),
-        verification: "verified",
-        revision: (current.revision ?? 1) + 1,
-      })
-      .eq("id", id)
-      .in("verification", ["verified", "stale"])
-      .select("id");
-    if (save) throw save;
-    if (!data.length)
-      return NextResponse.json(
-        { error: "Listing changed. Refresh and try again." },
-        { status: 409 },
-      );
+    const { error } = await db.rpc("apply_availability_action", {
+      p_listing_id: id,
+      p_broker_id: brokerId,
+      p_expected_revision: expectedRevision,
+      p_action: "reconfirm",
+    });
+    if (error) {
+      const msg = (error as { message?: string }).message ?? "";
+      if (
+        msg.includes("Stale revision") ||
+        msg.includes("Under review") ||
+        msg.includes("reconfirmed") ||
+        msg.includes("Broker approval")
+      )
+        return NextResponse.json({ error: msg }, { status: 409 });
+      if (msg.includes("Listing not found"))
+        return NextResponse.json({ error: msg }, { status: 404 });
+      throw error;
+    }
     return NextResponse.json({ ok: true });
   } catch (e) {
     return unavailable(e);
   }
+}
+
+export async function GET() {
+  return invalid(["Use POST to reconfirm."]);
 }
