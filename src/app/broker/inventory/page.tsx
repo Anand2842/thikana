@@ -94,7 +94,7 @@ export default async function InventoryPage({
       : null;
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <Link href="/broker/dashboard" className="text-sm underline">
         ← Broker dashboard
       </Link>
@@ -128,6 +128,6 @@ export default async function InventoryPage({
       />
       <BuildingManager buildings={buildingRows} />
       <CaptureForm />
-    </main>
+    </div>
   );
 }

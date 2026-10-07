@@ -57,7 +57,7 @@ function AuthForm() {
     }
   }
   return (
-    <main className="max-w-md mx-auto px-4 py-16">
+    <div className="max-w-md mx-auto px-4 py-16">
       <div className="eyebrow">THIKANA.RENT · SIGN IN</div>
       <h1 className="display text-4xl font-black">Welcome back.</h1>
       <p className="mt-2 text-ink/65">
@@ -170,7 +170,7 @@ function AuthForm() {
           </button>
         )}
       </form>
-    </main>
+    </div>
   );
 }
 export default function AuthPage() {

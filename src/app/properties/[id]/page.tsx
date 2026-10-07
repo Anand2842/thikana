@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import {
   fetchListingVisible,
   fetchBroker,
@@ -93,7 +94,7 @@ export default async function PropertyPage({
   const brokerById = new Map(brokers.map((b) => [b.id, b]));
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -160,7 +161,7 @@ export default async function PropertyPage({
                     ) : (
                       <Link
                         href={`/properties/${g.id}`}
-                        className="font-bold border border-ink px-3 py-1.5 rounded-full"
+                        className="font-bold underline underline-offset-4 text-[13px]"
                       >
                         View
                       </Link>
@@ -270,30 +271,46 @@ export default async function PropertyPage({
                 {broker.policy}
               </div>
               <Link
+                className="mt-4 block text-center font-bold py-2.5 text-[13.5px] underline underline-offset-4"
                 href={`/brokers/${broker.id}`}
-                className="mt-4 block text-center border border-white/25 font-bold py-2.5 rounded-2xl text-[13.5px]"
               >
                 View broker profile →
               </Link>
             </div>
           )}
           {available ? (
-            <ContactBrokerForm
-              listingId={listing.id}
-              brokerAgency={broker?.agency ?? "broker"}
-              visitFee={listing.visitFee}
-              signedIn={!!user}
-            />
+            <div id="contact" className="scroll-mt-24">
+              <ContactBrokerForm
+                listingId={listing.id}
+                listingTitle={`${listing.bhk} BHK ${listing.type} · ${listing.locality}, ${listing.city}`}
+                brokerAgency={broker?.agency ?? "broker"}
+                brokerResponseTime={broker?.responseTime ?? "~1 day"}
+                visitFee={listing.visitFee}
+                visitFeeRefundable={listing.visitFeeRefundable ?? false}
+                signedIn={!!user}
+              />
+            </div>
           ) : (
             <div
               role="status"
               className="bg-red-50 border border-red-200 rounded-3xl p-5"
             >
-              This home is {listing.verification}. Enquiries are paused until
-              availability and broker approval are confirmed.
+              <b>This home is {listing.verification}.</b>
+              <p className="mt-1 text-[13px]">
+                Enquiries are paused until availability and broker approval
+                are confirmed.
+              </p>
+              <Link
+                className="underline font-bold text-[13px] mt-2 inline-block"
+                href={`/properties?city=${encodeURIComponent(listing.city)}`}
+              >
+                Browse similar verified homes →
+              </Link>
             </div>
           )}
-          <PropertyActions id={id} signedIn={!!user} initialSaved={saved} />
+          <Suspense>
+            <PropertyActions id={id} signedIn={!!user} initialSaved={saved} />
+          </Suspense>
           <div className="text-[12px] text-ink/55 font-medium">
             <Link
               className="underline"
@@ -306,6 +323,21 @@ export default async function PropertyPage({
           </div>
         </div>
       </div>
-    </main>
+      {available && (
+        <div className="fixed bottom-0 inset-x-0 z-(--z-sticky) md:hidden bg-cream/95 backdrop-blur border-t border-line px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <b className="text-[17px]">{inr(listing.rent)}/mo</b>
+              <div className="text-[11px] font-semibold text-ink/60">
+                + {listing.brokDays}d brokerage · {f.label}
+              </div>
+            </div>
+            <a href="#contact" className="button">
+              Contact {broker?.agency?.split(" ")[0] ?? "broker"}
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

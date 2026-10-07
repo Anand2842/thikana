@@ -15,7 +15,7 @@ export default async function PrivacyQueuePage({ searchParams }: { searchParams:
   const { data, count, error } = await createServiceClient().from("privacy_requests").select("*", { count: "exact" })
     .eq("status", status).order("created_at", { ascending: true }).range((page - 1) * size, page * size - 1);
   if (error) throw error;
-  return <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+  return <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
     <div className="eyebrow">TRUST OPERATIONS · PRIVATE REQUESTS</div>
     <h1 className="display text-4xl font-black mt-3">Privacy &amp; appeals queue</h1>
     <p className="mt-4 text-ink/65">Verify identity and authority before a disclosure, correction or deletion. A case reference or contact email alone is not proof. Keep privacy requests separate from fraud-report counts.</p>
@@ -33,5 +33,5 @@ export default async function PrivacyQueuePage({ searchParams }: { searchParams:
     </article>)}</div>
     {!data?.length && <p className="mt-5 text-ink/65">No {status.toLowerCase()} requests.</p>}
     <nav aria-label="Queue pages" className="flex gap-4 mt-5 text-sm font-bold">{page > 1 && <Link className="underline" href={`?status=${status}&page=${page - 1}`}>Previous</Link>}{page * size < (count ?? 0) && <Link className="underline" href={`?status=${status}&page=${page + 1}`}>Next</Link>}</nav>
-  </main>;
+  </div>;
 }

@@ -13,6 +13,16 @@
   --color-mist: #eff6f1;
   --font-display: "Fraunces", serif;
   --font-sans: "Inter", sans-serif;
+  --motion-micro: 120ms;
+  --motion-quick: 180ms;
+  --motion-standard: 240ms;
+  --motion-emphasis: 320ms;
+  --motion-sheet: 400ms;
+  --z-sticky: 40;
+  --z-popover: 50;
+  --z-sheet: 60;
+  --z-modal: 70;
+  --z-toast: 80;
 }
 
 body {
@@ -28,12 +38,19 @@ body {
 
 .card-hover {
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s;
+    transform var(--motion-quick) ease-out,
+    box-shadow var(--motion-quick) ease-out;
 }
 .card-hover:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 22px 50px -18px rgba(11, 21, 38, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px -18px rgba(11, 21, 38, 0.35);
+}
+.card-hover:active {
+  transform: translateY(-1px) scale(0.995);
+}
+.card-hover:focus-visible {
+  outline: 3px solid #0b7a55;
+  outline-offset: 3px;
 }
 
 * {
@@ -106,12 +123,13 @@ a {
   color: #0b7a55;
 }
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
   *,
   *::before,
   *::after {
     animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
   }
   .card-hover:hover {
     transform: none;

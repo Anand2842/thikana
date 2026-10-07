@@ -3,7 +3,7 @@ import Link from "next/link";
 export const metadata: Metadata = { title: "Support — Thikana" };
 export default function SupportPage() {
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="eyebrow">WE RESPOND</div>
       <h1 className="display text-4xl font-black mt-2">Support</h1>
       <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-ink/80">
@@ -42,6 +42,6 @@ export default function SupportPage() {
           .
         </p>
       </div>
-    </main>
+    </div>
   );
 }

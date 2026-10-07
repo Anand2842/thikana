@@ -28,7 +28,7 @@ export default async function BrokerDashboardPage({
   }
   if (role === "seeker")
     return (
-      <main className="max-w-xl mx-auto px-4 py-16">
+      <div className="max-w-xl mx-auto px-4 py-16">
         <h1 className="display text-3xl font-black">
           Start your broker profile.
         </h1>
@@ -39,7 +39,7 @@ export default async function BrokerDashboardPage({
         <Link href="/broker/onboard" className="button inline-block mt-6">
           Apply as a broker
         </Link>
-      </main>
+      </div>
     );
   const brokerId =
     role === "admin" && typeof sp.broker === "string"
@@ -48,7 +48,7 @@ export default async function BrokerDashboardPage({
   const brokers = await fetchBrokers();
   if (!brokerId)
     return (
-      <main className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-10">
         <h1 className="display text-3xl font-black">
           Choose a broker to preview.
         </h1>
@@ -63,7 +63,7 @@ export default async function BrokerDashboardPage({
             </Link>
           ))}
         </div>
-      </main>
+      </div>
     );
   const broker = brokers.find((b) => b.id === brokerId);
   if (!broker) notFound();
@@ -80,7 +80,7 @@ export default async function BrokerDashboardPage({
     )) ?? new Map(),
   );
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="eyebrow">BROKER DASHBOARD · {broker.agency}</div>
       <h1 className="display text-4xl font-black mt-2">
         Welcome, {broker.name.split(" ")[0]}.
@@ -189,6 +189,6 @@ export default async function BrokerDashboardPage({
         userId={user.id}
         unread={unread}
       />
-    </main>
+    </div>
   );
 }

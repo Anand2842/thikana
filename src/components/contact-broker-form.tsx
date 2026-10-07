@@ -1,22 +1,61 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "@/lib/client-request";
 import { inr } from "@/lib/trust";
 export default function ContactBrokerForm({
   listingId,
+  listingTitle,
   brokerAgency,
+  brokerResponseTime,
   visitFee,
+  visitFeeRefundable,
   signedIn,
 }: {
   listingId: string;
+  listingTitle: string;
   brokerAgency: string;
+  brokerResponseTime: string;
   visitFee: number;
+  visitFeeRefundable: boolean;
   signedIn: boolean;
 }) {
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [done, setDone] = useState(false);
+  // Preserve user work across refreshes and network failures; cleared only
+  // on successful send. Restored after mount to avoid hydration mismatch.
+  const empty = { name: "", phone: "", budget: "", moveIn: "", tenantType: "", msg: "" };
+  const [draft, setDraft] = useState(empty);
+  useEffect(() => {
+    let live = true;
+    // Deferred past mount: restores the draft without a synchronous
+    // setState-in-effect and without hydration mismatch.
+    queueMicrotask(() => {
+      if (!live) return;
+      try {
+        const raw = sessionStorage.getItem(`enquiry:${listingId}`);
+        if (raw) setDraft({ ...empty, ...JSON.parse(raw) });
+      } catch {
+        /* private mode — form simply starts empty */
+      }
+    });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listingId]);
+  function keep(next: Partial<typeof draft>) {
+    setDraft((d) => {
+      const merged = { ...d, ...next };
+      try {
+        sessionStorage.setItem(`enquiry:${listingId}`, JSON.stringify(merged));
+      } catch {
+        /* ignore */
+      }
+      return merged;
+    });
+  }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
@@ -47,6 +86,11 @@ export default function ContactBrokerForm({
         time: moveIn,
       });
       setDone(true);
+      try {
+        sessionStorage.removeItem(`enquiry:${listingId}`);
+      } catch {
+        /* ignore */
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -60,8 +104,19 @@ export default function ContactBrokerForm({
         className="bg-mist border border-pine/25 rounded-3xl p-5"
       >
         <b>Enquiry sent to {brokerAgency}.</b>
+        <ul className="mt-2 text-[13px] space-y-1">
+          <li>Home: {listingTitle}</li>
+          <li>
+            Visit fee {visitFee === 0 ? "₹0" : `₹${visitFee}`} —{" "}
+            {visitFee === 0 || visitFeeRefundable
+              ? "nothing to pay upfront"
+              : "due only after you verify the property in person"}
+            .
+          </li>
+          <li>{brokerAgency} typically responds in {brokerResponseTime}.</li>
+        </ul>
         <Link className="block underline mt-3" href="/dashboard">
-          View enquiry & schedule a visit →
+          Manage enquiry & schedule a visit →
         </Link>
       </div>
     );
@@ -88,6 +143,8 @@ export default function ContactBrokerForm({
           required
           minLength={2}
           maxLength={100}
+          value={draft.name}
+          onChange={(e) => keep({ name: e.target.value })}
         />
       </label>
       <label>
@@ -100,6 +157,8 @@ export default function ContactBrokerForm({
           required
           pattern="[0-9]{10}"
           maxLength={10}
+          value={draft.phone}
+          onChange={(e) => keep({ phone: e.target.value })}
         />
       </label>
       <label>
@@ -111,15 +170,26 @@ export default function ContactBrokerForm({
           max={10000000}
           step={1}
           placeholder="e.g. 25000"
+          value={draft.budget}
+          onChange={(e) => keep({ budget: e.target.value })}
         />
       </label>
       <label>
         Move-in date (optional)
-        <input name="moveIn" type="date" />
+        <input
+          name="moveIn"
+          type="date"
+          value={draft.moveIn}
+          onChange={(e) => keep({ moveIn: e.target.value })}
+        />
       </label>
       <label>
         Tenant type (optional)
-        <select name="tenantType" defaultValue="">
+        <select
+          name="tenantType"
+          value={draft.tenantType}
+          onChange={(e) => keep({ tenantType: e.target.value })}
+        >
           <option value="">Select…</option>
           <option value="Family">Family</option>
           <option value="Student">Student</option>
@@ -133,6 +203,8 @@ export default function ContactBrokerForm({
           maxLength={2000}
           rows={3}
           placeholder="Move-in date, family size, questions…"
+          value={draft.msg}
+          onChange={(e) => keep({ msg: e.target.value })}
         />
       </label>
       {error && (
@@ -141,10 +213,13 @@ export default function ContactBrokerForm({
         </p>
       )}
       <button className="button w-full" disabled={busy}>
-        {busy ? "Sending…" : `Send enquiry · Visit ${inr(visitFee)}`}
+        {busy ? "Sending…" : "Send enquiry"}
       </button>
       <p className="text-xs text-ink/65">
-        Never pay a token before a visit. Report advance-fee demands.
+        {visitFee === 0
+          ? "No visit fee. Never pay a token before a visit."
+          : `Visit fee ${inr(visitFee)} due only after you verify the property in person. Never pay a token before a visit.`}{" "}
+        Report advance-fee demands.
       </p>
     </form>
   );

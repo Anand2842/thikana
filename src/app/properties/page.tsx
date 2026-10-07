@@ -51,6 +51,17 @@ export default async function PropertiesPage({
   );
   const scoped = active.filter((l) => city === "All" || l.city === city),
     localities = ["All", ...new Set(scoped.map((l) => l.locality))];
+  // Active filter chips: each removes exactly one dimension so the seeker
+  // sees what is narrowing the results and can widen selectively.
+  const activeFilters: { key: string; label: string }[] = [];
+  if (city !== "All") activeFilters.push({ key: "city", label: city });
+  if (locality !== "All") activeFilters.push({ key: "locality", label: locality });
+  if (value("bhk")) activeFilters.push({ key: "bhk", label: `${value("bhk")} BHK` });
+  if (value("budget"))
+    activeFilters.push({ key: "budget", label: `≤ ₹${Number(value("budget")).toLocaleString("en-IN")}` });
+  if (value("furnishing")) activeFilters.push({ key: "furnishing", label: value("furnishing") });
+  if (q) activeFilters.push({ key: "q", label: `“${value("q")}”` });
+  const alternatives = [...active].sort((a, b) => a.hrs - b.hrs).slice(0, 3);
   function link(change: Record<string, string>) {
     const params = new URLSearchParams();
     for (const [k, v] of Object.entries(sp))
@@ -61,7 +72,7 @@ export default async function PropertiesPage({
     return `/properties?${params}`;
   }
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="eyebrow">AVAILABLE HOMES · VERIFIED BROKERS</div>
       <h1 className="display font-black text-4xl">Know the fees first.</h1>
       <form
@@ -175,12 +186,45 @@ export default async function PropertiesPage({
       {!rows.length && (
         <div className="mt-6 bg-cream border border-line rounded-3xl p-10 text-center">
           <h2 className="display font-black text-2xl">No homes match yet.</h2>
-          <p className="mt-2">Try a nearby locality or a wider budget.</p>
-          <Link className="button inline-block mt-5" href="/properties">
+          <p className="mt-2">
+            {activeFilters.length
+              ? `Active filters: ${activeFilters.map((f) => f.label).join(" · ")}. Remove one to widen the search.`
+              : "Try a nearby locality or a wider budget."}
+          </p>
+          {activeFilters.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2 justify-center">
+              {activeFilters.map((f) => (
+                <Link
+                  key={f.key}
+                  href={link({ [f.key]: "All" })}
+                  className="text-xs font-bold px-4 py-2 rounded-full border border-ink bg-paper"
+                >
+                  ✕ {f.label}
+                </Link>
+              ))}
+            </div>
+          )}
+          {alternatives.length > 0 && (
+            <>
+              <p className="mt-6 font-bold text-sm">
+                Freshest verified homes right now:
+              </p>
+              <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+                {alternatives.map((l) => (
+                  <ListingCard
+                    key={l.id}
+                    listing={l}
+                    broker={byBroker.get(l.brokerId)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+          <Link className="button inline-block mt-6" href="/properties">
             Clear filters
           </Link>
         </div>
       )}
-    </main>
+    </div>
   );
 }

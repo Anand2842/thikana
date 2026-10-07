@@ -122,7 +122,7 @@ export default function AdminMfaPage() {
     }
   }
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
+    <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="eyebrow">ADMIN SECURITY</div>
       <h1 className="display text-4xl font-black mt-2">
         Two-factor authentication
@@ -207,6 +207,6 @@ export default function AdminMfaPage() {
           </p>
         )}
       </div>
-    </main>
+    </div>
   );
 }

@@ -30,7 +30,7 @@ export default async function Page({
   if (role !== "admin" && listing.brokerId !== userBrokerId(user))
     notFound();
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-3xl mx-auto px-4 py-10">
       <Link href="/broker/dashboard" className="text-sm underline">
         ← Broker dashboard
       </Link>
@@ -48,6 +48,6 @@ export default async function Page({
         </div>
       ) : null}
       <EditListingForm listing={listing} />
-    </main>
+    </div>
   );
 }

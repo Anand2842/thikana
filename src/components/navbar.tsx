@@ -37,7 +37,7 @@ export default function Navbar() {
     ...(role === "admin" ? [{ href: "/admin", label: "Admin" }] : []),
   ];
   return (
-    <header className="sticky top-0 z-40 bg-ink text-white border-b border-white/10">
+    <header className="sticky top-0 z-(--z-sticky) bg-ink text-white border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2 flex-wrap">
         <Link href="/" className="display font-black text-xl whitespace-nowrap">
           Thikana<span className="text-gold">.rent</span>
@@ -69,20 +69,20 @@ export default function Navbar() {
         aria-label="Main navigation"
         className="max-w-7xl mx-auto px-4 sm:px-6 pb-2 flex flex-wrap gap-1 text-xs sm:text-sm font-semibold"
       >
-        {links.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            aria-current={
-              path === l.href || path.startsWith(l.href + "/")
-                ? "page"
-                : undefined
-            }
-            className={`px-3 py-2 rounded-full ${path === l.href || path.startsWith(l.href + "/") ? "bg-white text-ink" : "hover:bg-white/10"}`}
-          >
-            {l.label}
-          </Link>
-        ))}
+        {links.map((l) => {
+          const active =
+            path === l.href || path.startsWith(l.href + "/");
+          return (
+            <Link
+              key={l.href}
+              href={l.href}
+              aria-current={active ? "page" : undefined}
+              className={`px-3 py-2 rounded-full ${active ? "bg-white text-ink underline underline-offset-4 decoration-2" : "hover:bg-white/10"}`}
+            >
+              {l.label}
+            </Link>
+          );
+        })}
       </nav>
     </header>
   );

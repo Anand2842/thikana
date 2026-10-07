@@ -52,7 +52,7 @@ export default async function DashboardPage() {
     ),
   );
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="eyebrow">YOUR NEXT ADDRESS</div>
       <h1 className="display text-4xl font-black">My homes & enquiries</h1>
       <p className="mt-3 text-ink/65">
@@ -184,6 +184,6 @@ export default async function DashboardPage() {
           </p>
         )}
       </div>
-    </main>
+    </div>
   );
 }

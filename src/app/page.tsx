@@ -47,7 +47,7 @@ export default async function Home() {
     groups.set(l.propId, [...(groups.get(l.propId) ?? []), l]);
   const offers = [...groups.values()].find((g) => g.length > 1) ?? [];
   return (
-    <main>
+    <div>
       <section className="bg-ink text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16 grid lg:grid-cols-2 gap-10 items-center">
           <div>
@@ -290,6 +290,6 @@ export default async function Home() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

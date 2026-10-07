@@ -39,21 +39,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
-        <Navbar />
-        {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
-          <p className="bg-mist text-pinedark text-center text-xs font-semibold px-4 py-2">
-            Demo workspace · Sample homes, brokers and reviews for testing.
-          </p>
-        )}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 button"
         >
           Skip to content
         </a>
-        <div id="main-content" className="flex-1">
+        <Navbar />
+        {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
+          <p className="bg-mist text-pinedark text-center text-xs font-semibold px-4 py-2">
+            Demo workspace · Sample homes, brokers and reviews for testing.
+          </p>
+        )}
+        <main id="main-content" className="flex-1">
           {children}
-        </div>
+        </main>
         <footer className="bg-ink text-white/70 text-[12.5px] font-medium">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row gap-3 items-center justify-between">
             <span>

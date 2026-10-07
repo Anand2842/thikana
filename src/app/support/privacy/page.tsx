@@ -10,7 +10,7 @@ export default async function PrivacySupportPage({ searchParams }: { searchParam
   const result = user ? await createServiceClient().from("privacy_requests")
     .select("id,kind,status,response,created_at,updated_at", { count: "exact" }).eq("owner_id", user.id)
     .order("created_at", { ascending: false }).range((page - 1) * size, page * size - 1) : null;
-  return <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+  return <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
     <div className="eyebrow">YOUR INFORMATION · YOUR SAY</div>
     <h1 className="display text-4xl font-black mt-3">Privacy &amp; appeals</h1>
     <p className="mt-4 text-ink/65 leading-relaxed">Ask for access, correction, deletion, consent withdrawal or review of a moderation decision. This channel is separate from listing/broker complaints. Our team targets acknowledgement within 24 hours and general resolution within seven days, applying shorter required deadlines.</p>
@@ -29,5 +29,5 @@ export default async function PrivacySupportPage({ searchParams }: { searchParam
         <nav aria-label="Request pages" className="flex gap-4 mt-4 text-sm font-bold">{page > 1 && <Link className="underline" href={`?page=${page - 1}`}>Previous</Link>}{page * size < (result?.count ?? 0) && <Link className="underline" href={`?page=${page + 1}`}>Next</Link>}</nav>
       </>}
     </section>}
-  </main>;
+  </div>;
 }

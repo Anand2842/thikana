@@ -224,7 +224,7 @@ export default async function AdminPage({
   });
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="text-[11px] font-extrabold tracking-[.2em] text-pine">
         TRUST OPERATIONS
       </div>
@@ -733,6 +733,6 @@ export default async function AdminPage({
           reconfirms.
         </p>
       )}
-    </main>
+    </div>
   );
 }

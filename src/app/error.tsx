@@ -1,7 +1,7 @@
 "use client";
 export default function ErrorPage({ reset }: { reset: () => void }) {
   return (
-    <main className="max-w-xl mx-auto px-4 py-20 text-center">
+    <div className="max-w-xl mx-auto px-4 py-20 text-center">
       <h1 className="display text-3xl font-black">
         We couldn’t load this page.
       </h1>
@@ -11,6 +11,6 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
       <button onClick={reset} className="button mt-6">
         Try again
       </button>
-    </main>
+    </div>
   );
 }

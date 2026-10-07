@@ -157,13 +157,13 @@ export default function BrokerOnboardPage() {
   }
   if (mode === "unknown")
     return (
-      <main className="max-w-2xl mx-auto px-4 py-10">
+      <div className="max-w-2xl mx-auto px-4 py-10">
         <p className="text-ink/65">Loading…</p>
-      </main>
+      </div>
     );
   const editing = mode === "edit" && !!editId && !!initial;
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
+    <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="eyebrow">FOR LOCAL BROKERS</div>
       <h1 className="display text-4xl font-black">
         {editing ? "Update your profile." : "Build trust before the visit."}
@@ -336,6 +336,6 @@ export default function BrokerOnboardPage() {
       <Link className="block mt-6 underline text-sm" href="/broker/dashboard">
         Already applied? View application status →
       </Link>
-    </main>
+    </div>
   );
 }
