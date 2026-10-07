@@ -69,10 +69,13 @@ export async function POST(req: Request) {
   const b = await body(req);
   const draftId = typeof b.draftId === "string" ? b.draftId : "";
   const kind: AssetKind | null =
-    b.kind === "photo" || b.kind === "screenshot" ? b.kind : null;
-  const mime = typeof b.mime === "string" ? b.mime : "";
+    b.kind === "photo" || b.kind === "screenshot" ? b.kind : null;  const mime = typeof b.mime === "string" ? b.mime : "";
   const bytes = typeof b.bytes === "number" ? b.bytes : 0;
-  if (!draftId || !kind) return invalid(["Draft and photo/screenshot kind are required."]);
+  if (!kind) return invalid(["Photo/screenshot kind is required."]);
+  // Photos attach to a draft; screenshots may be unattached capture input
+  // (no draft exists yet). Unattached screenshots expire via retention.
+  if (kind === "photo" && !draftId)
+    return invalid(["Draft is required for photos."]);
   if (!(ASSET_MIMES as readonly string[]).includes(mime))
     return invalid(["Choose a JPEG, PNG or WEBP photo. HEIC is not supported."]);
   if (!Number.isFinite(bytes) || bytes <= 0 || bytes > MAX_ASSET_BYTES)
@@ -90,18 +93,22 @@ export async function POST(req: Request) {
         { error: "Draft workspace unlocks after approval." },
         { status: 403 },
       );
-    const { data: draft, error: de } = await db
-      .from("listing_drafts")
-      .select("id,submitted_listing_id")
-      .eq("id", draftId)
-      .eq("broker_id", brokerId)
-      .maybeSingle();
-    if (de) throw de;
-    if (!draft)
-      return NextResponse.json({ error: "Draft not found." }, { status: 404 });
+    let draft: { submitted_listing_id?: unknown } | null = null;
+    if (draftId) {
+      const { data, error: de } = await db
+        .from("listing_drafts")
+        .select("id,submitted_listing_id")
+        .eq("id", draftId)
+        .eq("broker_id", brokerId)
+        .maybeSingle();
+      if (de) throw de;
+      if (!data)
+        return NextResponse.json({ error: "Draft not found." }, { status: 404 });
+      draft = data;
+    }
     if (
-      typeof (draft as Record<string, unknown>).submitted_listing_id === "string" &&
-      (draft as Record<string, unknown>).submitted_listing_id
+      typeof draft?.submitted_listing_id === "string" &&
+      draft.submitted_listing_id
     )
       return NextResponse.json(
         { error: "Already submitted — edit the listing instead." },
@@ -109,32 +116,34 @@ export async function POST(req: Request) {
       );
     const cap =
       kind === "photo" ? MAX_PHOTOS_PER_DRAFT : MAX_SCREENSHOTS_PER_DRAFT;
-    const { count } = await db
+    let capQuery = db
       .from("inventory_assets")
       .select("id", { count: "exact", head: true })
-      .eq("draft_id", draftId)
       .eq("kind", kind)
       .neq("state", "failed")
       .gt("reserved_until", new Date().toISOString());
+    capQuery = draftId ? capQuery.eq("draft_id", draftId) : capQuery.is("draft_id", null);
+    const { count } = await capQuery;
     if ((count ?? 0) >= cap)
       return NextResponse.json(
         { error: `Only ${cap} ${kind === "photo" ? "photos" : "screenshots"} per home.` },
         { status: 409 },
       );
-    const { data: existing } = await db
+    let posQuery = db
       .from("inventory_assets")
       .select("position")
-      .eq("draft_id", draftId)
       .order("position", { ascending: false })
       .limit(1);
+    posQuery = draftId ? posQuery.eq("draft_id", draftId) : posQuery.is("draft_id", null);
+    const { data: existing } = await posQuery;
     const assetId = `A-${crypto.randomUUID()}`;
-    const path = `${brokerId}/${draftId}/${assetId}`;
+    const path = `${brokerId}/${draftId || "capture"}/${assetId}`;
     const { data: row, error: ie } = await db
       .from("inventory_assets")
       .insert({
         id: assetId,
         broker_id: brokerId,
-        draft_id: draftId,
+        draft_id: draftId || null,
         kind,
         storage_path: path,
         mime,

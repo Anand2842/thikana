@@ -81,12 +81,50 @@ export async function POST(req: Request) {
         .remove(stale.map((a) => a.storage_path));
       if (robj) throw robj;
     }
+    // Source screenshots expire after seven days — they are extraction
+    // inputs, never listing photos, so no listing can reference them.
+    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    const { data: oldShots, error: se } = await db
+      .from("inventory_assets")
+      .select("id,storage_path")
+      .eq("kind", "screenshot")
+      .lt("created_at", weekAgo);
+    if (se) throw se;
+    const shots = (oldShots ?? []) as { id: string; storage_path: string }[];
+    let screenshotsCleared = 0;
+    if (shots.length) {
+      const { error: sdel } = await db
+        .from("inventory_assets")
+        .delete()
+        .in(
+          "id",
+          shots.map((a) => a.id),
+        );
+      if (sdel) throw sdel;
+      screenshotsCleared = shots.length;
+      const { error: robj } = await db.storage
+        .from("inventory-media")
+        .remove(shots.map((a) => a.storage_path));
+      if (robj) throw robj;
+    }
+    // Redact raw extraction inputs after seven days; result receipts
+    // (created draft IDs) stay for accountability.
+    const { data: redacted, error: red } = await db
+      .from("inventory_requests")
+      .update({ items: { redacted: true }, updated_at: new Date().toISOString() })
+      .eq("kind", "extract")
+      .eq("state", "done")
+      .lt("updated_at", weekAgo)
+      .select("id");
+    if (red) throw red;
     return NextResponse.json({
       anonymized: oldIds,
       count: oldIds.length,
       messagesCleared,
       cityRequests: (oldReqs ?? []).length,
       uploadsCleared: assetsCleared,
+      screenshotsCleared,
+      inputsRedacted: (redacted ?? []).length,
     });
   } catch (e) {
     return unavailable(e);

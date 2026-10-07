@@ -4,6 +4,7 @@ import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
 import { createServiceClient } from "@/lib/supabase/server";
 import InventoryEditor from "@/components/inventory-editor";
 import BuildingManager from "@/components/building-manager";
+import CaptureForm from "@/components/capture-form";
 
 export const metadata = { robots: { index: false, follow: false } };
 
@@ -126,6 +127,7 @@ export default async function InventoryPage({
         }
       />
       <BuildingManager buildings={buildingRows} />
+      <CaptureForm />
     </main>
   );
 }
