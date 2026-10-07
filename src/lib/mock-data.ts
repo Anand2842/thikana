@@ -74,6 +74,7 @@ export interface Listing {
   moderationNote?: string;
   revision?: number;
   sourceDraftId?: string | null;
+  sourceRequestId?: string | null;
 }
 
 export interface Lead {

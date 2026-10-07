@@ -14,6 +14,7 @@ import {
   fetchCityRequestsSvc,
   type KycCheck,
 } from "@/lib/supabase/data";
+import { fetchReviewQueue } from "@/lib/review-queue";
 import { VerificationPill } from "@/components/badges";
 import {
   BrokerButtons,
@@ -135,6 +136,9 @@ export default async function AdminPage({
   const pendingBrokers = brokers.filter((b) => b.verified === "pending");
   const flagged = listings.filter((l) => l.verification === "flagged");
   const pendingListings = listings.filter((l) => l.verification === "pending");
+  // Grouped moderation queue: broker clusters with fee/photo/duplicate
+  // differences. Degrades to the flat list if the queue lookup fails.
+  const reviewGroups = await fetchReviewQueue(db).catch(() => []);
   const stale = listings.filter((l) => l.verification === "stale");
   // Open-report counts derived inline from the service-role reports already
   // loaded above (no data.ts change). "Open" mirrors the queue below: any
@@ -478,34 +482,75 @@ export default async function AdminPage({
       <h2 className="font-extrabold text-[18px] mt-8">
         Pending listings ({pendingListings.length})
       </h2>
-      <div className="mt-3 space-y-2">
-        {pageOf(
-          pendingListings.filter(
-            (l) =>
-              inQueue("listings") &&
-              matchQ(`${l.propId} ${l.locality} ${l.title} ${l.id}`),
-          ),
-        ).rows.map((l) => (
-          <div
-            key={l.id}
-            className="bg-cream border border-line rounded-2xl p-4 text-[13.5px]"
-          >
-            <VerificationPill v={l.verification} />{" "}
-            <OpenReportPill n={openByListing.get(l.id) ?? 0} />
-            <b className="ml-2">
-              {l.propId} · {l.bhk} BHK {l.locality} · ₹{l.rent}
-            </b>
-            <p className="mt-2">
-              Address: {addressById.get(l.id) || "Sample catalog home"}
-            </p>
-            <Link className="underline block mt-2" href={`/properties/${l.id}`}>
-              Review full listing →
-            </Link>
-            <div className="mt-2">
-              <ListingButtons id={l.id} />
-            </div>
-          </div>
-        ))}
+      <div className="mt-3 space-y-4">
+        {inQueue("listings") &&
+          reviewGroups
+            .map((g) => ({
+              ...g,
+              items: g.items.filter((it) =>
+                matchQ(
+                  `${g.brokerName} ${it.propId} ${it.locality} ${it.title} ${it.id} ${it.building ?? ""}`,
+                ),
+              ),
+            }))
+            .filter((g) => g.items.length > 0)
+            .map((g) => (
+              <div
+                key={g.brokerId}
+                className="border border-line rounded-2xl overflow-hidden"
+              >
+                <div className="bg-ink text-white px-4 py-2 text-[13px] font-bold">
+                  {g.brokerName} · {g.items.length} pending
+                </div>
+                <div className="p-3 space-y-2 bg-cream">
+                  {g.items.map((it) => (
+                    <div
+                      key={it.id}
+                      className="bg-white border border-line rounded-2xl p-4 text-[13.5px]"
+                    >
+                      <VerificationPill v="pending" />{" "}
+                      <OpenReportPill n={openByListing.get(it.id) ?? 0} />
+                      {it.duplicatePhotoReports > 0 && (
+                        <span className="ml-1 bg-amber-100 text-amber-800 border border-amber-300 text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                          {it.duplicatePhotoReports} photo-dup signal
+                          {it.duplicatePhotoReports === 1 ? "" : "s"}
+                        </span>
+                      )}
+                      {it.sameHomeOtherListings > 0 && (
+                        <span className="ml-1 bg-sky-100 text-sky-800 border border-sky-300 text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                          same home ×{it.sameHomeOtherListings + 1} across brokers
+                        </span>
+                      )}
+                      <b className="ml-2">
+                        {it.propId} · {it.bhk} BHK {it.locality} · ₹{it.rent}
+                      </b>
+                      <p className="mt-2">
+                        Address: {addressById.get(it.id) || "Sample catalog home"}
+                        {it.building ? ` · Building: ${it.building}` : ""}
+                        {it.requestId ? ` · Batch: ${it.requestId.slice(0, 13)}…` : ""}
+                      </p>
+                      <p className="mt-1 text-ink/70">
+                        Fees: {it.fees.brokDays}d brokerage · ₹{it.fees.visitFee}{" "}
+                        visit{it.fees.visitFeeRefundable ? " (refundable)" : ""}
+                        {it.fees.otherFee > 0
+                          ? ` · ₹${it.fees.otherFee} other (${it.fees.otherFeeNote || "no note"})`
+                          : ""}
+                        {" · "}{it.photos} photo{it.photos === 1 ? "" : "s"}
+                      </p>
+                      <Link
+                        className="underline block mt-2"
+                        href={`/properties/${it.id}`}
+                      >
+                        Review full listing →
+                      </Link>
+                      <div className="mt-2">
+                        <ListingButtons id={it.id} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
         {pendingListings.length === 0 && (
           <p className="text-ink/60">Queue clear.</p>
         )}

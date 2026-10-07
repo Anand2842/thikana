@@ -93,6 +93,7 @@ export function mapListing(r: any): Listing {
     moderationNote: r.moderation_note ?? "",
     revision: r.revision ?? 1,
     sourceDraftId: r.source_draft_id ?? null,
+    sourceRequestId: r.source_request_id ?? null,
   };
 }
 

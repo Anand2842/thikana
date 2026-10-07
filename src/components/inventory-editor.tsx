@@ -41,6 +41,60 @@ export default function InventoryEditor({
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  // Batch selection: one stable request ID per click, reused if the broker
+  // double-clicks or retries, so the batch endpoint replays instead of
+  // duplicating. A new click mints a new ID.
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [batchResults, setBatchResults] = useState<
+    { draftId: string; ok: boolean; error?: string; propId?: string }[]
+  >([]);
+
+  function toggleSelect(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function submitBatch() {
+    const items = drafts
+      .filter((d) => selected.has(d.id) && !d.submittedListingId)
+      .slice(0, 10)
+      .map((d) => ({ draftId: d.id, expectedRevision: d.revision }));
+    if (!items.length) {
+      setMessage("Select unsubmitted drafts first.");
+      return;
+    }
+    setBusy(true);
+    setMessage("");
+    setBatchResults([]);
+    try {
+      const data = await request("/api/broker/drafts/submit", {
+        requestId:
+          typeof crypto !== "undefined" && "randomUUID" in crypto
+            ? crypto.randomUUID()
+            : `web-${Date.now()}`,
+        items,
+      });
+      setBatchResults(data.results ?? []);
+      const failed = (data.results ?? []).filter(
+        (r: { ok: boolean }) => !r.ok,
+      ).length;
+      setMessage(
+        failed
+          ? `${(data.results ?? []).length - failed} submitted, ${failed} need attention.`
+          : `Submitted ${(data.results ?? []).length} home${(data.results ?? []).length === 1 ? "" : "s"} for review.`,
+      );
+      setSelected(new Set());
+      router.refresh();
+    } catch (e) {
+      setMessage((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function quickAdd(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -180,11 +234,28 @@ export default function InventoryEditor({
           </p>
         )}
         <div className="mt-3 space-y-2">
+          {drafts.some((d) => !d.submittedListingId) && (
+            <button
+              className="button secondary w-full"
+              disabled={busy || selected.size === 0}
+              onClick={() => void submitBatch()}
+            >
+              Submit selected ({selected.size})
+            </button>
+          )}
           {drafts.map((d) => (
             <div
               key={d.id}
               className="bg-paper border border-line rounded-2xl p-3 text-[13px] flex items-center gap-2"
             >
+              {!d.submittedListingId && (
+                <input
+                  type="checkbox"
+                  checked={selected.has(d.id)}
+                  onChange={() => toggleSelect(d.id)}
+                  aria-label={`Select draft ${str(d.fields.title) || d.id.slice(0, 8)}`}
+                />
+              )}
               <Link
                 href={`/broker/inventory?draft=${d.id}`}
                 className="font-bold underline flex-1"
@@ -195,6 +266,9 @@ export default function InventoryEditor({
                   d.id.slice(0, 8)}
               </Link>
               <span className="text-ink/55">r{d.revision}</span>
+              {d.submittedListingId && (
+                <span className="text-[11px] text-ink/55">submitted</span>
+              )}
               <button
                 className="underline text-[12px]"
                 disabled={busy}
@@ -204,6 +278,16 @@ export default function InventoryEditor({
               </button>
             </div>
           ))}
+          {batchResults.length > 0 && (
+            <ul className="text-[12px] space-y-1" aria-label="Batch results">
+              {batchResults.map((r) => (
+                <li key={r.draftId} className={r.ok ? "" : "text-red-700"}>
+                  {r.draftId.slice(0, 8)}:{" "}
+                  {r.ok ? `submitted${r.propId ? ` (${r.propId})` : ""}` : r.error}
+                </li>
+              ))}
+            </ul>
+          )}
           {!drafts.length && (
             <p className="text-sm text-ink/60">No drafts yet.</p>
           )}

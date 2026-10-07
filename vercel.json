@@ -1,7 +1,5 @@
 {
   "crons": [
-    { "path": "/api/cron/expire", "schedule": "0 2 * * *" },
-    { "path": "/api/cron/reminders", "schedule": "*/30 * * * *" },
-    { "path": "/api/cron/retention", "schedule": "0 3 * * 0" }
+    { "path": "/api/cron/daily", "schedule": "0 8 * * *" }
   ]
 }

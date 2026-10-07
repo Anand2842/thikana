@@ -3,22 +3,15 @@ import { authorize, body, invalid, requireAal2, unavailable } from "@/lib/api";
 import { createServiceClient } from "@/lib/supabase/server";
 import { userBrokerId, userRole } from "@/lib/supabase/role";
 import { mapListing } from "@/lib/supabase/data";
+import { validPhotoUrl } from "@/lib/validation";
 import { checkRateLimit } from "@/lib/ratelimit";
 
 // ---- Inline partial-edit validators (mirrors validateListing rules;
-// validation.ts is intentionally left untouched). ----
+// photo URLs reuse the shared validator so inventory asset references stay
+// consistent between the form, drafts and edits). ----
 const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const integer = (v: unknown, min = 0, max = 10_000_000) =>
   typeof v === "number" && Number.isInteger(v) && v >= min && v <= max;
-function validPhotoUrl(v: unknown) {
-  if (typeof v !== "string" || v.length > 2048) return false;
-  try {
-    const u = new URL(v);
-    return u.protocol === "https:" && !u.username && !u.password;
-  } catch {
-    return false;
-  }
-}
 const AVAILABILITY = ["Available", "Taken", "OnHold"] as const;
 const RELATIONSHIPS = ["owner", "agent", "subagent"] as const;
 const FURNISHINGS = [
@@ -177,7 +170,17 @@ export async function PATCH(
           { status: 403 },
         );
       if (typeof b.note !== "string" || b.note.length > 2000)
-        return invalid(["Moderation note must be under 2,000 characters."]);
+        return invalid(["Moderation note must be under 2000 characters."]);
+    }
+    // Stale-screen guard: when the editor sends the revision it loaded, a
+    // concurrent moderation or edit is a visible conflict, not a silent
+    // overwrite. Absent revision keeps legacy callers working.
+    if (typeof b.expectedRevision === "number") {
+      if (b.expectedRevision !== (existing.revision ?? 1))
+        return NextResponse.json(
+          { error: "Listing changed. Refresh and try again." },
+          { status: 409 },
+        );
     }
 
     const errors: string[] = [];
@@ -286,7 +289,30 @@ export async function PATCH(
         !b.photos.every(validPhotoUrl)
       )
         errors.push("Add 1–8 HTTPS photo URLs or upload photos.");
-      else patch.photos = b.photos;
+      else {
+        // Inventory asset references must resolve to this listing's own
+        // verified uploads — no borrowing another unit's photos on edit.
+        const refs = (b.photos as unknown[]).filter(
+          (u): u is string =>
+            typeof u === "string" && u.startsWith("/api/inventory-media/"),
+        );
+        if (refs.length) {
+          const ids = refs.map((u) => u.split("/").pop() ?? "");
+          const { data: own } = await db
+            .from("inventory_assets")
+            .select("id")
+            .in("id", ids)
+            .eq("broker_id", existing.broker_id)
+            .eq("state", "ready");
+          const ownIds = new Set(
+            ((own ?? []) as { id: string }[]).map((a) => a.id),
+          );
+          const foreign = ids.filter((x) => !ownIds.has(x));
+          if (foreign.length)
+            errors.push("Unknown photo reference. Upload the photo to this home.");
+          else patch.photos = b.photos;
+        } else patch.photos = b.photos;
+      }
     }
     if (has("photoHashes")) {
       if (
