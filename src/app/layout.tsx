@@ -18,9 +18,18 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
-  title: "Thikana — NCR's Verified Broker Marketplace",
+  title: {
+    default: "Thikana — NCR's Verified Broker Marketplace",
+    template: "%s | Thikana",
+  },
   description:
     "NCR property search across Delhi, Gurugram, Noida, Greater Noida & Ghaziabad — verified brokers, transparent charges & fresh availability.",
+  openGraph: {
+    siteName: "Thikana",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: { card: "summary" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

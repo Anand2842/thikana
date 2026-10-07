@@ -1,8 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { fetchListings, fetchBrokers } from "@/lib/supabase/data";
 import { PHASE1_CITIES } from "@/lib/mock-data";
 import { isActive } from "@/lib/trust";
 import ListingCard from "@/components/listing-card";
+
+export const metadata: Metadata = {
+  title: "Verified Homes for Rent in NCR — Fees Upfront",
+  description:
+    "Browse verified broker listings across Delhi, Gurugram, Noida, Greater Noida & Ghaziabad. Every home shows rent, brokerage, visit fee and reconfirmed availability.",
+  alternates: { canonical: "/properties" },
+};
 export default async function PropertiesPage({
   searchParams,
 }: {

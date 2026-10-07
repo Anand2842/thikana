@@ -1,7 +1,14 @@
 import Photo from "@/components/photo";
+import type { Metadata } from "next";
 import { isActive } from "@/lib/trust";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  absoluteUrl,
+  brokerDescription,
+  brokerJsonLd,
+  brokerTitle,
+} from "@/lib/seo";
 import {
   fetchBroker,
   fetchBrokerListings,
@@ -12,6 +19,36 @@ import { getSessionUser } from "@/lib/supabase/role";
 import { VerifiedBadge } from "@/components/badges";
 import ListingCard from "@/components/listing-card";
 import BrokerReportForm from "@/components/broker-report-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const broker = await fetchBroker(id);
+  if (!broker || broker.verified !== "verified")
+    return { robots: { index: false, follow: false } };
+  const mine = (await fetchBrokerListings(broker.id)).filter(isActive);
+  const title = brokerTitle(broker);
+  const description = brokerDescription(broker, mine.length);
+  const url = absoluteUrl(`/brokers/${broker.id}`);
+  const image =
+    broker.photo?.startsWith("https://") ? broker.photo : undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "profile",
+      ...(image ? { images: [{ url: image }] } : {}),
+    },
+    twitter: { card: "summary", title, description },
+  };
+}
 
 export default async function BrokerPage({
   params,
@@ -49,6 +86,12 @@ export default async function BrokerPage({
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(brokerJsonLd(broker, mine.length)),
+        }}
+      />
       <Link href="/brokers" className="text-[13px] font-bold text-ink/60">
         ← Back to directory
       </Link>
@@ -135,7 +178,7 @@ export default async function BrokerPage({
           <ListingCard key={l.id} listing={l} broker={broker} />
         ))}
       </div>
-      <h2 className="display font-black text-[26px] mt-8">
+      <h2 id="reviews" className="display font-black text-[26px] mt-8 scroll-mt-24">
         Verified-visit reviews ({revs.length})
       </h2>
       <div className="mt-4 grid sm:grid-cols-2 gap-4">

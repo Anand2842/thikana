@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { fetchBrokers, fetchListings, fetchReviews } from "@/lib/supabase/data";
 import { PHASE1_CITIES } from "@/lib/mock-data";
 import { inr, isActive, moveInTotal } from "@/lib/trust";
@@ -6,6 +7,15 @@ import ListingCard from "@/components/listing-card";
 import BrokerCard from "@/components/broker-card";
 import Photo from "@/components/photo";
 import CityRequestForm from "@/components/city-request-form";
+
+export const metadata: Metadata = {
+  // Default mirrors the layout default; template appends "| Thikana" elsewhere.
+  title: "NCR's Verified Broker Marketplace",
+  description:
+    "NCR property search across Delhi, Gurugram, Noida, Greater Noida & Ghaziabad — verified brokers, transparent charges & fresh availability.",
+  alternates: { canonical: "/" },
+};
+
 export default async function Home() {
   const [listings, brokers, reviews] = await Promise.all([
     fetchListings(),

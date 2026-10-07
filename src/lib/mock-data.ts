@@ -75,6 +75,7 @@ export interface Listing {
   revision?: number;
   sourceDraftId?: string | null;
   sourceRequestId?: string | null;
+  createdAt?: string | null;
 }
 
 export interface Lead {

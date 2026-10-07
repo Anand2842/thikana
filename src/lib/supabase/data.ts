@@ -94,6 +94,7 @@ export function mapListing(r: any): Listing {
     revision: r.revision ?? 1,
     sourceDraftId: r.source_draft_id ?? null,
     sourceRequestId: r.source_request_id ?? null,
+    createdAt: r.created_at ?? null,
   };
 }
 

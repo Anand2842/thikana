@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   fetchListingVisible,
@@ -8,6 +9,12 @@ import {
   fetchSavedIds,
   fetchBrokers,
 } from "@/lib/supabase/data";
+import {
+  absoluteUrl,
+  listingDescription,
+  listingJsonLd,
+  listingTitle,
+} from "@/lib/seo";
 import {
   inr,
   freshness,
@@ -21,6 +28,42 @@ import Photo from "@/components/photo";
 import PropertyActions from "@/components/property-actions";
 import { getSessionUser, userBrokerId, userRole } from "@/lib/supabase/role";
 import ContactBrokerForm from "@/components/contact-broker-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  // Public catalog only: crawlers never get pending/review content.
+  const listing = await fetchListingVisible(id, { role: "seeker", brokerId: null });
+  if (!listing || listing.verification !== "verified")
+    return { robots: { index: false, follow: false } };
+  const broker = await fetchBroker(listing.brokerId);
+  const brokerName = broker?.agency ?? "verified broker";
+  const title = listingTitle(listing);
+  const description = listingDescription(listing, brokerName);
+  const url = absoluteUrl(`/properties/${listing.id}`);
+  const image = listing.photos.find((p) => p.startsWith("https://")) ?? undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      ...(image ? { images: [{ url: image }] } : {}),
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
+  };
+}
 
 export default async function PropertyPage({
   params,
@@ -47,9 +90,24 @@ export default async function PropertyPage({
   const available = isActive(listing) && broker?.verified === "verified";
   const brokerReviewCount = (await fetchReviews(listing.brokerId)).length;
   const f = freshness(listing);
+  const brokerById = new Map(brokers.map((b) => [b.id, b]));
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            listingJsonLd(
+              listing,
+              broker
+                ? { id: broker.id, agency: broker.agency, rating: broker.rating, reviews: broker.reviews }
+                : null,
+              brokerReviewCount,
+            ),
+          ),
+        }}
+      />
       <Link
         href="/properties"
         className="text-[13px] font-bold text-ink/60 hover:text-ink"
@@ -92,7 +150,8 @@ export default async function PropertyPage({
                   >
                     <span>
                       <b>{inr(g.rent)}/mo</b> · {g.brok} · Visit{" "}
-                      {g.visitFee === 0 ? "₹0" : `₹${g.visitFee}`}
+                      {g.visitFee === 0 ? "₹0" : `₹${g.visitFee}`} ·{" "}
+                      {brokerById.get(g.brokerId)?.agency ?? "Verified broker"}
                     </span>
                     {g.id === listing.id ? (
                       <span className="text-[10px] font-extrabold bg-pine text-white px-2 py-1 rounded-full">
@@ -203,7 +262,7 @@ export default async function PropertyPage({
                   <b>{broker.agency}</b>
                   <div className="text-[12.5px] text-white/65">
                     ★ {broker.rating} ({broker.reviews}) · {broker.responseTime}{" "}
-                    response
+                    response · {broker.tenure}
                   </div>
                 </div>
               </div>
@@ -236,8 +295,14 @@ export default async function PropertyPage({
           )}
           <PropertyActions id={id} signedIn={!!user} initialSaved={saved} />
           <div className="text-[12px] text-ink/55 font-medium">
-            Reviews for this broker: {brokerReviewCount} verified-visit reviews
-            on profile.
+            <Link
+              className="underline"
+              href={`/brokers/${listing.brokerId}#reviews`}
+            >
+              Reviews for this broker: {brokerReviewCount} verified-visit
+              reviews on profile
+            </Link>
+            .
           </div>
         </div>
       </div>

@@ -45,13 +45,20 @@ export function Gallery({
   const [index, setIndex] = useState(0);
   return (
     <div>
-      <Photo
-        eager
-        key={photos[index]}
-        src={photos[index]}
-        alt={`${title} — photo ${index + 1}`}
-        className="w-full h-64 sm:h-96 object-cover rounded-3xl border border-line"
-      />
+      <div className="relative">
+        <Photo
+          eager
+          key={photos[index]}
+          src={photos[index]}
+          alt={`${title} — photo ${index + 1} of ${photos.length}`}
+          className="w-full h-64 sm:h-96 object-cover rounded-3xl border border-line"
+        />
+        {photos.length > 1 && (
+          <span className="absolute bottom-3 right-3 text-[11px] font-bold bg-ink/70 text-white px-2 py-1 rounded-full">
+            {index + 1} / {photos.length}
+          </span>
+        )}
+      </div>
       <div className="flex flex-wrap gap-2 mt-3">
         {photos.map((p, i) => (
           <button
